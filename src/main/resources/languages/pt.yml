@@ -1,0 +1,43 @@
+# Arquivo de Idioma Português para AdvancedCoreHub
+
+# Mensagens gerais
+no-permission: "&cVocê não tem permissão para executar este comando."
+players-only: "&cEste comando só pode ser executado por um jogador."
+player-not-found: "&cJogador '{0}' não encontrado."
+invalid-usage: "&cUso inválido. Use: {0}"
+invalid-number: "&c'{0}' não é um número válido."
+reload-success: "&aA configuração do AdvancedCoreHub foi recarregada."
+version-info: "&aAdvancedCoreHub está na versão &e{0}&a."
+unknown-command: "&cSubcomando '{0}' desconhecido. Use /ach help para ver a lista de comandos."
+
+# Mensagens de itens
+item-not-found: "&cO item '{0}' não existe."
+item-given: "&aVocê deu &e{0}x {1} &apara &e{2}&a."
+item-cooldown: "&cVocê deve esperar mais {0} segundos para usar este item."
+
+# Gerenciamento de mundos
+worlds-list: "&aMundos desativados: &e{0}"
+worlds-list-empty: "&cNão há mundos desativados."
+world-added: "&aO mundo '&e{0}&a' foi adicionado à lista de desativados."
+world-removed: "&aO mundo '&e{0}&a' foi removido da lista de desativados."
+world-check-status: "&aO mundo '&e{0}&a' está atualmente &e{1}&a."
+
+# Mensagens de spawn
+spawn-teleport-success: "&aTeleportado para o spawn."
+spawn-not-set: "&cO spawn do servidor ainda não foi definido."
+spawn-set-success: "&aA localização do spawn foi definida para sua posição atual."
+
+# Comando fly
+fly-toggled-self: "&aSeu modo de voo foi &e{0}&a."
+fly-toggled-by-other: "&aSeu modo de voo foi &e{0} &apor &e{1}&a."
+fly-toggled-other: "&aVocê &e{0} &ao voo para &e{1}&a."
+
+# Mensagens de entrada/saída
+join-message: "&e%player_name% &aentrou no servidor."
+quit-message: "&e%player_name% &csaiu do servidor."
+
+# Anúncios
+announcement-prefix: "&b[Anúncio] &r"
+
+# Mensagem AOTE
+aote-no-space: "&cNão há espaço suficiente para teleportar."

@@ -1,0 +1,63 @@
+# ----------------------------------------------------------------
+# AdvancedCoreHub Main Configuration
+# ----------------------------------------------------------------
+
+# Default language for the plugin. Corresponds to a file name in the 'languages' folder (e.g., 'en').
+language: en
+
+# Spawn location settings. Use /setspawn to set this automatically.
+spawn:
+  world: world
+  x: 0.5
+  y: 100.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
+
+# Actions to be executed when a player joins the server.
+# See the action format documentation for all available types.
+actions_on_join:
+  - "[TITLE]&aWelcome to the Server!;&7Enjoy your stay, %player_name%!;10;70;20"
+  - "[SOUND]ENTITY_PLAYER_LEVELUP"
+
+# List of worlds where hub-specific rules should apply (e.g., event cancellation).
+disabled_worlds:
+  - hub
+  - lobby
+
+# Settings for events to cancel in the disabled_worlds list.
+# Players with the 'advancedcorehub.bypass.worldguard' permission are immune.
+world_settings:
+  cancel_block_break: true
+  cancel_block_place: true
+  cancel_player_damage: true
+  cancel_hunger_loss: true
+  cancel_weather_change: true
+
+# Settings for movement items.
+movement_items:
+  trident:
+    return_trident: true
+    cooldown: 5 # in seconds
+  grappling_hook:
+    power: 1.8
+    cooldown: 3
+  aote:
+    distance: 8 # in blocks
+    cooldown: 2
+  enderbow:
+    cooldown: 3
+
+# Automatic announcements settings.
+announcements:
+  enabled: true
+  interval_seconds: 90
+  messages:
+    - "&eDon't forget to visit our website at &nwww.example.com"
+    - "&eYou can vote for our server using &a/vote&e!"
+    - "&eJoin our Discord server for updates and events!"
+
+# Boss bar settings.
+bossbar:
+  show_on_join: true
+  # More settings will be added here in the future
