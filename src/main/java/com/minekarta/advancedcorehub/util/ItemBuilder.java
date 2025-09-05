@@ -1,6 +1,8 @@
 package com.minekarta.advancedcorehub.util;
 
+import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -8,11 +10,49 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ItemBuilder {
 
-    private final ItemStack itemStack;
-    private final ItemMeta itemMeta;
+    private ItemStack itemStack;
+    private ItemMeta itemMeta;
+    private static HeadDatabaseAPI hdbApi;
+    private static final Logger LOGGER = Bukkit.getLogger();
+
+
+    public ItemBuilder(String materialString) {
+        if (hdbApi == null && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
+            hdbApi = new HeadDatabaseAPI();
+        }
+
+        if (materialString.toLowerCase().startsWith("headdatabase:") || materialString.toLowerCase().startsWith("hdb:")) {
+            if (hdbApi == null) {
+                LOGGER.warning("HeadDatabase is not enabled, but an item tried to use it. Defaulting to PLAYER_HEAD.");
+                this.itemStack = new ItemStack(Material.PLAYER_HEAD);
+            } else {
+                try {
+                    String id = materialString.split(":")[1];
+                    this.itemStack = hdbApi.getItemHead(id);
+                    if (this.itemStack == null) {
+                        LOGGER.warning("Invalid HeadDatabase ID: " + id + ". Defaulting to PLAYER_HEAD.");
+                        this.itemStack = new ItemStack(Material.PLAYER_HEAD);
+                    }
+                } catch (Exception e) {
+                    LOGGER.warning("Failed to parse HeadDatabase item: " + materialString + ". Defaulting to PLAYER_HEAD.");
+                    this.itemStack = new ItemStack(Material.PLAYER_HEAD);
+                }
+            }
+        } else {
+            try {
+                Material material = Material.valueOf(materialString.toUpperCase());
+                this.itemStack = new ItemStack(material);
+            } catch (IllegalArgumentException e) {
+                LOGGER.warning("Invalid material '" + materialString + "'. Defaulting to STONE.");
+                this.itemStack = new ItemStack(Material.STONE);
+            }
+        }
+        this.itemMeta = this.itemStack.getItemMeta();
+    }
 
     public ItemBuilder(Material material) {
         this.itemStack = new ItemStack(material);

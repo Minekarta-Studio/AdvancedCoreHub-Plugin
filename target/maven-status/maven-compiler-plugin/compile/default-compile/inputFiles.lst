@@ -49,3 +49,4 @@
 /app/src/main/java/com/minekarta/advancedcorehub/util/ItemBuilder.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Permissions.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/PersistentKeys.java
+/app/src/main/java/com/minekarta/advancedcorehub/util/TeleportUtil.java
