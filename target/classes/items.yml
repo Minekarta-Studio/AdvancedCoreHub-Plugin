@@ -1,0 +1,49 @@
+# ----------------------------------------------------------------
+# AdvancedCoreHub Custom Items Configuration
+# ----------------------------------------------------------------
+
+# This section defines all custom items that can be created and given to players.
+# Use /ach give <player> <item_id> to give an item.
+items:
+  server_selector:
+    material: COMPASS
+    displayname: "&aServer Selector &7(Right Click)"
+    lore:
+      - "&7Right-click to open the server menu."
+    actions:
+      - "[MENU] selector"
+  socials_menu:
+    material: BOOK
+    displayname: "&bSocial Media &7(Right Click)"
+    lore:
+      - "&7Click to see our social links!"
+    actions:
+      - "[MENU] socials"
+  teleport_trident:
+    material: TRIDENT
+    displayname: "&bPoseidon's Leap"
+    persistent_key: trident # This key links to the TridentListener
+    lore:
+      - "&7Throw this trident to teleport"
+      - "&7to its landing location."
+      - ""
+      - "&c5 second cooldown."
+  grappling_hook:
+    material: FISHING_ROD
+    displayname: "&6Grappling Hook"
+    persistent_key: grappling_hook
+    lore:
+      - "&7Cast this at a block to be"
+      - "&7pulled towards it."
+
+# This section defines items to be given to players when they join.
+# 'item_name' must match an ID from the 'items' section above.
+join_items:
+  item1:
+    item_name: server_selector
+    slot: 0
+    force: false # If true, gives the item even if the player already has it.
+  item2:
+    item_name: socials_menu
+    slot: 8
+    force: false

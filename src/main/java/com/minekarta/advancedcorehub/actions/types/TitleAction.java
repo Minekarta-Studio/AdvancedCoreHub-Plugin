@@ -38,7 +38,7 @@ public class TitleAction implements Action {
             long stay = parts.length > 3 ? Long.parseLong(parts[3]) : 70L;
             long fadeOut = parts.length > 4 ? Long.parseLong(parts[4]) : 20L;
 
-            Title.Times times = Title.Times.times(Duration.ofTicks(fadeIn), Duration.ofTicks(stay), Duration.ofTicks(fadeOut));
+            Title.Times times = Title.Times.times(Duration.ofMillis(fadeIn * 50), Duration.ofMillis(stay * 50), Duration.ofMillis(fadeOut * 50));
             Title finalTitle = Title.title(title, subtitle, times);
 
             player.showTitle(finalTitle);

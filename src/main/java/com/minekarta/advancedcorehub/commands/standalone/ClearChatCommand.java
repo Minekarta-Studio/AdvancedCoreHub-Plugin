@@ -5,6 +5,7 @@ import com.minekarta.advancedcorehub.util.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ClearChatCommand implements CommandExecutor {
@@ -26,7 +27,8 @@ public class ClearChatCommand implements CommandExecutor {
             plugin.getServer().broadcastMessage(" ");
         }
 
-        plugin.getServer().broadcast(plugin.getLocaleManager().getComponent("chat-clear-broadcast", sender.getName()));
+        Player player = (sender instanceof Player) ? (Player) sender : null;
+        plugin.getServer().broadcast(plugin.getLocaleManager().getComponent("chat-clear-broadcast", player, sender.getName()));
 
         return true;
     }

@@ -1,0 +1,100 @@
+name: AdvancedCoreHub
+main: com.minekarta.advancedcorehub.AdvancedCoreHub
+version: 1.0.0-SNAPSHOT
+api-version: '1.20'
+author: Jules (AI Assistant)
+description: Core plugin for a Minecraft hub server.
+softdepend: [PlaceholderAPI, HeadDatabase]
+
+commands:
+  advancedcorehub:
+    description: Root command for AdvancedCoreHub.
+    aliases: [ach, acore, ahub]
+    usage: /<command> <subcommand>
+    permission: advancedcorehub.command.help
+  spawn:
+    description: Teleport to the server spawn.
+    usage: /spawn
+    permission: advancedcorehub.command.spawn
+  setspawn:
+    description: Set the server spawn location.
+    usage: /setspawn
+    permission: advancedcorehub.command.setspawn
+  fly:
+    description: Toggle your flight mode.
+    usage: /fly
+    permission: advancedcorehub.command.fly
+  clearchat:
+    description: Clear the global chat.
+    usage: /clearchat
+    permission: advancedcorehub.command.clearchat
+  lockchat:
+    description: Lock or unlock the global chat.
+    usage: /lockchat
+    permission: advancedcorehub.command.lockchat
+
+permissions:
+  advancedcorehub.*:
+    description: Gives access to all AdvancedCoreHub commands.
+    children:
+      - advancedcorehub.command.reload
+      - advancedcorehub.command.give
+      - advancedcorehub.command.worlds
+      - advancedcorehub.command.setspawn
+      - advancedcorehub.command.fly.others
+      - advancedcorehub.command.clearchat
+      - advancedcorehub.command.lockchat
+  advancedcorehub.command.help:
+    description: Allows using the help command.
+    default: true
+  advancedcorehub.command.version:
+    description: Allows checking the plugin version.
+    default: true
+  advancedcorehub.command.reload:
+    description: Allows reloading the plugin configuration.
+    default: op
+  advancedcorehub.command.give:
+    description: Allows giving custom items to players.
+    default: op
+  advancedcorehub.command.worlds:
+    description: Allows managing disabled worlds.
+    default: op
+  advancedcorehub.command.spawn:
+    description: Allows teleporting to spawn.
+    default: true
+  advancedcorehub.command.setspawn:
+    description: Allows setting the spawn location.
+    default: op
+  advancedcorehub.command.fly:
+    description: Allows toggling personal flight mode.
+    default: op
+  advancedcorehub.command.fly.others:
+    description: Allows toggling flight mode for other players.
+    default: op
+  advancedcorehub.command.clearchat:
+    description: Allows clearing the chat.
+    default: op
+  advancedcorehub.command.lockchat:
+    description: Allows locking the chat.
+    default: op
+  advancedcorehub.item.use.*:
+    description: Allows using all movement items.
+    default: true
+  advancedcorehub.item.use.trident:
+    description: Allows using the movement trident.
+    default: true
+  advancedcorehub.item.use.grappling_hook:
+    description: Allows using the grappling hook.
+    default: true
+  advancedcorehub.item.use.aote:
+    description: Allows using the AOTE.
+    default: true
+  advancedcorehub.item.use.enderbow:
+    description: Allows using the enderbow.
+    default: true
+  advancedcorehub.bypass.cooldown:
+    description: Bypass all item cooldowns.
+    default: op
+  advancedcorehub.chat.bypasslock:
+    description: Allows talking when chat is locked.
+    default: op
