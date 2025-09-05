@@ -2,40 +2,40 @@
 # Menu Configuration: Server Selector
 # ----------------------------------------------------------------
 
-title: "&8Select a Server"
+title: "<dark_gray>Select a Server"
 size: 27 # 3 rows
 
 items:
   survival:
     material: GRASS_BLOCK
     slot: 11
-    display-name: "&aSurvival"
+    display-name: "<green>Survival"
     lore:
-      - "&7Click to join the Survival server!"
+      - "<gray>Click to join the Survival server!"
       - ""
-      - "&ePlayers online: %papi_server_survival_online%"
+      - "<yellow>Players online: %papi_server_survival_online%"
     actions:
       - "[BUNGEE] survival"
       - "[CLOSE]"
   skyblock:
     material: GRASS_BLOCK # Should be a skyblock-related item
     slot: 13
-    display-name: "&bSkyblock"
+    display-name: "<aqua>Skyblock"
     lore:
-      - "&7Click to join the Skyblock server!"
+      - "<gray>Click to join the Skyblock server!"
       - ""
-      - "&ePlayers online: %papi_server_skyblock_online%"
+      - "<yellow>Players online: %papi_server_skyblock_online%"
     actions:
       - "[BUNGEE] skyblock"
       - "[CLOSE]"
   creative:
     material: QUARTZ_BLOCK
     slot: 15
-    display-name: "&eCreative"
+    display-name: "<yellow>Creative"
     lore:
-      - "&7Click to join the Creative server!"
+      - "<gray>Click to join the Creative server!"
       - ""
-      - "&ePlayers online: %papi_server_creative_online%"
+      - "<yellow>Players online: %papi_server_creative_online%"
     actions:
       - "[BUNGEE] creative"
       - "[CLOSE]"
@@ -43,7 +43,7 @@ items:
   close_button:
     material: BARRIER
     slot: 22
-    display-name: "&cClose Menu"
+    display-name: "<red>Close Menu"
     actions:
       - "[CLOSE]"
 

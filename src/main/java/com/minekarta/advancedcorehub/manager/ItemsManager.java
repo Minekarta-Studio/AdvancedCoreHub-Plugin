@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub.manager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.util.ItemBuilder;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class ItemsManager {
 
@@ -39,9 +41,14 @@ public class ItemsManager {
                 Material material = Material.valueOf(itemConfig.getString("material", "STONE").toUpperCase());
                 ItemBuilder builder = new ItemBuilder(material);
 
-                builder.setDisplayName(itemConfig.getString("displayname", ""));
+                Component displayName = plugin.getLocaleManager().getComponentFromString(itemConfig.getString("displayname", ""), null);
+                builder.setDisplayName(displayName);
+
                 if (itemConfig.contains("lore")) {
-                    builder.setLore(itemConfig.getStringList("lore"));
+                    List<Component> lore = itemConfig.getStringList("lore").stream()
+                            .map(line -> plugin.getLocaleManager().getComponentFromString(line, null))
+                            .collect(Collectors.toList());
+                    builder.setLore(lore);
                 }
 
                 // Add a persistent key to identify this as a custom item from our plugin
@@ -55,8 +62,9 @@ public class ItemsManager {
                         builder.addPdcValue(PersistentKeys.TRIDENT_KEY, PersistentDataType.BYTE, (byte)1);
                     } else if (persistentKeyStr.equalsIgnoreCase("grappling_hook")) {
                         builder.addPdcValue(PersistentKeys.GRAPPLING_HOOK_KEY, PersistentDataType.BYTE, (byte)1);
+                    } else if (persistentKeyStr.equalsIgnoreCase("enderbow")) {
+                        builder.addPdcValue(PersistentKeys.ENDERBOW_KEY, PersistentDataType.BYTE, (byte)1);
                     }
-                    // Add other keys here
                 }
 
                 customItems.put(key, builder.build());

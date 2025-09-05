@@ -2,7 +2,10 @@ package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
@@ -14,7 +17,10 @@ public class AnnouncementsManager {
     private BukkitTask announcementTask;
     private List<String> announcements;
     private int interval;
-    private String prefix;
+    private String displayMode;
+    private BarColor bossBarColor;
+    private BarStyle bossBarStyle;
+    private int bossBarDuration;
 
     public AnnouncementsManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -31,7 +37,19 @@ public class AnnouncementsManager {
 
         this.announcements = plugin.getConfig().getStringList("announcements.messages");
         this.interval = plugin.getConfig().getInt("announcements.interval_seconds", 60);
-        this.prefix = plugin.getLocaleManager().get("announcement-prefix", null);
+        this.displayMode = plugin.getConfig().getString("announcements.display_mode", "CHAT").toUpperCase();
+
+        try {
+            this.bossBarColor = BarColor.valueOf(plugin.getConfig().getString("announcements.boss_bar_color", "YELLOW").toUpperCase());
+            this.bossBarStyle = BarStyle.valueOf(plugin.getConfig().getString("announcements.boss_bar_style", "SOLID").toUpperCase());
+        } catch (IllegalArgumentException e) {
+            plugin.getLogger().warning("Invalid boss bar color or style in config.yml. Using defaults.");
+            this.bossBarColor = BarColor.YELLOW;
+            this.bossBarStyle = BarStyle.SOLID;
+        }
+
+        this.bossBarDuration = plugin.getConfig().getInt("announcements.boss_bar_duration", 10);
+
 
         if (announcements.isEmpty()) {
             return;
@@ -43,19 +61,25 @@ public class AnnouncementsManager {
     private void startAnnouncements() {
         AtomicInteger currentIndex = new AtomicInteger(0);
         announcementTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            if (announcements.isEmpty()) {
-                cancelTasks();
-                return;
+            if (announcements.isEmpty() || Bukkit.getOnlinePlayers().isEmpty()) {
+                return; // Don't announce to an empty server
             }
+
             String message = announcements.get(currentIndex.getAndIncrement());
             if (currentIndex.get() >= announcements.size()) {
                 currentIndex.set(0);
             }
 
-            String fullMessage = prefix + message;
-            Component componentMessage = MiniMessage.miniMessage().deserialize(toMiniMessage(fullMessage));
-
-            plugin.getServer().broadcast(componentMessage);
+            if ("BOSS_BAR".equals(displayMode)) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    // We pass the player to format placeholders per-player in the announcement
+                    plugin.getBossBarManager().createBossBar(player, message, bossBarColor, bossBarStyle, bossBarDuration);
+                }
+            } else { // Default to CHAT
+                // For chat, we can't format per-player, so we pass null.
+                Component componentMessage = plugin.getLocaleManager().getComponentFromString(message, null);
+                plugin.getServer().broadcast(componentMessage);
+            }
 
         }, 20L * 10, 20L * interval); // 10 second initial delay
     }
@@ -64,9 +88,5 @@ public class AnnouncementsManager {
         if (announcementTask != null && !announcementTask.isCancelled()) {
             announcementTask.cancel();
         }
-    }
-
-    private String toMiniMessage(String legacyText) {
-        return legacyText.replace('§', '&').replaceAll("&([0-9a-fk-or])", "<$1>");
     }
 }

@@ -1,43 +1,58 @@
 # English Language File for AdvancedCoreHub
 
 # General messages
-no-permission: "&cYou do not have permission to execute this command."
-players-only: "&cThis command can only be run by a player."
-player-not-found: "&cPlayer '{0}' not found."
-invalid-usage: "&cInvalid usage. Use: {0}"
-invalid-number: "&c'{0}' is not a valid number."
-reload-success: "&aAdvancedCoreHub configuration has been reloaded."
-version-info: "&aAdvancedCoreHub is running version &e{0}&a."
-unknown-command: "&cUnknown subcommand '{0}'. Use /ach help for a list of commands."
+no-permission: "<red>You do not have permission to execute this command."
+players-only: "<red>This command can only be run by a player."
+player-not-found: "<red>Player '{0}' not found."
+invalid-usage: "<red>Invalid usage. Use: {0}"
+invalid-number: "<red>'{0}' is not a valid number."
+reload-success: "<green>AdvancedCoreHub configuration has been reloaded."
+version-info: "<green>AdvancedCoreHub is running version <yellow>{0}</yellow>."
+unknown-command: "<red>Unknown subcommand '{0}'. Use /ach help for a list of commands."
 
 # Item related messages
-item-not-found: "&cThe item '{0}' does not exist."
-item-given: "&aYou have given &e{0}x {1} &ato &e{2}&a."
-item-cooldown: "&cYou must wait {0} more seconds to use this item."
+item-not-found: "<red>The item '{0}' does not exist."
+item-given: "<green>You have given <yellow>{0}x {1}</yellow> to <yellow>{2}</yellow>."
+item-cooldown: "<red>You must wait {0} more seconds to use this item."
 
 # World management
-worlds-list: "&aDisabled worlds: &e{0}"
-worlds-list-empty: "&cThere are no disabled worlds."
-world-added: "&aWorld '&e{0}&a' has been added to the disabled list."
-world-removed: "&aWorld '&e{0}&a' has been removed from the disabled list."
-world-check-status: "&aWorld '&e{0}&a' is currently &e{1}&a."
+worlds-list: "<green>Disabled worlds: <yellow>{0}</yellow>"
+worlds-list-empty: "<red>There are no disabled worlds."
+world-added: "<green>World '<yellow>{0}</yellow>' has been added to the disabled list."
+world-removed: "<green>World '<yellow>{0}</yellow>' has been removed from the disabled list."
+world-check-status: "<green>World '<yellow>{0}</yellow>' is currently <yellow>{1}</yellow>."
 
 # Spawn messages
-spawn-teleport-success: "&aTeleported to spawn."
-spawn-not-set: "&cThe server spawn has not been set yet."
-spawn-set-success: "&aSpawn location has been set to your current position."
+spawn-teleport-success: "<green>Teleported to spawn."
+spawn-not-set: "<red>The server spawn has not been set yet."
+spawn-set-success: "<green>Spawn location has been set to your current position."
 
 # Fly command
-fly-toggled-self: "&aYour flight mode has been &e{0}&a."
-fly-toggled-by-other: "&aYour flight mode was &e{0} &aby &e{1}&a."
-fly-toggled-other: "&aYou have &e{0} &aflight for &e{1}&a."
+fly-toggled-self: "<green>Your flight mode has been <yellow>{0}</yellow>."
+fly-toggled-by-other: "<green>Your flight mode was <yellow>{0}</yellow> by <yellow>{1}</yellow>."
+fly-toggled-other: "<green>You have <yellow>{0}</yellow> flight for <yellow>{1}</yellow>."
+fly-toggled-timed-self: "<green>Your flight mode has been <yellow>enabled</yellow> for <yellow>{0}</yellow>."
+fly-toggled-timed-other: "<green>You have <yellow>enabled</yellow> flight for <yellow>{0}</yellow> for <yellow>{1}</yellow>."
+fly-expired: "<red>Your temporary flight has expired."
+invalid-duration-format: "<red>Invalid duration format: {0}. Use formats like 10s, 5m, 1h."
 
 # Join/Quit messages
-join-message: "&e%player_name% &ajoined the server."
-quit-message: "&e%player_name% &cleft the server."
+join-message: "<yellow>%player_name% <green>joined the server."
+quit-message: "<yellow>%player_name% <red>left the server."
 
 # Announcements
-announcement-prefix: "&b[Announcement] &r"
+announcement-prefix: "<aqua>[Announcement] <reset>"
 
 # AOTE message
-aote-no-space: "&cThere is not enough space to teleport."
+aote-no-space: "<red>There is not enough space to teleport."
+
+# BossBar Command
+bossbar-help-header: "<gold>--- BossBar Command Help ---"
+bossbar-help-create: "<yellow>/bossbar create <player|@a> <color> <style> <title...>"
+bossbar-help-remove: "<yellow>/bossbar remove <player|@a>"
+bossbar-help-set: "<yellow>/bossbar set <player|@a> <title|color|style> <value...>"
+bossbar-created: "<green>Boss bar created for <yellow>{0}</yellow>."
+bossbar-removed: "<green>Boss bar removed for <yellow>{0}</yellow>."
+bossbar-set-success: "<green>Boss bar <yellow>{0}</yellow> set to '<yellow>{1}</yellow>' for <yellow>{2}</yellow>."
+bossbar-invalid-color: "<red>Invalid color: {0}. Valid colors are: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
+bossbar-invalid-style: "<red>Invalid style: {0}. Valid styles are: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."

@@ -1,6 +1,7 @@
 package com.minekarta.advancedcorehub;
 
 import com.minekarta.advancedcorehub.commands.AdvancedCoreHubCommand;
+import com.minekarta.advancedcorehub.commands.standalone.BossBarCommand;
 import com.minekarta.advancedcorehub.commands.standalone.ClearChatCommand;
 import com.minekarta.advancedcorehub.commands.standalone.FlyCommand;
 import com.minekarta.advancedcorehub.commands.standalone.LockChatCommand;
@@ -106,17 +107,18 @@ public class AdvancedCoreHub extends JavaPlugin {
         FlyCommand flyCommand = new com.minekarta.advancedcorehub.commands.standalone.FlyCommand(this);
         getCommand("fly").setExecutor(flyCommand);
         getCommand("fly").setTabCompleter(flyCommand);
+
+        BossBarCommand bossBarCommand = new BossBarCommand(this);
+        getCommand("bossbar").setExecutor(bossBarCommand);
+        getCommand("bossbar").setTabCompleter(bossBarCommand);
     }
 
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldEventListeners(this), this);
-        getServer().getPluginManager().registerEvents(new TridentListener(this), this);
-        getServer().getPluginManager().registerEvents(new RodListener(this), this);
-        getServer().getPluginManager().registerEvents(new AoteListener(this), this);
-        getServer().getPluginManager().registerEvents(new EnderbowListener(this), this);
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new MovementItemListener(this), this);
     }
 
     private void registerChannels() {

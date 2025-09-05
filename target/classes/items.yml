@@ -7,34 +7,34 @@
 items:
   server_selector:
     material: COMPASS
-    displayname: "&aServer Selector &7(Right Click)"
+    displayname: "<green>Server Selector <gray>(Right Click)"
     lore:
-      - "&7Right-click to open the server menu."
+      - "<gray>Right-click to open the server menu."
     actions:
       - "[MENU] selector"
   socials_menu:
     material: BOOK
-    displayname: "&bSocial Media &7(Right Click)"
+    displayname: "<aqua>Social Media <gray>(Right Click)"
     lore:
-      - "&7Click to see our social links!"
+      - "<gray>Click to see our social links!"
     actions:
       - "[MENU] socials"
   teleport_trident:
     material: TRIDENT
-    displayname: "&bPoseidon's Leap"
+    displayname: "<aqua>Poseidon's Leap"
     persistent_key: trident # This key links to the TridentListener
     lore:
-      - "&7Throw this trident to teleport"
-      - "&7to its landing location."
+      - "<gray>Throw this trident to teleport"
+      - "<gray>to its landing location."
       - ""
-      - "&c5 second cooldown."
+      - "<red>5 second cooldown."
   grappling_hook:
     material: FISHING_ROD
-    displayname: "&6Grappling Hook"
+    displayname: "<gold>Grappling Hook"
     persistent_key: grappling_hook
     lore:
-      - "&7Cast this at a block to be"
-      - "&7pulled towards it."
+      - "<gray>Cast this at a block to be"
+      - "<gray>pulled towards it."
 
 # This section defines items to be given to players when they join.
 # 'item_name' must match an ID from the 'items' section above.

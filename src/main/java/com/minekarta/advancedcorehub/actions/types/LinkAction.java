@@ -5,7 +5,6 @@ import com.minekarta.advancedcorehub.actions.Action;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 public class LinkAction implements Action {
@@ -26,12 +25,14 @@ public class LinkAction implements Action {
             return;
         }
 
-        String messageStr = plugin.getLocaleManager().get(parts[0], player);
-        String hoverStr = plugin.getLocaleManager().get(parts[1], player);
-        String link = plugin.getLocaleManager().get(parts[2], player);
+        // The link part should not be formatted, so we just replace placeholders.
+        String link = parts[2];
+        if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            link = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, link);
+        }
 
-        Component message = LegacyComponentSerializer.legacyAmpersand().deserialize(messageStr)
-                .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(hoverStr)))
+        Component message = plugin.getLocaleManager().getComponentFromString(parts[0], player)
+                .hoverEvent(HoverEvent.showText(plugin.getLocaleManager().getComponentFromString(parts[1], player)))
                 .clickEvent(ClickEvent.openUrl(link));
 
         player.sendMessage(message);

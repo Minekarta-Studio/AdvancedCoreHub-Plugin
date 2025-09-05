@@ -1,43 +1,58 @@
 # Arquivo de Idioma Português para AdvancedCoreHub
 
 # Mensagens gerais
-no-permission: "&cVocê não tem permissão para executar este comando."
-players-only: "&cEste comando só pode ser executado por um jogador."
-player-not-found: "&cJogador '{0}' não encontrado."
-invalid-usage: "&cUso inválido. Use: {0}"
-invalid-number: "&c'{0}' não é um número válido."
-reload-success: "&aA configuração do AdvancedCoreHub foi recarregada."
-version-info: "&aAdvancedCoreHub está na versão &e{0}&a."
-unknown-command: "&cSubcomando '{0}' desconhecido. Use /ach help para ver a lista de comandos."
+no-permission: "<red>Você não tem permissão para executar este comando."
+players-only: "<red>Este comando só pode ser executado por um jogador."
+player-not-found: "<red>Jogador '{0}' não encontrado."
+invalid-usage: "<red>Uso inválido. Use: {0}"
+invalid-number: "<red>'{0}' não é um número válido."
+reload-success: "<green>A configuração do AdvancedCoreHub foi recarregada."
+version-info: "<green>AdvancedCoreHub está na versão <yellow>{0}</yellow>."
+unknown-command: "<red>Subcomando '{0}' desconhecido. Use /ach help para ver a lista de comandos."
 
 # Mensagens de itens
-item-not-found: "&cO item '{0}' não existe."
-item-given: "&aVocê deu &e{0}x {1} &apara &e{2}&a."
-item-cooldown: "&cVocê deve esperar mais {0} segundos para usar este item."
+item-not-found: "<red>O item '{0}' não existe."
+item-given: "<green>Você deu <yellow>{0}x {1}</yellow> para <yellow>{2}</yellow>."
+item-cooldown: "<red>Você deve esperar mais {0} segundos para usar este item."
 
 # Gerenciamento de mundos
-worlds-list: "&aMundos desativados: &e{0}"
-worlds-list-empty: "&cNão há mundos desativados."
-world-added: "&aO mundo '&e{0}&a' foi adicionado à lista de desativados."
-world-removed: "&aO mundo '&e{0}&a' foi removido da lista de desativados."
-world-check-status: "&aO mundo '&e{0}&a' está atualmente &e{1}&a."
+worlds-list: "<green>Mundos desativados: <yellow>{0}</yellow>"
+worlds-list-empty: "<red>Não há mundos desativados."
+world-added: "<green>O mundo '<yellow>{0}</yellow>' foi adicionado à lista de desativados."
+world-removed: "<green>O mundo '<yellow>{0}</yellow>' foi removido da lista de desativados."
+world-check-status: "<green>O mundo '<yellow>{0}</yellow>' está atualmente <yellow>{1}</yellow>."
 
 # Mensagens de spawn
-spawn-teleport-success: "&aTeleportado para o spawn."
-spawn-not-set: "&cO spawn do servidor ainda não foi definido."
-spawn-set-success: "&aA localização do spawn foi definida para sua posição atual."
+spawn-teleport-success: "<green>Teleportado para o spawn."
+spawn-not-set: "<red>O spawn do servidor ainda não foi definido."
+spawn-set-success: "<green>A localização do spawn foi definida para sua posição atual."
 
 # Comando fly
-fly-toggled-self: "&aSeu modo de voo foi &e{0}&a."
-fly-toggled-by-other: "&aSeu modo de voo foi &e{0} &apor &e{1}&a."
-fly-toggled-other: "&aVocê &e{0} &ao voo para &e{1}&a."
+fly-toggled-self: "<green>Seu modo de voo foi <yellow>{0}</yellow>."
+fly-toggled-by-other: "<green>Seu modo de voo foi <yellow>{0}</yellow> por <yellow>{1}</yellow>."
+fly-toggled-other: "<green>Você <yellow>{0}</yellow> o voo para <yellow>{1}</yellow>."
+fly-toggled-timed-self: "<green>Seu modo de voo foi <yellow>ativado</yellow> por <yellow>{0}</yellow>."
+fly-toggled-timed-other: "<green>Você <yellow>ativou</yellow> o voo para <yellow>{0}</yellow> por <yellow>{1}</yellow>."
+fly-expired: "<red>Seu voo temporário expirou."
+invalid-duration-format: "<red>Formato de duração inválido: {0}. Use formatos como 10s, 5m, 1h."
 
 # Mensagens de entrada/saída
-join-message: "&e%player_name% &aentrou no servidor."
-quit-message: "&e%player_name% &csaiu do servidor."
+join-message: "<yellow>%player_name% <green>entrou no servidor."
+quit-message: "<yellow>%player_name% <red>saiu do servidor."
 
 # Anúncios
-announcement-prefix: "&b[Anúncio] &r"
+announcement-prefix: "<aqua>[Anúncio] <reset>"
 
 # Mensagem AOTE
-aote-no-space: "&cNão há espaço suficiente para teleportar."
+aote-no-space: "<red>Não há espaço suficiente para teleportar."
+
+# Comando BossBar
+bossbar-help-header: "<gold>--- Ajuda do Comando BossBar ---"
+bossbar-help-create: "<yellow>/bossbar create <jogador|@a> <cor> <estilo> <título...>"
+bossbar-help-remove: "<yellow>/bossbar remove <jogador|@a>"
+bossbar-help-set: "<yellow>/bossbar set <jogador|@a> <title|color|style> <valor...>"
+bossbar-created: "<green>Boss bar criada para <yellow>{0}</yellow>."
+bossbar-removed: "<green>Boss bar removida para <yellow>{0}</yellow>."
+bossbar-set-success: "<green>A boss bar <yellow>{0}</yellow> foi definida como '<yellow>{1}</yellow>' para <yellow>{2}</yellow>."
+bossbar-invalid-color: "<red>Cor inválida: {0}. Cores válidas são: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
+bossbar-invalid-style: "<red>Estilo inválido: {0}. Estilos válidos são: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
