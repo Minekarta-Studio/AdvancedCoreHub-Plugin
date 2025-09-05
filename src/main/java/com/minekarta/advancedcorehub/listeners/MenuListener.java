@@ -1,11 +1,12 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import com.minekarta.advancedcorehub.util.MenuHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -22,18 +23,21 @@ public class MenuListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
 
-        Player player = (Player) event.getWhoClicked();
-        String inventoryTitle = PlainTextComponentSerializer.plainText().serialize(event.getView().title());
+        InventoryHolder holder = event.getInventory().getHolder();
 
-        // A better way would be to check if event.getInventory().getHolder() is a custom holder.
-        // But for this project, we check the title.
-        Map<Integer, List<String>> actions = plugin.getMenuManager().getActionsForMenu(inventoryTitle);
+        // Check if the inventory is one of our custom menus
+        if (holder instanceof MenuHolder) {
+            event.setCancelled(true); // Prevent players from taking items out of the menu
 
-        if (actions != null) {
-            event.setCancelled(true);
+            MenuHolder menuHolder = (MenuHolder) holder;
+            String menuId = menuHolder.getMenuId();
+            Map<Integer, List<String>> actions = plugin.getMenuManager().getActions(menuId);
+
+            if (actions == null) return;
+
             List<String> slotActions = actions.get(event.getRawSlot());
             if (slotActions != null && !slotActions.isEmpty()) {
-                plugin.getActionManager().executeActions(player, slotActions);
+                plugin.getActionManager().executeActions((Player) event.getWhoClicked(), slotActions);
             }
         }
     }

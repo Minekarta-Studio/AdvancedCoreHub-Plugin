@@ -26,9 +26,9 @@ public class LinkAction implements Action {
             return;
         }
 
-        String messageStr = plugin.getLocaleManager().get(parts[0], player);
-        String hoverStr = plugin.getLocaleManager().get(parts[1], player);
-        String link = plugin.getLocaleManager().get(parts[2], player);
+        String messageStr = plugin.getLocaleManager().getLegacyString(parts[0], player);
+        String hoverStr = plugin.getLocaleManager().getLegacyString(parts[1], player);
+        String link = plugin.getLocaleManager().getLegacyString(parts[2], player);
 
         Component message = LegacyComponentSerializer.legacyAmpersand().deserialize(messageStr)
                 .hoverEvent(HoverEvent.showText(LegacyComponentSerializer.legacyAmpersand().deserialize(hoverStr)))

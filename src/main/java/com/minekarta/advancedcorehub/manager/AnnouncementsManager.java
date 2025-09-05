@@ -2,7 +2,7 @@ package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class AnnouncementsManager {
     private BukkitTask announcementTask;
     private List<String> announcements;
     private int interval;
-    private String prefix;
+    private String prefix; // Legacy formatted string
 
     public AnnouncementsManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -31,7 +31,7 @@ public class AnnouncementsManager {
 
         this.announcements = plugin.getConfig().getStringList("announcements.messages");
         this.interval = plugin.getConfig().getInt("announcements.interval_seconds", 60);
-        this.prefix = plugin.getLocaleManager().get("announcement-prefix", null);
+        this.prefix = plugin.getLocaleManager().getLegacyString("announcement-prefix", null);
 
         if (announcements.isEmpty()) {
             return;
@@ -52,10 +52,13 @@ public class AnnouncementsManager {
                 currentIndex.set(0);
             }
 
-            String fullMessage = prefix + message;
-            Component componentMessage = MiniMessage.miniMessage().deserialize(toMiniMessage(fullMessage));
+            String fullRawMessage = this.prefix + " " + message;
 
-            plugin.getServer().broadcast(componentMessage);
+            // Broadcast to each player individually to handle PAPI placeholders correctly
+            for (Player player : plugin.getServer().getOnlinePlayers()) {
+                Component formattedMessage = plugin.getLocaleManager().format(fullRawMessage, player);
+                player.sendMessage(formattedMessage);
+            }
 
         }, 20L * 10, 20L * interval); // 10 second initial delay
     }
@@ -64,9 +67,5 @@ public class AnnouncementsManager {
         if (announcementTask != null && !announcementTask.isCancelled()) {
             announcementTask.cancel();
         }
-    }
-
-    private String toMiniMessage(String legacyText) {
-        return legacyText.replace('§', '&').replaceAll("&([0-9a-fk-or])", "<$1>");
     }
 }

@@ -23,8 +23,17 @@ public class ClearChatCommand implements CommandExecutor {
             return true;
         }
 
+        // Create a string of 100 blank lines
+        StringBuilder blankLines = new StringBuilder();
         for (int i = 0; i < 100; i++) {
-            plugin.getServer().broadcastMessage(" ");
+            blankLines.append(" \n");
+        }
+
+        // Send the blank lines to all players without the bypass permission
+        for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
+            if (!onlinePlayer.hasPermission(Permissions.CMD_CLEARCHAT_BYPASS)) {
+                onlinePlayer.sendMessage(blankLines.toString());
+            }
         }
 
         Player player = (sender instanceof Player) ? (Player) sender : null;

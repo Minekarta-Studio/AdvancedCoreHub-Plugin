@@ -5,13 +5,10 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +19,7 @@ public class LocaleManager {
     private String defaultLang;
     private boolean papiEnabled = false;
 
+    // Pattern to convert legacy hex codes &#RRGGBB to MiniMessage format <#RRGGBB>
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
 
     public LocaleManager(AdvancedCoreHub plugin, FileManager fileManager) {
@@ -33,13 +31,20 @@ public class LocaleManager {
         this.defaultLang = plugin.getConfig().getString("language", "en");
         this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
         if (papiEnabled) {
-            plugin.getLogger().info("PlaceholderAPI found, placeholder support enabled.");
+            plugin.getLogger().info("PlaceholderAPI found, MiniMessage placeholder support enabled.");
         } else {
             plugin.getLogger().info("PlaceholderAPI not found, using basic placeholder replacement.");
         }
     }
 
-    public String get(String key, Player player, Object... placeholders) {
+    /**
+     * Gets the raw, untranslated message string from the appropriate language file.
+     *
+     * @param key The key of the message.
+     * @param player The player, used to determine the locale.
+     * @return The raw message string.
+     */
+    public String getRaw(String key, Player player) {
         String lang = (player != null) ? player.getLocale().substring(0, 2) : defaultLang;
         FileConfiguration langFile = fileManager.getConfig("languages/" + lang + ".yml");
 
@@ -47,62 +52,76 @@ public class LocaleManager {
             langFile = fileManager.getConfig("languages/" + defaultLang + ".yml");
         }
 
-        String message = langFile.getString(key, "Missing translation for key: " + key);
+        return langFile.getString(key, "<red>Missing translation for key: " + key + "</red>");
+    }
 
-        // Replace custom placeholders
+    /**
+     * Formats a raw message string with placeholders and color codes into a Component.
+     *
+     * @param message The raw message string.
+     * @param player The player to apply PlaceholderAPI placeholders for.
+     * @param placeholders Custom placeholders to be replaced.
+     * @return A formatted Component.
+     */
+    public Component format(String message, Player player, Object... placeholders) {
+        // First, apply our custom indexed placeholders like {0}, {1}, etc.
         for (int i = 0; i < placeholders.length; i++) {
             message = message.replace("{" + i + "}", String.valueOf(placeholders[i]));
         }
 
-        // Apply PAPI placeholders
+        // Second, apply PlaceholderAPI placeholders if available
         if (papiEnabled && player != null) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
 
-        return translateColors(message);
+        // For now, we will only support legacy ampersand codes, as the rest of the plugin uses them.
+        // This provides stability. A future refactor could move the entire plugin to MiniMessage.
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(message);
     }
 
+    /**
+     * Sends a formatted message to a CommandSender.
+     *
+     * @param sender The recipient of the message.
+     * @param key The key of the message in the language files.
+     * @param placeholders The placeholders to be inserted into the message.
+     */
     public void sendMessage(CommandSender sender, String key, Object... placeholders) {
         Player player = (sender instanceof Player) ? (Player) sender : null;
-        String message = get(key, player, placeholders);
+        String rawMessage = getRaw(key, player);
+        Component formattedComponent = format(rawMessage, player, placeholders);
 
-        // Modern component-based sending for players
-        if (player != null) {
-            player.sendMessage(MiniMessage.miniMessage().deserialize(toMiniMessage(message)));
+        if (sender instanceof Player) {
+            sender.sendMessage(formattedComponent);
         } else {
-            // Legacy for console
-            sender.sendMessage(message);
+            // Send to console without MiniMessage formatting, but with legacy colors
+            sender.sendMessage(LegacyComponentSerializer.builder().hexColors().build().serialize(formattedComponent));
         }
     }
 
-    private String translateColors(String message) {
-        if (message == null) return "";
-        // Translate & color codes
-        message = ChatColor.translateAlternateColorCodes('&', message);
-
-        // Translate hex color codes like &#RRGGBB
-        Matcher matcher = HEX_PATTERN.matcher(message);
-        StringBuilder buffer = new StringBuilder();
-        while (matcher.find()) {
-            matcher.appendReplacement(buffer, ChatColor.of(matcher.group(1)).toString());
-        }
-        matcher.appendTail(buffer);
-
-        return buffer.toString();
-    }
-
-    private String toMiniMessage(String legacyText) {
-        // A simple converter from legacy with '&' and custom hex to MiniMessage format
-        legacyText = legacyText.replace('§', '&');
-        Matcher matcher = HEX_PATTERN.matcher(legacyText);
-        while(matcher.find()){
-            legacyText = legacyText.replace(matcher.group(0), "<#" + matcher.group(1) + ">");
-        }
-        return legacyText.replaceAll("&([0-9a-fk-or])", "<$1>");
-    }
-
+    /**
+     * Gets a formatted message as a Component.
+     *
+     * @param key The key of the message in the language files.
+     * @param player The player for whom placeholders should be parsed.
+     * @param placeholders The placeholders to be inserted into the message.
+     * @return The formatted Component.
+     */
     public Component getComponent(String key, Player player, Object... placeholders) {
-        String message = get(key, player, placeholders);
-        return MiniMessage.miniMessage().deserialize(toMiniMessage(message));
+        String rawMessage = getRaw(key, player);
+        return format(rawMessage, player, placeholders);
+    }
+
+    /**
+     * Gets a formatted message as a legacy string with '§' color codes.
+     *
+     * @param key The key of the message in the language files.
+     * @param player The player for whom placeholders should be parsed.
+     * @param placeholders The placeholders to be inserted into the message.
+     * @return The formatted legacy string.
+     */
+    public String getLegacyString(String key, Player player, Object... placeholders) {
+        Component component = getComponent(key, player, placeholders);
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(component);
     }
 }

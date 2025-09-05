@@ -2,6 +2,8 @@ package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.util.ItemBuilder;
+import com.minekarta.advancedcorehub.util.MenuHolder;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,8 +11,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,20 +30,23 @@ public class MenuManager {
     public void loadMenus() {
         menus.clear();
         menuActions.clear();
-        // Assuming menu files are listed in config.yml, but prompt implies direct loading
-        loadMenu("selector", plugin.getFileManager().getConfig("menus/selector.yml"));
-        loadMenu("socials", plugin.getFileManager().getConfig("menus/socials.yml"));
+        loadMenu("selector");
+        loadMenu("socials");
     }
 
-    private void loadMenu(String menuId, FileConfiguration config) {
+    private void loadMenu(String menuId) {
+        FileConfiguration config = plugin.getFileManager().getConfig("menus/" + menuId + ".yml");
         if (config == null) {
             plugin.getLogger().warning("Menu configuration for '" + menuId + "' not found.");
             return;
         }
-        String title = plugin.getLocaleManager().get(config.getString("title", "&cInvalid Title"), null);
-        int size = config.getInt("size", 27);
 
-        Inventory inventory = Bukkit.createInventory(null, size, title);
+        Component title = plugin.getLocaleManager().getComponent(config.getString("title", "&cInvalid Title"), null);
+        int size = config.getInt("size", 27);
+        MenuHolder holder = new MenuHolder(menuId);
+        Inventory inventory = Bukkit.createInventory(holder, size, title);
+        holder.setInventory(inventory);
+
         Map<Integer, List<String>> actions = new HashMap<>();
 
         ConfigurationSection itemsSection = config.getConfigurationSection("items");
@@ -52,6 +55,7 @@ public class MenuManager {
                 ConfigurationSection itemConfig = itemsSection.getConfigurationSection(key);
                 if (itemConfig == null) continue;
 
+                // For now, we build items with static text. A future refactor would parse placeholders on open.
                 Material material = Material.valueOf(itemConfig.getString("material", "STONE").toUpperCase());
                 ItemBuilder builder = new ItemBuilder(material);
                 builder.setDisplayName(itemConfig.getString("display-name", " "));
@@ -60,25 +64,16 @@ public class MenuManager {
                 }
                 ItemStack itemStack = builder.build();
 
-                if (itemConfig.contains("actions")) {
-                    List<String> itemActions = itemConfig.getStringList("actions");
-                    if (itemConfig.contains("slot")) {
-                        int slot = itemConfig.getInt("slot");
+                List<String> itemActions = itemConfig.getStringList("actions");
+
+                if (itemConfig.contains("slot")) {
+                    int slot = itemConfig.getInt("slot");
+                    inventory.setItem(slot, itemStack);
+                    if (!itemActions.isEmpty()) actions.put(slot, itemActions);
+                } else if (itemConfig.contains("slots")) {
+                    for (int slot : itemConfig.getIntegerList("slots")) {
                         inventory.setItem(slot, itemStack);
-                        actions.put(slot, itemActions);
-                    } else if (itemConfig.contains("slots")) {
-                        for (int slot : itemConfig.getIntegerList("slots")) {
-                            inventory.setItem(slot, itemStack);
-                            actions.put(slot, itemActions);
-                        }
-                    }
-                } else {
-                     if (itemConfig.contains("slot")) {
-                        inventory.setItem(itemConfig.getInt("slot"), itemStack);
-                    } else if (itemConfig.contains("slots")) {
-                        for (int slot : itemConfig.getIntegerList("slots")) {
-                            inventory.setItem(slot, itemStack);
-                        }
+                        if (!itemActions.isEmpty()) actions.put(slot, itemActions);
                     }
                 }
             }
@@ -93,21 +88,12 @@ public class MenuManager {
             plugin.getLocaleManager().sendMessage(player, "menu-not-found", menuId);
             return;
         }
-        // We need to clone the inventory to prevent multiple players from seeing the same instance
-        // and to allow for per-player placeholders in the future.
-        // For this implementation, we'll create a fresh copy.
-        Inventory clonedMenu = Bukkit.createInventory(null, menu.getSize(), menu.getViewers().get(0).getOpenInventory().title());
-        clonedMenu.setContents(menu.getContents());
-        player.openInventory(clonedMenu);
+        // A proper implementation would parse per-player placeholders here.
+        // For now, we just open the pre-built inventory.
+        player.openInventory(menu);
     }
 
-    public Map<Integer, List<String>> getActionsForMenu(String menuTitle) {
-        // This is a bit of a hack. A better system would tag the inventory itself.
-        for (Map.Entry<String, Inventory> entry : menus.entrySet()) {
-            if (entry.getValue().getViewers().get(0).getOpenInventory().getTitle().equals(menuTitle)) {
-                return menuActions.get(entry.getKey());
-            }
-        }
-        return null;
+    public Map<Integer, List<String>> getActions(String menuId) {
+        return menuActions.get(menuId);
     }
 }

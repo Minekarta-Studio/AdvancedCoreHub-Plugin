@@ -31,6 +31,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/AoteListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/EnderbowListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/HotbarListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerJoinListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/RodListener.java
@@ -43,9 +44,12 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/CooldownManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/DisabledWorlds.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/FileManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/manager/FlyManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ItemsManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/LocaleManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/util/CustomItem.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/ItemBuilder.java
+/app/src/main/java/com/minekarta/advancedcorehub/util/MenuHolder.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Permissions.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/PersistentKeys.java

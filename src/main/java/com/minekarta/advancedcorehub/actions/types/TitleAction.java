@@ -27,8 +27,8 @@ public class TitleAction implements Action {
             return;
         }
 
-        String titleStr = plugin.getLocaleManager().get(parts[0], player);
-        String subtitleStr = plugin.getLocaleManager().get(parts[1], player);
+        String titleStr = plugin.getLocaleManager().getLegacyString(parts[0], player);
+        String subtitleStr = plugin.getLocaleManager().getLegacyString(parts[1], player);
 
         Component title = LegacyComponentSerializer.legacyAmpersand().deserialize(titleStr);
         Component subtitle = LegacyComponentSerializer.legacyAmpersand().deserialize(subtitleStr);

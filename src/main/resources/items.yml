@@ -35,15 +35,39 @@ items:
     lore:
       - "&7Cast this at a block to be"
       - "&7pulled towards it."
+  launch_feather:
+    material: FEATHER
+    displayname: "&bLaunch Feather &7(Right Click)"
+    lore:
+      - "&7Right-click to get a boost!"
+    actions:
+      - "[LAUNCH] 1.5"
+      - "[SOUND] ENTITY_FIREWORK_ROCKET_LAUNCH"
+  speed_boost:
+    material: SUGAR
+    displayname: "&eSpeed Boost &7(Right Click)"
+    lore:
+      - "&7Right-click for a 10-second speed boost."
+    actions:
+      - "[EFFECT] SPEED;200;1" # Effect;Duration in Ticks;Amplifier
+      - "[PLAYER] speed" # Sends a message from the 'speed' key in en.yml
 
 # This section defines items to be given to players when they join.
 # 'item_name' must match an ID from the 'items' section above.
 join_items:
-  item1:
+  server_selector:
     item_name: server_selector
     slot: 0
-    force: false # If true, gives the item even if the player already has it.
-  item2:
+    force: false
+  launch_feather:
+    item_name: launch_feather
+    slot: 2
+    force: false
+  speed_boost:
+    item_name: speed_boost
+    slot: 3
+    force: false
+  socials_menu:
     item_name: socials_menu
     slot: 8
     force: false

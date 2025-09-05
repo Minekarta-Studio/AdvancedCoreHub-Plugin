@@ -1,6 +1,7 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.util.CustomItem;
 import com.minekarta.advancedcorehub.util.ItemBuilder;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
 import org.bukkit.Material;
@@ -17,7 +18,7 @@ import java.util.logging.Level;
 public class ItemsManager {
 
     private final AdvancedCoreHub plugin;
-    private final Map<String, ItemStack> customItems = new HashMap<>();
+    private final Map<String, CustomItem> customItems = new HashMap<>();
 
     public ItemsManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -59,7 +60,9 @@ public class ItemsManager {
                     // Add other keys here
                 }
 
-                customItems.put(key, builder.build());
+                List<String> actions = itemConfig.getStringList("actions");
+                ItemStack item = builder.build();
+                customItems.put(key, new CustomItem(item, actions));
                 plugin.getLogger().info("Loaded item: " + key);
 
             } catch (Exception e) {
@@ -68,9 +71,13 @@ public class ItemsManager {
         }
     }
 
+    public CustomItem getCustomItem(String key) {
+        return customItems.get(key);
+    }
+
     public ItemStack getItem(String key) {
-        if (customItems.get(key) == null) return null;
-        return customItems.get(key).clone();
+        CustomItem customItem = getCustomItem(key);
+        return (customItem != null) ? customItem.itemStack().clone() : null;
     }
 
     public void giveItem(Player player, String key, int amount, int slot) {

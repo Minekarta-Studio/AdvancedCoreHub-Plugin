@@ -25,6 +25,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private BossBarManager bossBarManager;
     private MenuManager menuManager;
     private ChatManager chatManager;
+    private FlyManager flyManager;
 
 
     @Override
@@ -51,6 +52,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.announcementsManager.load();
         this.bossBarManager = new BossBarManager(this);
         this.chatManager = new ChatManager();
+        this.flyManager = new FlyManager(this); // Initialized here
 
         // Load other components
         registerCommands();
@@ -117,6 +119,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EnderbowListener(this), this);
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new HotbarListener(this), this);
     }
 
     private void registerChannels() {
@@ -167,5 +170,9 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public FlyManager getFlyManager() {
+        return flyManager;
     }
 }

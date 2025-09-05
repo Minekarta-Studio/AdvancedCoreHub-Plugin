@@ -29,8 +29,12 @@ spawn-set-success: "&aSpawn location has been set to your current position."
 
 # Fly command
 fly-toggled-self: "&aYour flight mode has been &e{0}&a."
+fly-toggled-self-temp: "&aYour flight mode has been &e{0}&a for &e{1}&a seconds."
 fly-toggled-by-other: "&aYour flight mode was &e{0} &aby &e{1}&a."
+fly-toggled-by-other-temp: "&aYour flight mode was &e{0} &aby &e{1}&a for &e{2}&a seconds."
 fly-toggled-other: "&aYou have &e{0} &aflight for &e{1}&a."
+fly-toggled-other-temp: "&aYou have &e{0} &aflight for &e{1}&a for &e{2}&a seconds."
+fly-temp-expired: "&6Your temporary flight has expired."
 
 # Join/Quit messages
 join-message: "&e%player_name% &ajoined the server."

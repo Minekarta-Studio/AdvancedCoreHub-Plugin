@@ -22,10 +22,9 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
 
         // 1. Handle Join Message (can be customized or disabled)
-        String joinMessage = plugin.getLocaleManager().get("join-message", player);
-        if (joinMessage != null && !joinMessage.isEmpty()) {
-            event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
-        }
+        // We get the component directly. If the key is missing or empty in the lang file, no message will be sent.
+        event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
+
 
         // 2. Execute actions_on_join from config.yml
         List<String> joinActions = plugin.getConfig().getStringList("actions_on_join");
