@@ -5,6 +5,7 @@ import com.minekarta.advancedcorehub.util.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class LockChatCommand implements CommandExecutor {
@@ -26,7 +27,8 @@ public class LockChatCommand implements CommandExecutor {
         boolean isLocked = plugin.getChatManager().isChatLocked();
         String status = isLocked ? "locked" : "unlocked";
 
-        plugin.getServer().broadcast(plugin.getLocaleManager().getComponent("chat-lock-broadcast", sender.getName(), status));
+        Player player = (sender instanceof Player) ? (Player) sender : null;
+        plugin.getServer().broadcast(plugin.getLocaleManager().getComponent("chat-lock-broadcast", player, sender.getName(), status));
 
         return true;
     }

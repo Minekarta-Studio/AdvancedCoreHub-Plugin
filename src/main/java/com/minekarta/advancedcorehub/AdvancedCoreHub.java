@@ -4,8 +4,7 @@ import com.minekarta.advancedcorehub.commands.AdvancedCoreHubCommand;
 import com.minekarta.advancedcorehub.commands.standalone.ClearChatCommand;
 import com.minekarta.advancedcorehub.commands.standalone.FlyCommand;
 import com.minekarta.advancedcorehub.commands.standalone.LockChatCommand;
-import com.minekarta.advancedcorehub.listeners.ChatListener;
-import com.minekarta.advancedcorehub.listeners.MenuListener;
+import com.minekarta.advancedcorehub.listeners.*;
 import com.minekarta.advancedcorehub.manager.*;
 import org.bukkit.plugin.java.JavaPlugin;
 

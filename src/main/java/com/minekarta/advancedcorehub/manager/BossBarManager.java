@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub.manager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -26,7 +27,7 @@ public class BossBarManager {
         removeBossBar(player); // Remove existing bar before creating a new one
 
         Component componentTitle = MiniMessage.miniMessage().deserialize(toMiniMessage(title));
-        BossBar bossBar = Bukkit.createBossBar(componentTitle, color, style);
+        BossBar bossBar = Bukkit.createBossBar(LegacyComponentSerializer.legacySection().serialize(componentTitle), color, style);
         bossBar.addPlayer(player);
         playerBossBars.put(player.getUniqueId(), bossBar);
     }
@@ -42,7 +43,7 @@ public class BossBarManager {
         BossBar bossBar = playerBossBars.get(player.getUniqueId());
         if (bossBar != null) {
             Component componentTitle = MiniMessage.miniMessage().deserialize(toMiniMessage(newTitle));
-            bossBar.setTitle(componentTitle);
+            bossBar.setTitle(LegacyComponentSerializer.legacySection().serialize(componentTitle));
         }
     }
 

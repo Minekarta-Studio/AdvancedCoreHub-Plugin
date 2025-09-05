@@ -1,0 +1,43 @@
+# English Language File for AdvancedCoreHub
+
+# General messages
+no-permission: "&cYou do not have permission to execute this command."
+players-only: "&cThis command can only be run by a player."
+player-not-found: "&cPlayer '{0}' not found."
+invalid-usage: "&cInvalid usage. Use: {0}"
+invalid-number: "&c'{0}' is not a valid number."
+reload-success: "&aAdvancedCoreHub configuration has been reloaded."
+version-info: "&aAdvancedCoreHub is running version &e{0}&a."
+unknown-command: "&cUnknown subcommand '{0}'. Use /ach help for a list of commands."
+
+# Item related messages
+item-not-found: "&cThe item '{0}' does not exist."
+item-given: "&aYou have given &e{0}x {1} &ato &e{2}&a."
+item-cooldown: "&cYou must wait {0} more seconds to use this item."
+
+# World management
+worlds-list: "&aDisabled worlds: &e{0}"
+worlds-list-empty: "&cThere are no disabled worlds."
+world-added: "&aWorld '&e{0}&a' has been added to the disabled list."
+world-removed: "&aWorld '&e{0}&a' has been removed from the disabled list."
+world-check-status: "&aWorld '&e{0}&a' is currently &e{1}&a."
+
+# Spawn messages
+spawn-teleport-success: "&aTeleported to spawn."
+spawn-not-set: "&cThe server spawn has not been set yet."
+spawn-set-success: "&aSpawn location has been set to your current position."
+
+# Fly command
+fly-toggled-self: "&aYour flight mode has been &e{0}&a."
+fly-toggled-by-other: "&aYour flight mode was &e{0} &aby &e{1}&a."
+fly-toggled-other: "&aYou have &e{0} &aflight for &e{1}&a."
+
+# Join/Quit messages
+join-message: "&e%player_name% &ajoined the server."
+quit-message: "&e%player_name% &cleft the server."
+
+# Announcements
+announcement-prefix: "&b[Announcement] &r"
+
+# AOTE message
+aote-no-space: "&cThere is not enough space to teleport."
