@@ -22,10 +22,7 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
 
         // 1. Handle Join Message (can be customized or disabled)
-        String joinMessage = plugin.getLocaleManager().get("join-message", player);
-        if (joinMessage != null && !joinMessage.isEmpty()) {
-            event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
-        }
+        event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
 
         // 2. Execute actions_on_join from config.yml
         List<String> joinActions = plugin.getConfig().getStringList("actions_on_join");
@@ -55,6 +52,30 @@ public class PlayerJoinListener implements Listener {
         // 4. Handle Boss Bar on join
         if (plugin.getConfig().getBoolean("bossbar.show_on_join", false)) {
             // Logic to be added when BossBar config is defined
+        }
+
+        // 5. Check for persistent timed flight
+        if (player.getPersistentDataContainer().has(com.minekarta.advancedcorehub.util.PersistentKeys.FLY_EXPIRATION, org.bukkit.persistence.PersistentDataType.LONG)) {
+            long expirationTime = player.getPersistentDataContainer().get(com.minekarta.advancedcorehub.util.PersistentKeys.FLY_EXPIRATION, org.bukkit.persistence.PersistentDataType.LONG);
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime >= expirationTime) {
+                // Flight has expired while offline
+                player.setAllowFlight(false);
+                player.setFlying(false);
+                player.getPersistentDataContainer().remove(com.minekarta.advancedcorehub.util.PersistentKeys.FLY_EXPIRATION);
+            } else {
+                // Flight is still active, restart the timer
+                long remainingTicks = (expirationTime - currentTime) / 50;
+                org.bukkit.Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    if (player.isOnline() && player.getAllowFlight()) {
+                        player.setAllowFlight(false);
+                        player.setFlying(false);
+                        player.getPersistentDataContainer().remove(com.minekarta.advancedcorehub.util.PersistentKeys.FLY_EXPIRATION);
+                        plugin.getLocaleManager().sendMessage(player, "fly-expired");
+                    }
+                }, remainingTicks);
+            }
         }
     }
 }

@@ -24,4 +24,6 @@ public final class PersistentKeys {
     // Key to store the identifier of the item from items.yml
     public static final NamespacedKey ITEM_ID = new NamespacedKey(plugin, "item_id");
 
+    // Key for timed flight expiration
+    public static final NamespacedKey FLY_EXPIRATION = new NamespacedKey(plugin, "fly_expiration");
 }

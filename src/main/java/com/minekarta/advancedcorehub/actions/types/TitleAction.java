@@ -3,7 +3,6 @@ package com.minekarta.advancedcorehub.actions.types;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 
@@ -27,11 +26,8 @@ public class TitleAction implements Action {
             return;
         }
 
-        String titleStr = plugin.getLocaleManager().get(parts[0], player);
-        String subtitleStr = plugin.getLocaleManager().get(parts[1], player);
-
-        Component title = LegacyComponentSerializer.legacyAmpersand().deserialize(titleStr);
-        Component subtitle = LegacyComponentSerializer.legacyAmpersand().deserialize(subtitleStr);
+        Component title = plugin.getLocaleManager().getComponentFromString(parts[0], player);
+        Component subtitle = plugin.getLocaleManager().getComponentFromString(parts[1], player);
 
         try {
             long fadeIn = parts.length > 2 ? Long.parseLong(parts[2]) : 10L;

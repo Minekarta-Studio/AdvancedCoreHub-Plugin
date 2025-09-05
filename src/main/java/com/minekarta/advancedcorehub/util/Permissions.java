@@ -19,6 +19,7 @@ public final class Permissions {
     public static final String CMD_FLY_OTHERS = PREFIX + "command.fly.others";
     public static final String CMD_CLEARCHAT = PREFIX + "command.clearchat";
     public static final String CMD_LOCKCHAT = PREFIX + "command.lockchat";
+    public static final String CMD_BOSSBAR = PREFIX + "command.bossbar";
     public static final String CMD_HELP = PREFIX + "command.help";
     public static final String CMD_VERSION = PREFIX + "command.version";
 

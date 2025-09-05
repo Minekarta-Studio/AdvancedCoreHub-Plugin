@@ -32,6 +32,10 @@ commands:
     description: Lock or unlock the global chat.
     usage: /lockchat
     permission: advancedcorehub.command.lockchat
+  bossbar:
+    description: Manage server-wide boss bars.
+    usage: /bossbar <subcommand>
+    permission: advancedcorehub.command.bossbar
 
 permissions:
   advancedcorehub.*:
@@ -44,6 +48,7 @@ permissions:
       - advancedcorehub.command.fly.others
       - advancedcorehub.command.clearchat
       - advancedcorehub.command.lockchat
+      - advancedcorehub.command.bossbar
   advancedcorehub.command.help:
     description: Allows using the help command.
     default: true
@@ -76,6 +81,9 @@ permissions:
     default: op
   advancedcorehub.command.lockchat:
     description: Allows locking the chat.
+    default: op
+  advancedcorehub.command.bossbar:
+    description: Allows managing the server boss bar.
     default: op
   advancedcorehub.item.use.*:
     description: Allows using all movement items.

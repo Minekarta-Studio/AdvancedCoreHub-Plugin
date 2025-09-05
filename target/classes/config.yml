@@ -17,7 +17,7 @@ spawn:
 # Actions to be executed when a player joins the server.
 # See the action format documentation for all available types.
 actions_on_join:
-  - "[TITLE]&aWelcome to the Server!;&7Enjoy your stay, %player_name%!;10;70;20"
+  - "[TITLE]<green>Welcome to the Server!;<gray>Enjoy your stay, %player_name%!;10;70;20"
   - "[SOUND]ENTITY_PLAYER_LEVELUP"
 
 # List of worlds where hub-specific rules should apply (e.g., event cancellation).
@@ -52,10 +52,14 @@ movement_items:
 announcements:
   enabled: true
   interval_seconds: 90
+  display_mode: CHAT # Can be CHAT or BOSS_BAR
+  boss_bar_color: YELLOW # Default color for announcements
+  boss_bar_style: SOLID # Default style for announcements
+  boss_bar_duration: 10 # in seconds
   messages:
-    - "&eDon't forget to visit our website at &nwww.example.com"
-    - "&eYou can vote for our server using &a/vote&e!"
-    - "&eJoin our Discord server for updates and events!"
+    - "<yellow>Don't forget to visit our website at <underline>www.example.com</underline></yellow>"
+    - "<yellow>You can vote for our server using <green>/vote</green>!</yellow>"
+    - "<yellow>Join our Discord server for updates and events!</yellow>"
 
 # Boss bar settings.
 bossbar:

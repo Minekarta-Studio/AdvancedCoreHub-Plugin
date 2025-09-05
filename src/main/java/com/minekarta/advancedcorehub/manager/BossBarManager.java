@@ -1,8 +1,8 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.util.Formatter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -24,12 +24,30 @@ public class BossBarManager {
     }
 
     public void createBossBar(Player player, String title, BarColor color, BarStyle style) {
+        createBossBar(player, title, color, style, -1); // -1 for permanent
+    }
+
+    public void createBossBar(Player player, String title, BarColor color, BarStyle style, int durationSeconds) {
         removeBossBar(player); // Remove existing bar before creating a new one
 
-        Component componentTitle = MiniMessage.miniMessage().deserialize(toMiniMessage(title));
-        BossBar bossBar = Bukkit.createBossBar(LegacyComponentSerializer.legacySection().serialize(componentTitle), color, style);
+        Component componentTitle = Formatter.format(player, title);
+        // The modern component methods might not be available in all 1.20.4 paper forks,
+        // so we use the legacy serializer for broader compatibility.
+        String legacyTitle = LegacyComponentSerializer.legacySection().serialize(componentTitle);
+
+        BossBar bossBar = Bukkit.createBossBar(legacyTitle, color, style);
         bossBar.addPlayer(player);
         playerBossBars.put(player.getUniqueId(), bossBar);
+
+        if (durationSeconds > 0) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                // Only remove it if it's still the same bar we created
+                BossBar currentBar = playerBossBars.get(player.getUniqueId());
+                if (currentBar == bossBar) {
+                    removeBossBar(player);
+                }
+            }, durationSeconds * 20L);
+        }
     }
 
     public void removeBossBar(Player player) {
@@ -42,7 +60,7 @@ public class BossBarManager {
     public void updateTitle(Player player, String newTitle) {
         BossBar bossBar = playerBossBars.get(player.getUniqueId());
         if (bossBar != null) {
-            Component componentTitle = MiniMessage.miniMessage().deserialize(toMiniMessage(newTitle));
+            Component componentTitle = Formatter.format(player, newTitle);
             bossBar.setTitle(LegacyComponentSerializer.legacySection().serialize(componentTitle));
         }
     }
@@ -66,10 +84,5 @@ public class BossBarManager {
             bossBar.removeAll();
         }
         playerBossBars.clear();
-    }
-
-    private String toMiniMessage(String legacyText) {
-        if (legacyText == null) return "";
-        return legacyText.replace('§', '&').replaceAll("&([0-9a-fk-or])", "<$1>");
     }
 }

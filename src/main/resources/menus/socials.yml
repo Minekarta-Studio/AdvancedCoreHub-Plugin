@@ -2,36 +2,36 @@
 # Menu Configuration: Socials
 # ----------------------------------------------------------------
 
-title: "&8Our Social Media"
+title: "<dark_gray>Our Social Media"
 size: 27
 
 items:
   discord:
     material: PAPER # Placeholder, ideally use HeadDatabase: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2E4YjIyZTU1ZGIzY2Y0YjY2Y2YyN2YxOTgzYjYwYmNhYjFlYjkyMjI4OTgxY2Q3NThmNTRiMDU0YjE3NDUifX19'
     slot: 11
-    display-name: "&9Discord"
+    display-name: "<blue>Discord"
     lore:
-      - "&7Click to get our Discord invite link!"
+      - "<gray>Click to get our Discord invite link!"
     actions:
-      - "[LINK]&9[Discord] &fClick here to join our Discord!;&7discord.gg/example;&https://discord.gg/example"
+      - "[MESSAGE]<blue>[Discord] <white>Click here to join our Discord! <gray><u>discord.gg/example</u>"
       - "[CLOSE]"
   website:
     material: BOOK
     slot: 13
-    display-name: "&aWebsite"
+    display-name: "<green>Website"
     lore:
-      - "&7Click to open our website!"
+      - "<gray>Click to open our website!"
     actions:
-      - "[LINK]&a[Website] &fClick here to visit our site!;&7www.example.com;&https://www.example.com"
+      - "[MESSAGE]<green>[Website] <white>Click here to visit our site! <gray><u>www.example.com</u>"
       - "[CLOSE]"
   twitter:
     material: FEATHER # Placeholder, ideally use HeadDatabase
     slot: 15
-    display-name: "&bTwitter / X"
+    display-name: "<aqua>Twitter / X"
     lore:
-      - "&7Click to open our Twitter page!"
+      - "<gray>Click to open our Twitter page!"
     actions:
-      - "[LINK]&b[Twitter] &fClick here to visit our Twitter!;&7@Example;&https://twitter.com/example"
+      - "[MESSAGE]<aqua>[Twitter] <white>Click here to visit our Twitter! <gray><u>@Example</u>"
       - "[CLOSE]"
 
   filler_glass:
