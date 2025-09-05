@@ -25,7 +25,7 @@ This project was developed by the AI assistant, Jules.
 | --- | --- | --- |
 | `/ach <subcommand>` | Root command for the plugin. | `advancedcorehub.command.help` |
 | `/fly [player] [duration]` | Toggles flight. Duration can be specified (e.g., `10s`, `5m`, `1h`). | `advancedcorehub.command.fly` |
-| `/bossbar <create/remove> ...` | Manages global or per-player boss bars. | `advancedcorehub.command.bossbar` |
+| `/bossbar <create/remove/set> ...` | Manages global or per-player boss bars. | `advancedcorehub.command.bossbar` |
 | `/spawn` | Teleports you to the server spawn. | `advancedcorehub.command.spawn` |
 | `/setspawn` | Sets the server spawn location. | `advancedcorehub.command.setspawn` |
 | `/lockchat` | Locks or unlocks the global chat. | `advancedcorehub.command.lockchat` |
@@ -38,7 +38,36 @@ This project was developed by the AI assistant, Jules.
 
 ### Optional (Soft Dependencies)
 -   **PlaceholderAPI**: For full placeholder support in messages and menus.
--   **HeadDatabase**: For using custom heads in menus.
+-   **HeadDatabase**: For using custom heads in menus. To use a head from HeadDatabase, set the `material` of an item in your menu configuration to `hdb:<head_id>` or `headdatabase:<head_id>`.
+
+## For Developers
+
+### Action System API
+
+AdvancedCoreHub allows other plugins to register their own custom actions. To do this, you can access the `ActionManager` and register your own `Action` implementation.
+
+**Example:**
+```java
+// In your plugin's onEnable, after AdvancedCoreHub has loaded
+if (getServer().getPluginManager().isPluginEnabled("AdvancedCoreHub")) {
+    ActionManager actionManager = AdvancedCoreHub.getInstance().getActionManager();
+
+    // Create your custom action
+    Action myCustomAction = (player, data) -> {
+        player.sendMessage("Executing my custom action with data: " + data);
+    };
+
+    // Register it
+    actionManager.registerAction("MY_CUSTOM_ACTION", myCustomAction);
+}
+```
+
+You can then use `[MY_CUSTOM_ACTION] some data` in your item actions, just like any other action.
+
+## Future Improvements
+
+-   **Command Framework**: The current command system is functional, but could be migrated to a more robust framework like ACF (Advanced Command Framework) to provide features like improved tab-completion and validation.
+-   **Safe Teleportation**: The teleportation for movement items has been improved, but could be enhanced further with more sophisticated checks for things like server lag or other plugins interfering.
 
 ## Building from Source
 

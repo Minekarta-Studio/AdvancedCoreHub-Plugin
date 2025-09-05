@@ -2,6 +2,7 @@ package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
+import com.minekarta.advancedcorehub.util.TeleportUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -49,7 +50,7 @@ public class MovementItemListener implements Listener {
             }
             // AOTE teleport logic
             Location targetLocation = player.getTargetBlock(null, plugin.getConfig().getInt("movement_items.aote.distance", 8)).getLocation();
-            player.teleport(targetLocation.add(0.5, 1, 0.5)); // Center on block and move up
+            TeleportUtil.safeTeleport(player, targetLocation.add(0.5, 1, 0.5)); // Center on block and move up
         }
     }
 
@@ -89,7 +90,7 @@ public class MovementItemListener implements Listener {
              if (handleCooldown(player, "trident", "movement_items.trident.cooldown", 5)) {
                 return;
             }
-            player.teleport(projectile.getLocation());
+            TeleportUtil.safeTeleport(player, projectile.getLocation());
             projectile.remove();
         }
         // Ender Bow Logic
@@ -97,7 +98,7 @@ public class MovementItemListener implements Listener {
              if (handleCooldown(player, "enderbow", "movement_items.enderbow.cooldown", 3)) {
                 return;
             }
-            player.teleport(projectile.getLocation());
+            TeleportUtil.safeTeleport(player, projectile.getLocation());
             projectile.remove();
         }
     }

@@ -47,7 +47,7 @@ public class BossBarCommand implements CommandExecutor, TabCompleter {
                 handleRemove(sender, args);
                 break;
             case "set":
-                // handle set title/color/style
+                handleSet(sender, args);
                 break;
             default:
                 sendHelpMessage(sender);
@@ -123,25 +123,72 @@ public class BossBarCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void handleSet(CommandSender sender, String[] args) {
+        if (args.length < 4) {
+            sendHelpMessage(sender);
+            return;
+        }
+
+        String targetSelector = args[1];
+        String property = args[2].toLowerCase();
+        String value = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+
+        // Simplified target processing for now, can be expanded later
+        Player target = Bukkit.getPlayer(targetSelector);
+        if (target == null) {
+            plugin.getLocaleManager().sendMessage(sender, "player-not-found", targetSelector);
+            return;
+        }
+
+        switch (property) {
+            case "title":
+                plugin.getBossBarManager().updateTitle(target, value);
+                plugin.getLocaleManager().sendMessage(sender, "bossbar-set-success", property, value, target.getName());
+                break;
+            case "color":
+                try {
+                    BarColor color = BarColor.valueOf(value.toUpperCase());
+                    plugin.getBossBarManager().updateColor(target, color);
+                    plugin.getLocaleManager().sendMessage(sender, "bossbar-set-success", property, value, target.getName());
+                } catch (IllegalArgumentException e) {
+                    plugin.getLocaleManager().sendMessage(sender, "bossbar-invalid-color", value);
+                }
+                break;
+            case "style":
+                try {
+                    BarStyle style = BarStyle.valueOf(value.toUpperCase());
+                    plugin.getBossBarManager().updateStyle(target, style);
+                    plugin.getLocaleManager().sendMessage(sender, "bossbar-set-success", property, value, target.getName());
+                } catch (IllegalArgumentException e) {
+                    plugin.getLocaleManager().sendMessage(sender, "bossbar-invalid-style", value);
+                }
+                break;
+            default:
+                plugin.getLocaleManager().sendMessage(sender, "bossbar-invalid-property", property);
+        }
+    }
+
 
     private void sendHelpMessage(CommandSender sender) {
         plugin.getLocaleManager().sendMessage(sender, "bossbar-help-header");
         plugin.getLocaleManager().sendMessage(sender, "bossbar-help-create");
         plugin.getLocaleManager().sendMessage(sender, "bossbar-help-remove");
-        // plugin.getLocaleManager().sendMessage(sender, "bossbar-help-set");
+        plugin.getLocaleManager().sendMessage(sender, "bossbar-help-set");
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            return List.of("create", "remove"/*, "set"*/).stream()
+            return List.of("create", "remove", "set").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }
 
-        if (args.length == 2 && (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("remove"))) {
+        if (args.length == 2 && (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("set"))) {
             List<String> suggestions = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-            suggestions.add("@a");
+            if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("remove")) {
+                suggestions.add("@a");
+            }
             return suggestions.stream()
                     .filter(s -> s.toLowerCase().startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
@@ -154,11 +201,31 @@ public class BossBarCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         }
 
+        if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
+            return List.of("title", "color", "style").stream()
+                    .filter(s -> s.startsWith(args[2].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
         if (args.length == 4 && args[0].equalsIgnoreCase("create")) {
             return Arrays.stream(BarStyle.values())
                     .map(Enum::name)
                     .filter(s -> s.toLowerCase().startsWith(args[3].toLowerCase()))
                     .collect(Collectors.toList());
+        }
+
+        if (args.length == 4 && args[0].equalsIgnoreCase("set")) {
+            if (args[2].equalsIgnoreCase("color")) {
+                return Arrays.stream(BarColor.values())
+                        .map(Enum::name)
+                        .filter(s -> s.toLowerCase().startsWith(args[3].toLowerCase()))
+                        .collect(Collectors.toList());
+            } else if (args[2].equalsIgnoreCase("style")) {
+                return Arrays.stream(BarStyle.values())
+                        .map(Enum::name)
+                        .filter(s -> s.toLowerCase().startsWith(args[3].toLowerCase()))
+                        .collect(Collectors.toList());
+            }
         }
 
         return Collections.emptyList();

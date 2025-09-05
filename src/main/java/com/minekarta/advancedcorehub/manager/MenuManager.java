@@ -54,8 +54,8 @@ public class MenuManager {
                 if (itemConfig == null) continue;
 
                 try {
-                    Material material = Material.valueOf(itemConfig.getString("material", "STONE").toUpperCase());
-                    ItemBuilder builder = new ItemBuilder(material);
+                    String materialString = itemConfig.getString("material", "STONE");
+                    ItemBuilder builder = new ItemBuilder(materialString);
 
                     // Parse display name and lore with player-specific placeholders
                     Component displayName = plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player);
