@@ -95,4 +95,8 @@ public class ItemsManager {
             player.getInventory().addItem(item);
         }
     }
+
+    public java.util.Set<String> getItemKeys() {
+        return customItems.keySet();
+    }
 }
