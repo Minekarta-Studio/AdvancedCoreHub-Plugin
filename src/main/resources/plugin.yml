@@ -7,35 +7,6 @@ description: ${project.description}
 softdepend: [PlaceholderAPI, HeadDatabase]
 
 commands:
-  advancedcorehub:
-    description: Root command for AdvancedCoreHub.
-    aliases: [ach, acore, ahub]
-    usage: /<command> <subcommand>
-    permission: advancedcorehub.command.help
-  spawn:
-    description: Teleport to the server spawn.
-    usage: /spawn
-    permission: advancedcorehub.command.spawn
-  setspawn:
-    description: Set the server spawn location.
-    usage: /setspawn
-    permission: advancedcorehub.command.setspawn
-  fly:
-    description: Toggle your flight mode.
-    usage: /fly
-    permission: advancedcorehub.command.fly
-  clearchat:
-    description: Clear the global chat.
-    usage: /clearchat
-    permission: advancedcorehub.command.clearchat
-  lockchat:
-    description: Lock or unlock the global chat.
-    usage: /lockchat
-    permission: advancedcorehub.command.lockchat
-  bossbar:
-    description: Manage server-wide boss bars.
-    usage: /bossbar <subcommand>
-    permission: advancedcorehub.command.bossbar
 
 permissions:
   advancedcorehub.*:

@@ -1,10 +1,5 @@
 package com.minekarta.advancedcorehub;
 
-import com.minekarta.advancedcorehub.commands.AdvancedCoreHubCommand;
-import com.minekarta.advancedcorehub.commands.standalone.BossBarCommand;
-import com.minekarta.advancedcorehub.commands.standalone.ClearChatCommand;
-import com.minekarta.advancedcorehub.commands.standalone.FlyCommand;
-import com.minekarta.advancedcorehub.commands.standalone.LockChatCommand;
 import com.minekarta.advancedcorehub.listeners.*;
 import com.minekarta.advancedcorehub.manager.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +21,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private BossBarManager bossBarManager;
     private MenuManager menuManager;
     private ChatManager chatManager;
+    private CommandManager commandManager;
 
 
     @Override
@@ -43,7 +39,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.itemsManager = new ItemsManager(this);
         this.itemsManager.loadItems();
 
-        this.menuManager = new MenuManager(this); // Must be before ActionManager if actions use menus
+        this.menuManager = new MenuManager(this);
 
         this.actionManager = new ActionManager(this);
         this.cooldownManager = new CooldownManager(this);
@@ -52,6 +48,8 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.announcementsManager.load();
         this.bossBarManager = new BossBarManager(this);
         this.chatManager = new ChatManager();
+        this.commandManager = new CommandManager(this);
+
 
         // Load other components
         registerCommands();
@@ -93,24 +91,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     }
 
     private void registerCommands() {
-        // Main command
-        AdvancedCoreHubCommand advancedCoreHubCommand = new AdvancedCoreHubCommand(this);
-        getCommand("advancedcorehub").setExecutor(advancedCoreHubCommand);
-        getCommand("advancedcorehub").setTabCompleter(advancedCoreHubCommand);
-
-        // Standalone commands
-        getCommand("spawn").setExecutor(new com.minekarta.advancedcorehub.commands.standalone.SpawnCommand(this));
-        getCommand("setspawn").setExecutor(new com.minekarta.advancedcorehub.commands.standalone.SetSpawnCommand(this));
-        getCommand("lockchat").setExecutor(new LockChatCommand(this));
-        getCommand("clearchat").setExecutor(new ClearChatCommand(this));
-
-        FlyCommand flyCommand = new com.minekarta.advancedcorehub.commands.standalone.FlyCommand(this);
-        getCommand("fly").setExecutor(flyCommand);
-        getCommand("fly").setTabCompleter(flyCommand);
-
-        BossBarCommand bossBarCommand = new BossBarCommand(this);
-        getCommand("bossbar").setExecutor(bossBarCommand);
-        getCommand("bossbar").setTabCompleter(bossBarCommand);
+        commandManager.registerCommands();
     }
 
     private void registerListeners() {
