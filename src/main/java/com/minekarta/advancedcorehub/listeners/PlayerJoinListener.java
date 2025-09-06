@@ -30,23 +30,9 @@ public class PlayerJoinListener implements Listener {
             plugin.getActionManager().executeActions(player, joinActions);
         }
 
-        // 3. Give join items from items.yml
-        ConfigurationSection joinItemsSection = plugin.getFileManager().getConfig("items.yml").getConfigurationSection("join_items");
-        if (joinItemsSection != null) {
-            for (String key : joinItemsSection.getKeys(false)) {
-                String itemName = joinItemsSection.getString(key + ".item_name");
-                int amount = joinItemsSection.getInt(key + ".amount", 1);
-                int slot = joinItemsSection.getInt(key + ".slot", -1);
-                boolean force = joinItemsSection.getBoolean(key + ".force", false);
-
-                if (itemName != null) {
-                    // Prevent item duplication if not forced
-                    if (!force && player.getInventory().contains(plugin.getItemsManager().getItem(itemName))) {
-                        continue;
-                    }
-                    plugin.getItemsManager().giveItem(player, itemName, amount, slot);
-                }
-            }
+        // 3. Handle Hub Inventory
+        if (plugin.getInventoryManager().isHubWorld(player.getWorld().getName())) {
+            plugin.getInventoryManager().setupHubInventory(player);
         }
 
         // 4. Handle Boss Bar on join
