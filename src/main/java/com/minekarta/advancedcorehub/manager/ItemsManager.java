@@ -54,16 +54,21 @@ public class ItemsManager {
                 // Add a persistent key to identify this as a custom item from our plugin
                 builder.addPdcValue(PersistentKeys.ITEM_ID, PersistentDataType.STRING, key);
 
-                // Add specific persistent key for movement items, etc.
-                if (itemConfig.contains("persistent_key")) {
-                    String persistentKeyStr = itemConfig.getString("persistent_key");
-                    // This is a simple implementation. A real one might use a map or reflection.
-                    if (persistentKeyStr.equalsIgnoreCase("trident")) {
-                        builder.addPdcValue(PersistentKeys.TRIDENT_KEY, PersistentDataType.BYTE, (byte)1);
-                    } else if (persistentKeyStr.equalsIgnoreCase("grappling_hook")) {
-                        builder.addPdcValue(PersistentKeys.GRAPPLING_HOOK_KEY, PersistentDataType.BYTE, (byte)1);
-                    } else if (persistentKeyStr.equalsIgnoreCase("enderbow")) {
-                        builder.addPdcValue(PersistentKeys.ENDERBOW_KEY, PersistentDataType.BYTE, (byte)1);
+                // Store actions if they exist
+                if (itemConfig.contains("actions")) {
+                    List<String> actions = itemConfig.getStringList("actions");
+                    if (!actions.isEmpty()) {
+                        // Join the list into a single string, separated by a newline character.
+                        String actionString = String.join("\n", actions);
+                        builder.addPdcValue(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING, actionString);
+                    }
+                }
+
+                // Store movement type if it exists
+                if (itemConfig.contains("movement_type")) {
+                    String movementType = itemConfig.getString("movement_type");
+                    if (movementType != null && !movementType.isEmpty()) {
+                        builder.addPdcValue(PersistentKeys.MOVEMENT_TYPE_KEY, PersistentDataType.STRING, movementType);
                     }
                 }
 

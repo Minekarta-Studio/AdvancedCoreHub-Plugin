@@ -12,6 +12,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/LaunchAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/LinkAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/MenuAction.java
+/app/src/main/java/com/minekarta/advancedcorehub/actions/types/MovementAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/PlayerAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/SlotAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/SoundAction.java
@@ -24,6 +25,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemActionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MovementItemListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerJoinListener.java
