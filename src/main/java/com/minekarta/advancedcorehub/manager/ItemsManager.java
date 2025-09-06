@@ -16,10 +16,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class ItemsManager {
 
     private final AdvancedCoreHub plugin;
     private final Map<String, ItemStack> customItems = new HashMap<>();
+    private final Set<String> protectedItemIds = new HashSet<>();
 
     public ItemsManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -27,6 +33,7 @@ public class ItemsManager {
 
     public void loadItems() {
         customItems.clear();
+        protectedItemIds.clear();
         ConfigurationSection itemsSection = plugin.getFileManager().getConfig("items.yml").getConfigurationSection("items");
         if (itemsSection == null) {
             plugin.getLogger().warning("No 'items' section found in items.yml. No custom items will be loaded.");
@@ -72,6 +79,11 @@ public class ItemsManager {
                     }
                 }
 
+                // Check if the item is protected
+                if (itemConfig.getBoolean("protected", false)) {
+                    protectedItemIds.add(key);
+                }
+
                 customItems.put(key, builder.build());
                 plugin.getLogger().info("Loaded item: " + key);
 
@@ -79,6 +91,15 @@ public class ItemsManager {
                 plugin.getLogger().log(Level.SEVERE, "Failed to load item with key '" + key + "' from items.yml", e);
             }
         }
+    }
+
+    public boolean isProtected(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        String itemId = meta.getPersistentDataContainer().get(PersistentKeys.ITEM_ID, PersistentDataType.STRING);
+        return itemId != null && protectedItemIds.contains(itemId);
     }
 
     public ItemStack getItem(String key) {

@@ -22,6 +22,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private MenuManager menuManager;
     private ChatManager chatManager;
     private CommandManager commandManager;
+    private InventoryManager inventoryManager;
 
 
     @Override
@@ -32,6 +33,8 @@ public class AdvancedCoreHub extends JavaPlugin {
         // Initialize managers
         this.fileManager = new FileManager(this);
         this.fileManager.setup(); // Must be first
+
+        this.inventoryManager = new InventoryManager(this);
 
         this.localeManager = new LocaleManager(this, this.fileManager);
         this.localeManager.load();
@@ -97,10 +100,12 @@ public class AdvancedCoreHub extends JavaPlugin {
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldEventListeners(this), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(this), this);
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementItemListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemActionListener(this), this);
+        getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
     }
 
     private void registerChannels() {
@@ -151,5 +156,9 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public InventoryManager getInventoryManager() {
+        return inventoryManager;
     }
 }

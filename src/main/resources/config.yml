@@ -34,6 +34,17 @@ world_settings:
   cancel_hunger_loss: true
   cancel_weather_change: true
 
+# --- Inventory Management ---
+# Settings for how inventories are handled in hub worlds.
+inventory_management:
+  # Worlds where inventory will be cleared and hub items will be given.
+  hub-worlds:
+    - "hub"
+    - "lobby"
+  # Clear inventory when a player enters a hub world.
+  clear-on-enter: true
+  # More features like save/restore can be added here later.
+
 # Settings for movement items.
 movement_items:
   trident:
