@@ -44,7 +44,6 @@ public class CommandManager {
     }
 
     private void registerDependencies() {
-        manager.registerDependency(AdvancedCoreHub.class, plugin);
         manager.registerDependency(BossBarManager.class, plugin.getBossBarManager());
         manager.registerDependency(LocaleManager.class, plugin.getLocaleManager());
         manager.registerDependency(ChatManager.class, plugin.getChatManager());
