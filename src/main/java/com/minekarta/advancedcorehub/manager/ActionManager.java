@@ -40,6 +40,7 @@ public class ActionManager {
         registerAction("SLOT", new SlotAction(plugin));
         registerAction("EFFECT", new EffectAction(plugin));
         registerAction("GAMEMODE", new GamemodeAction(plugin));
+        registerAction("MOVEMENT", new MovementAction(plugin));
     }
 
     public void registerAction(String identifier, Action action) {

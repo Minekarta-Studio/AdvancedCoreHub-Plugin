@@ -100,6 +100,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new MovementItemListener(this), this);
+        getServer().getPluginManager().registerEvents(new ItemActionListener(this), this);
     }
 
     private void registerChannels() {

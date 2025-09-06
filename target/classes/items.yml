@@ -22,7 +22,7 @@ items:
   teleport_trident:
     material: TRIDENT
     displayname: "<aqua>Poseidon's Leap"
-    persistent_key: trident # This key links to the TridentListener
+    movement_type: trident
     lore:
       - "<gray>Throw this trident to teleport"
       - "<gray>to its landing location."
@@ -31,10 +31,19 @@ items:
   grappling_hook:
     material: FISHING_ROD
     displayname: "<gold>Grappling Hook"
-    persistent_key: grappling_hook
+    movement_type: grappling_hook
     lore:
       - "<gray>Cast this at a block to be"
       - "<gray>pulled towards it."
+  aspect_of_the_end:
+    material: DIAMOND_SWORD
+    displayname: "<blue>Aspect of the End"
+    lore:
+      - "<gray>Right-click to teleport 8 blocks."
+      - ""
+      - "<red>2 second cooldown."
+    actions:
+      - "[MOVEMENT] aote"
 
 # This section defines items to be given to players when they join.
 # 'item_name' must match an ID from the 'items' section above.
