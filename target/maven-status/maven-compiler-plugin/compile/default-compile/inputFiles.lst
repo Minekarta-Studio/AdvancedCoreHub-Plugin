@@ -26,10 +26,12 @@
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemActionListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemProtectionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MovementItemListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerJoinListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldEventListeners.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ActionManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/AnnouncementsManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/BossBarManager.java
@@ -38,6 +40,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/CooldownManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/DisabledWorlds.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/FileManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/manager/InventoryManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ItemsManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/LocaleManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuHolder.java

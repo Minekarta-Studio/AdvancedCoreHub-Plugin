@@ -12,6 +12,7 @@ items:
       - "<gray>Right-click to open the server menu."
     actions:
       - "[MENU] selector"
+    protected: true
   socials_menu:
     material: BOOK
     displayname: "<aqua>Social Media <gray>(Right Click)"
@@ -19,6 +20,7 @@ items:
       - "<gray>Click to see our social links!"
     actions:
       - "[MENU] socials"
+    protected: true
   teleport_trident:
     material: TRIDENT
     displayname: "<aqua>Poseidon's Leap"
@@ -44,15 +46,23 @@ items:
       - "<red>2 second cooldown."
     actions:
       - "[MOVEMENT] aote"
+  vip_gadget:
+    material: "hdb:1234" # Example HeadDatabase ID
+    displayname: "<gold>VIP Gadget"
+    lore:
+      - "<gray>A special gadget for our VIPs!"
+    protected: true
 
 # This section defines items to be given to players when they join.
 # 'item_name' must match an ID from the 'items' section above.
 join_items:
-  item1:
-    item_name: server_selector
+  - item_name: server_selector
     slot: 0
-    force: false # If true, gives the item even if the player already has it.
-  item2:
-    item_name: socials_menu
+    # Conditions like permission or world can be added here.
+    # Example: permission: "advancedcorehub.item.vip"
+  - item_name: socials_menu
     slot: 8
-    force: false
+  - item_name: vip_gadget
+    slot: 4
+    permission: "advancedcorehub.item.vip"
+    # This item will only be given to players with the 'advancedcorehub.item.vip' permission.

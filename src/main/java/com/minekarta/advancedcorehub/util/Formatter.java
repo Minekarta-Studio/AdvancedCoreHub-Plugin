@@ -2,6 +2,7 @@ package com.minekarta.advancedcorehub.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,7 +30,8 @@ public class Formatter {
             text = PlaceholderAPI.setPlaceholders(player, text);
         }
 
-        return MINI_MESSAGE.deserialize(text);
+        // Deserialize the text and then remove the italic decoration.
+        return MINI_MESSAGE.deserialize(text).decoration(TextDecoration.ITALIC, false);
     }
 
     /**

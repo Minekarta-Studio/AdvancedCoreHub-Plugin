@@ -74,6 +74,9 @@ permissions:
   advancedcorehub.bypass.cooldown:
     description: Bypass all item cooldowns.
     default: op
+  advancedcorehub.bypass.protection:
+    description: Allows moving and dropping protected hub items.
+    default: op
   advancedcorehub.chat.bypasslock:
     description: Allows talking when chat is locked.
     default: op

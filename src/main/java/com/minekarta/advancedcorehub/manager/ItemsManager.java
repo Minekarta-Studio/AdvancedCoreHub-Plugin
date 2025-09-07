@@ -45,8 +45,8 @@ public class ItemsManager {
             if (itemConfig == null) continue;
 
             try {
-                Material material = Material.valueOf(itemConfig.getString("material", "STONE").toUpperCase());
-                ItemBuilder builder = new ItemBuilder(material);
+                String materialString = itemConfig.getString("material", "STONE");
+                ItemBuilder builder = new ItemBuilder(materialString);
 
                 Component displayName = plugin.getLocaleManager().getComponentFromString(itemConfig.getString("displayname", ""), null);
                 builder.setDisplayName(displayName);
