@@ -51,6 +51,8 @@ items:
     displayname: "<gold>VIP Gadget"
     lore:
       - "<gray>A special gadget for our VIPs!"
+    actions:
+      - "[MENU] vip_gadget"
     protected: true
 
 # This section defines items to be given to players when they join.
