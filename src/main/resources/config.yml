@@ -75,4 +75,7 @@ announcements:
 # Boss bar settings.
 bossbar:
   show_on_join: true
-  # More settings will be added here in the future
+  title: "<gradient:#5e4fa2:#f79459>Welcome, %player_name%!</gradient>"
+  color: WHITE # Can be BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
+  style: SOLID # Can be SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+  duration: 10 # in seconds, use -1 to make it stay forever

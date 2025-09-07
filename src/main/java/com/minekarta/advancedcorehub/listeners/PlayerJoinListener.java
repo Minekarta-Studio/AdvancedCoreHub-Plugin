@@ -2,6 +2,8 @@ package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +43,29 @@ public class PlayerJoinListener implements Listener {
 
         // 4. Handle Boss Bar on join
         if (plugin.getConfig().getBoolean("bossbar.show_on_join", false)) {
-            // Logic to be added when BossBar config is defined
+            ConfigurationSection bossBarConfig = plugin.getConfig().getConfigurationSection("bossbar");
+            if (bossBarConfig != null) {
+                String title = bossBarConfig.getString("title", "<red>Welcome!</red>");
+                int duration = bossBarConfig.getInt("duration", 10);
+
+                BarColor color;
+                try {
+                    color = BarColor.valueOf(bossBarConfig.getString("color", "WHITE").toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    plugin.getLogger().warning("Invalid Boss Bar color in config.yml. Defaulting to WHITE.");
+                    color = BarColor.WHITE;
+                }
+
+                BarStyle style;
+                try {
+                    style = BarStyle.valueOf(bossBarConfig.getString("style", "SOLID").toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    plugin.getLogger().warning("Invalid Boss Bar style in config.yml. Defaulting to SOLID.");
+                    style = BarStyle.SOLID;
+                }
+
+                plugin.getBossBarManager().createBossBar(player, title, color, style, duration);
+            }
         }
 
         // 5. Check for persistent timed flight

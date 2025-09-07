@@ -13,7 +13,7 @@ items:
     lore:
       - "<gray>Click to get our Discord invite link!"
     actions:
-      - "[MESSAGE]<blue>[Discord] <white>Click here to join our Discord! <gray><u>discord.gg/example</u>"
+      - "[LINK]<blue>Click here to join our Discord!;Click to open the link;https://discord.gg/example"
       - "[CLOSE]"
   website:
     material: BOOK
@@ -22,7 +22,7 @@ items:
     lore:
       - "<gray>Click to open our website!"
     actions:
-      - "[MESSAGE]<green>[Website] <white>Click here to visit our site! <gray><u>www.example.com</u>"
+      - "[LINK]<green>Click here to visit our site!;Click to open the link;https://www.example.com"
       - "[CLOSE]"
   twitter:
     material: FEATHER # Placeholder, ideally use HeadDatabase
@@ -31,7 +31,7 @@ items:
     lore:
       - "<gray>Click to open our Twitter page!"
     actions:
-      - "[MESSAGE]<aqua>[Twitter] <white>Click here to visit our Twitter! <gray><u>@Example</u>"
+      - "[LINK]<aqua>Click here to visit our Twitter!;Click to open the link;https://twitter.com/example"
       - "[CLOSE]"
 
   filler_glass:
