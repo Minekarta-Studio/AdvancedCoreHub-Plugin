@@ -6,11 +6,13 @@ This project was developed by the AI assistant, Jules.
 
 ## Features
 
--   **Full MiniMessage Support**: All user-facing text, from chat messages to item lore, supports the full range of MiniMessage formatting, including gradients, hover/click events, and more.
--   **Dynamic GUI Menus**: All menus (e.g., `/server selector`) are created dynamically for each player, allowing for full use of PlaceholderAPI placeholders (like `%player_name%`) in titles and item text.
--   **Custom Item System**: Create custom items with unique display names, lore, and attached actions.
+-   **Full MiniMessage Support**: All user-facing text, from chat messages to item lore, supports the full range of MiniMessage formatting, including gradients, hover/click events, and more. All text is non-italic by default for a clean, modern look.
+-   **Custom Item System**: Create custom items with unique display names, lore, and attached actions in `items.yml`.
+-   **Hotbar / Join Items**: Automatically equip players with specific items when they join or enter a hub world. You can define the item and its slot in `items.yml`.
+-   **Item Protection**: Prevent players from dropping, moving, or consuming specific items (like hotbar items) in hub worlds. This is enabled with the `protected: true` flag on an item.
 -   **Flexible Action System**: Define a series of actions to execute on item use or player join, including `[MESSAGE]`, `[CONSOLE]`, `[MENU]`, `[SOUND]`, and `[BUNGEE]`.
--   **Refactored Movement Items**: A unified listener handles all movement items (Trident, Grappling Hook, etc.), reducing code duplication and making it easy to add more.
+-   **Dynamic GUI Menus**: All menus (e.g., `/server selector`) are created dynamically for each player, allowing for full use of PlaceholderAPI placeholders (like `%player_name%`) in titles and item text.
+-   **Movement Items**: A unified listener handles all movement items (Trident, Grappling Hook, etc.), with configurable cooldowns and settings.
 -   **Admin Commands**: A suite of commands to manage the server hub.
     -   `/fly` with temporary flight support (e.g., `/fly Jules 10m`).
     -   `/bossbar` to create and remove global or per-player boss bars.
@@ -38,7 +40,7 @@ This project was developed by the AI assistant, Jules.
 
 ### Optional (Soft Dependencies)
 -   **PlaceholderAPI**: For full placeholder support in messages and menus.
--   **HeadDatabase**: For using custom heads in menus. To use a head from HeadDatabase, set the `material` of an item in your menu configuration to `hdb:<head_id>` or `headdatabase:<head_id>`.
+-   **HeadDatabase**: For using custom heads from HeadDatabase. To use a head, set the `material` of an item in `items.yml` to `hdb:<head_id>`.
 
 ## For Developers
 
@@ -63,11 +65,6 @@ if (getServer().getPluginManager().isPluginEnabled("AdvancedCoreHub")) {
 ```
 
 You can then use `[MY_CUSTOM_ACTION] some data` in your item actions, just like any other action.
-
-## Future Improvements
-
--   **Command Framework**: The current command system is functional, but could be migrated to a more robust framework like ACF (Advanced Command Framework) to provide features like improved tab-completion and validation.
--   **Safe Teleportation**: The teleportation for movement items has been improved, but could be enhanced further with more sophisticated checks for things like server lag or other plugins interfering.
 
 ## Building from Source
 
