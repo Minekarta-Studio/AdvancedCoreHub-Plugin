@@ -1,11 +1,13 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.util.PersistentKeys;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -31,7 +33,9 @@ public class PlayerJoinListener implements Listener {
         }
 
         // 3. Handle Hub Inventory
-        if (plugin.getInventoryManager().isHubWorld(player.getWorld().getName())) {
+        if (player.getPersistentDataContainer().has(PersistentKeys.INVENTORY_CLEARED, PersistentDataType.BYTE)) {
+            player.getPersistentDataContainer().remove(PersistentKeys.INVENTORY_CLEARED);
+        } else if (plugin.getInventoryManager().isHubWorld(player.getWorld().getName())) {
             plugin.getInventoryManager().setupHubInventory(player);
         }
 

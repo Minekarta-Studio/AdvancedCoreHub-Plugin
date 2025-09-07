@@ -26,4 +26,7 @@ public final class PersistentKeys {
 
     // Key for timed flight expiration
     public static final NamespacedKey FLY_EXPIRATION = new NamespacedKey(plugin, "fly_expiration");
+
+    // Key to prevent item giving on join after inventory clear
+    public static final NamespacedKey INVENTORY_CLEARED = new NamespacedKey(plugin, "inventory_cleared");
 }
