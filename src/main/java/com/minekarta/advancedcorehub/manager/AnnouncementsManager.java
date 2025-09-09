@@ -30,7 +30,6 @@ public class AnnouncementsManager {
         this.plugin = plugin;
     }
 
-    @SuppressWarnings("unchecked")
     public void load() {
         cancelTasks();
 
@@ -42,20 +41,7 @@ public class AnnouncementsManager {
         this.interval = config.getInt("interval_seconds", 60);
         this.randomized = config.getBoolean("randomized", false);
 
-        // Handle backward compatibility for old string list format
-        if (config.isStringList("messages")) {
-            this.announcements = config.getStringList("messages").stream()
-                    .map(msg -> {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("message", msg);
-                        map.put("type", config.getString("display_mode", "CHAT").toUpperCase());
-                        return map;
-                    })
-                    .collect(Collectors.toList());
-            plugin.getLogger().warning("You are using a deprecated format for announcements. Please update to the new object format for full features.");
-        } else {
-            this.announcements = config.getMapList("messages");
-        }
+        this.announcements = config.getMapList("messages");
 
         if (announcements == null || announcements.isEmpty()) {
             return;
@@ -83,7 +69,10 @@ public class AnnouncementsManager {
             }
         }
 
-        String type = ((String) announcementData.getOrDefault("type", "CHAT")).toUpperCase();
+        Object typeObj = announcementData.get("type");
+        String type = (typeObj != null) ? typeObj.toString().toUpperCase() : "CHAT";
+
+        @SuppressWarnings("unchecked")
         List<String> worlds = (List<String>) announcementData.get("worlds");
         Collection<? extends Player> recipients = getRecipients(worlds);
 
@@ -132,11 +121,16 @@ public class AnnouncementsManager {
         String titleStr = parts[0];
         String subtitleStr = parts.length > 1 ? parts[1] : "";
 
-        int fadeIn = Formatter.parseInt(data.getOrDefault("fade-in", 10).toString(), 10);
-        int stay = Formatter.parseInt(data.getOrDefault("stay", 70).toString(), 70);
-        int fadeOut = Formatter.parseInt(data.getOrDefault("fade-out", 20).toString(), 20);
+        Object fadeInObj = data.get("fade-in");
+        int fadeIn = (fadeInObj != null) ? Formatter.parseInt(fadeInObj.toString(), 10) : 10;
 
-        Title.Times times = Title.Times.times(Duration.ofTicks(fadeIn), Duration.ofTicks(stay), Duration.ofTicks(fadeOut));
+        Object stayObj = data.get("stay");
+        int stay = (stayObj != null) ? Formatter.parseInt(stayObj.toString(), 70) : 70;
+
+        Object fadeOutObj = data.get("fade-out");
+        int fadeOut = (fadeOutObj != null) ? Formatter.parseInt(fadeOutObj.toString(), 20) : 20;
+
+        Title.Times times = Title.Times.times(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L));
 
         for (Player player : recipients) {
             Component title = plugin.getLocaleManager().getComponentFromString(titleStr, player);
@@ -159,9 +153,17 @@ public class AnnouncementsManager {
         String message = (String) data.get("message");
         if (message == null) return;
 
-        BarColor color = BarColor.valueOf(((String) data.getOrDefault("color", "YELLOW")).toUpperCase());
-        BarStyle style = BarStyle.valueOf(((String) data.getOrDefault("style", "SOLID")).toUpperCase());
-        int duration = Formatter.parseInt(data.getOrDefault("duration", 10).toString(), 10);
+        Object colorObj = data.get("color");
+        String colorStr = (colorObj != null) ? colorObj.toString().toUpperCase() : "YELLOW";
+        BarColor color = BarColor.valueOf(colorStr);
+
+        Object styleObj = data.get("style");
+        String styleStr = (styleObj != null) ? styleObj.toString().toUpperCase() : "SOLID";
+        BarStyle style = BarStyle.valueOf(styleStr);
+
+        Object durationObj = data.get("duration");
+        int duration = (durationObj != null) ? Formatter.parseInt(durationObj.toString(), 10) : 10;
+
 
         for (Player player : recipients) {
             plugin.getBossBarManager().createBossBar(player, message, color, style, duration);

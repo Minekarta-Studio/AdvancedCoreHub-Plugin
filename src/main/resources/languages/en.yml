@@ -14,6 +14,8 @@ unknown-command: "<red>Unknown subcommand '{0}'. Use /ach help for a list of com
 item-not-found: "<red>The item '{0}' does not exist."
 item-given: "<green>You have given <yellow>{0}x {1}</yellow> to <yellow>{2}</yellow>."
 item-cooldown: "<red>You must wait {0} more seconds to use this item."
+no-items-found: "<red>There are no custom items defined."
+item-list: "<green>Available items: <yellow>{0}</yellow>"
 
 # World management
 worlds-list: "<green>Disabled worlds: <yellow>{0}</yellow>"

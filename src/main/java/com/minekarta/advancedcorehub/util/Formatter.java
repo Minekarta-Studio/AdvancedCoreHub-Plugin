@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 public class Formatter {
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
-    private static final boolean PAPI_ENABLED = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
     /**
      * Formats a string with MiniMessage and PlaceholderAPI placeholders.
@@ -24,9 +23,7 @@ public class Formatter {
             return Component.empty();
         }
 
-        // Note: PAPI is checked at class-loading time. A reload of PAPI might not be caught.
-        // For a hub plugin, this is generally an acceptable limitation.
-        if (PAPI_ENABLED && player != null) {
+        if (player != null && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             text = PlaceholderAPI.setPlaceholders(player, text);
         }
 

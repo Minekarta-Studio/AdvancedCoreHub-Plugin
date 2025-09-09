@@ -24,12 +24,13 @@ public class WorldListener implements Listener {
         String fromWorld = event.getFrom().getName();
 
         boolean isEnteringHub = inventoryManager.isHubWorld(newWorld) && !inventoryManager.isHubWorld(fromWorld);
+        boolean isLeavingHub = !inventoryManager.isHubWorld(newWorld) && inventoryManager.isHubWorld(fromWorld);
 
         if (isEnteringHub) {
-            // TODO: Add inventory saving logic here in the future
+            inventoryManager.savePlayerInventory(player);
             inventoryManager.setupHubInventory(player);
+        } else if (isLeavingHub) {
+            inventoryManager.restorePlayerInventory(player);
         }
-
-        // TODO: Add inventory restoring logic when leaving a hub world
     }
 }

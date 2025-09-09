@@ -10,7 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -105,5 +107,31 @@ public class MovementItemListener implements Listener {
         int cooldownSeconds = plugin.getConfig().getInt(configPath, defaultCooldown);
         plugin.getCooldownManager().setCooldown(player, cooldownId, cooldownSeconds);
         return false;
+    }
+
+    @EventHandler
+    public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
+        Player player = event.getPlayer();
+        if (!event.isFlying()) return;
+
+        PlayerInventory inventory = player.getInventory();
+        ItemStack chestplate = inventory.getChestplate();
+
+        if (chestplate == null || !chestplate.hasItemMeta()) return;
+
+        PersistentDataContainer container = chestplate.getItemMeta().getPersistentDataContainer();
+        if (!container.has(PersistentKeys.MOVEMENT_TYPE_KEY, PersistentDataType.STRING)) return;
+
+        String movementType = container.get(PersistentKeys.MOVEMENT_TYPE_KEY, PersistentDataType.STRING);
+        if (!"custom_elytra".equalsIgnoreCase(movementType)) return;
+
+        if (handleCooldown(player, "custom_elytra", "movement_items.custom_elytra.cooldown", 10)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        double speed = plugin.getConfig().getDouble("movement_items.custom_elytra.speed_boost", 1.5);
+        Vector direction = player.getLocation().getDirection().multiply(speed);
+        player.setVelocity(player.getVelocity().add(direction));
     }
 }

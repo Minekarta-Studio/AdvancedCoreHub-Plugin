@@ -58,24 +58,62 @@ movement_items:
     cooldown: 2
   enderbow:
     cooldown: 3
+  custom_elytra:
+    cooldown: 10
+    speed_boost: 1.8
 
-# Automatic announcements settings.
+# ----------------------------------------------------------------
+# Automatic Announcements
+# ----------------------------------------------------------------
 announcements:
   enabled: true
   interval_seconds: 90
-  display_mode: CHAT # Can be CHAT or BOSS_BAR
-  boss_bar_color: YELLOW # Default color for announcements
-  boss_bar_style: SOLID # Default style for announcements
-  boss_bar_duration: 10 # in seconds
+  # If true, announcements will be chosen randomly. If false, they will be shown in order.
+  randomized: false
+  # A list of announcements to display. Each announcement is an object with its own properties.
   messages:
-    - "<yellow>Don't forget to visit our website at <underline>www.example.com</underline></yellow>"
-    - "<yellow>You can vote for our server using <green>/vote</green>!</yellow>"
-    - "<yellow>Join our Discord server for updates and events!</yellow>"
+    # Example 1: A simple chat message shown to all players.
+    - type: CHAT
+      message: "<yellow>Don't forget to visit our website at <underline>www.example.com</underline></yellow>"
 
-# Boss bar settings.
+    # Example 2: An action bar message shown only to players in the 'hub' and 'lobby' worlds.
+    - type: ACTION_BAR
+      message: "<aqua>You are in the main lobby!"
+      worlds:
+        - "hub"
+        - "lobby"
+
+    # Example 3: A title message. The message is split by ';' into title and subtitle.
+    - type: TITLE
+      message: "<green>TIP<gray>;<white>You can use <gold>/vote</gold> to support the server!"
+      # Optional timing parameters for the title.
+      fade-in: 10
+      stay: 80
+      fade-out: 10
+
+    # Example 4: A boss bar message.
+    - type: BOSS_BAR
+      message: "<gradient:blue:purple>Join our Discord for updates and events!</gradient>"
+      color: PURPLE
+      style: SEGMENTED_10
+      duration: 10 # in seconds
+
+# Boss bar settings for on-join message.
 bossbar:
   show_on_join: true
   title: "<gradient:#5e4fa2:#f79459>Welcome, %player_name%!</gradient>"
   color: WHITE # Can be BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
   style: SOLID # Can be SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
   duration: 10 # in seconds, use -1 to make it stay forever
+
+# ----------------------------------------------------------------
+# Custom Actions
+# ----------------------------------------------------------------
+# Define your own custom actions here. Each key is the action name you will use in other configs.
+# For example, you can then use "[my_custom_action]" in your items or menus.
+custom-actions:
+  example_action:
+    actions:
+      - "[MESSAGE] <green>This is a custom action!"
+      - "[SOUND] ENTITY_EXPERIENCE_ORB_PICKUP;1.0;1.5"
+      - "[CONSOLE] say The player %player_name% just triggered a custom action."
