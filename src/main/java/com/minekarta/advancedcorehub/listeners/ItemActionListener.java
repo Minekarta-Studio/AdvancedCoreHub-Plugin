@@ -25,11 +25,6 @@ public class ItemActionListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // We only care about right-click actions for this listener
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
-
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
@@ -39,15 +34,31 @@ public class ItemActionListener implements Listener {
 
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
+        Action action = event.getAction();
 
-        if (container.has(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING)) {
-            event.setCancelled(true); // Prevent default item actions
+        boolean isLeftClick = action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK;
+        boolean isRightClick = action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK;
 
-            String actionString = container.get(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING);
-            if (actionString != null && !actionString.isEmpty()) {
-                List<String> actions = Arrays.asList(actionString.split("\n"));
-                plugin.getActionManager().executeActions(player, actions);
+        if (!isLeftClick && !isRightClick) {
+            return;
+        }
+
+        String actionString = null;
+        if (isLeftClick && container.has(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING)) {
+            actionString = container.get(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING);
+        } else if (isRightClick) {
+            if (container.has(PersistentKeys.RIGHT_CLICK_ACTIONS_KEY, PersistentDataType.STRING)) {
+                actionString = container.get(PersistentKeys.RIGHT_CLICK_ACTIONS_KEY, PersistentDataType.STRING);
+            } else if (container.has(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING)) {
+                // Backward compatibility
+                actionString = container.get(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING);
             }
+        }
+
+        if (actionString != null && !actionString.isEmpty()) {
+            event.setCancelled(true); // Prevent default item actions
+            List<String> actions = Arrays.asList(actionString.split("\n"));
+            plugin.getActionManager().executeActions(player, actions);
         }
     }
 }

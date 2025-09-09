@@ -67,6 +67,17 @@ public class MenuManager {
                                 .collect(Collectors.toList());
                         builder.setLore(lore);
                     }
+
+                    // Add custom model data if it exists
+                    if (itemConfig.isInt("custom-model-data")) {
+                        builder.setCustomModelData(itemConfig.getInt("custom-model-data"));
+                    }
+
+                    // Add enchantments if they exist
+                    if (itemConfig.contains("enchantments")) {
+                        builder.addEnchantments(itemConfig.getStringList("enchantments"));
+                    }
+
                     ItemStack itemStack = builder.build();
 
                     // Place item(s) in the inventory

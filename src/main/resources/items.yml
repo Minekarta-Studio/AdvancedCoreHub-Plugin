@@ -1,26 +1,46 @@
 # ----------------------------------------------------------------
 # AdvancedCoreHub Custom Items Configuration
 # ----------------------------------------------------------------
-
 # This section defines all custom items that can be created and given to players.
 # Use /ach give <player> <item_id> to give an item.
+#
+# Item Properties:
+#   material: The material of the item (e.g., 'DIAMOND_SWORD'). Supports HeadDatabase with 'hdb:<id>'.
+#   displayname: The name of the item. Supports MiniMessage and PlaceholderAPI.
+#   lore: A list of strings for the item's description. Supports MiniMessage and PlaceholderAPI.
+#   custom-model-data: (Optional) An integer for custom textures via a resource pack.
+#   enchantments: (Optional) A list of enchantments, e.g., ["sharpness:5", "unbreaking:3"].
+#   protected: (Optional) If true, players without permission cannot move or drop the item.
+#   movement_type: (Optional) For special movement items like 'trident', 'grappling_hook', etc.
+#
+# Actions:
+#   You can define actions for left and right clicks separately.
+#   left-click-actions: (Optional) A list of actions to run on left click.
+#   right-click-actions: (Optional) A list of actions to run on right click.
+#   actions: (DEPRECATED) A list of actions that run on right-click. Use 'right-click-actions' instead.
+# ----------------------------------------------------------------
 items:
   server_selector:
     material: COMPASS
     displayname: "<green>Server Selector <gray>(Right Click)"
     lore:
       - "<gray>Right-click to open the server menu."
-    actions:
+    custom-model-data: 100
+    enchantments:
+      - "unbreaking:1"
+    right-click-actions:
       - "[MENU] selector"
     protected: true
+
   socials_menu:
     material: BOOK
     displayname: "<aqua>Social Media <gray>(Right Click)"
     lore:
       - "<gray>Click to see our social links!"
-    actions:
+    right-click-actions:
       - "[MENU] socials"
     protected: true
+
   teleport_trident:
     material: TRIDENT
     displayname: "<aqua>Poseidon's Leap"
@@ -30,6 +50,7 @@ items:
       - "<gray>to its landing location."
       - ""
       - "<red>5 second cooldown."
+
   grappling_hook:
     material: FISHING_ROD
     displayname: "<gold>Grappling Hook"
@@ -37,20 +58,27 @@ items:
     lore:
       - "<gray>Cast this at a block to be"
       - "<gray>pulled towards it."
-  aspect_of_the_end:
+
+  multi_tool:
     material: DIAMOND_SWORD
-    displayname: "<blue>Aspect of the End"
+    displayname: "<blue>Multi-Tool"
     lore:
       - "<gray>Right-click to teleport 8 blocks."
+      - "<gray>Left-click to open the info menu."
       - ""
-      - "<red>2 second cooldown."
-    actions:
+      - "<red>2 second cooldown on teleport."
+    right-click-actions:
       - "[MOVEMENT] aote"
+    left-click-actions:
+      - "[MENU] info_menu"
+
   vip_gadget:
-    material: "hdb:1234" # Example HeadDatabase ID
+    material: "hdb:1234"
     displayname: "<gold>VIP Gadget"
     lore:
       - "<gray>A special gadget for our VIPs!"
+    # The 'actions' key is deprecated but still supported for backward compatibility.
+    # It will be treated as 'right-click-actions'.
     actions:
       - "[MENU] vip_gadget"
     protected: true
@@ -60,10 +88,10 @@ items:
 join_items:
   - item_name: server_selector
     slot: 0
-    # Conditions like permission or world can be added here.
-    # Example: permission: "advancedcorehub.item.vip"
   - item_name: socials_menu
     slot: 8
+  - item_name: multi_tool
+    slot: 1
   - item_name: vip_gadget
     slot: 4
     permission: "advancedcorehub.item.vip"

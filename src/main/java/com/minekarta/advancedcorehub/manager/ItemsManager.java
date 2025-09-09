@@ -58,18 +58,21 @@ public class ItemsManager {
                     builder.setLore(lore);
                 }
 
+                // Add custom model data if it exists
+                if (itemConfig.isInt("custom-model-data")) {
+                    builder.setCustomModelData(itemConfig.getInt("custom-model-data"));
+                }
+
+                // Add enchantments if they exist
+                if (itemConfig.contains("enchantments")) {
+                    builder.addEnchantments(itemConfig.getStringList("enchantments"));
+                }
+
                 // Add a persistent key to identify this as a custom item from our plugin
                 builder.addPdcValue(PersistentKeys.ITEM_ID, PersistentDataType.STRING, key);
 
-                // Store actions if they exist
-                if (itemConfig.contains("actions")) {
-                    List<String> actions = itemConfig.getStringList("actions");
-                    if (!actions.isEmpty()) {
-                        // Join the list into a single string, separated by a newline character.
-                        String actionString = String.join("\n", actions);
-                        builder.addPdcValue(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING, actionString);
-                    }
-                }
+                // Handle actions
+                handleActions(itemConfig, builder);
 
                 // Store movement type if it exists
                 if (itemConfig.contains("movement_type")) {
@@ -124,5 +127,32 @@ public class ItemsManager {
 
     public java.util.Set<String> getItemKeys() {
         return customItems.keySet();
+    }
+
+    private void handleActions(ConfigurationSection itemConfig, ItemBuilder builder) {
+        // New system: specific actions for left and right clicks
+        if (itemConfig.contains("left-click-actions")) {
+            List<String> actions = itemConfig.getStringList("left-click-actions");
+            if (!actions.isEmpty()) {
+                builder.addPdcValue(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING, String.join("\n", actions));
+            }
+        }
+
+        if (itemConfig.contains("right-click-actions")) {
+            List<String> actions = itemConfig.getStringList("right-click-actions");
+            if (!actions.isEmpty()) {
+                builder.addPdcValue(PersistentKeys.RIGHT_CLICK_ACTIONS_KEY, PersistentDataType.STRING, String.join("\n", actions));
+            }
+        }
+
+        // Backward compatibility: handle the old 'actions' key
+        // We assume old actions were for right-click, as that's the most common use for hub items.
+        if (itemConfig.contains("actions")) {
+            List<String> actions = itemConfig.getStringList("actions");
+            if (!actions.isEmpty() && !itemConfig.contains("right-click-actions")) {
+                plugin.getLogger().warning("Item '" + itemConfig.getName() + "' is using the deprecated 'actions' key. Please update to 'right-click-actions' or 'left-click-actions'.");
+                builder.addPdcValue(PersistentKeys.RIGHT_CLICK_ACTIONS_KEY, PersistentDataType.STRING, String.join("\n", actions));
+            }
+        }
     }
 }

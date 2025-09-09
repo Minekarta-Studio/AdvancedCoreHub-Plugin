@@ -44,4 +44,21 @@ public class Formatter {
         return format(null, text);
     }
 
+    /**
+     * Safely parses an integer from a string.
+     *
+     * @param input The string to parse.
+     * @param defaultValue The value to return if parsing fails.
+     * @return The parsed integer or the default value.
+     */
+    public static int parseInt(String input, int defaultValue) {
+        if (input == null) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
 }
