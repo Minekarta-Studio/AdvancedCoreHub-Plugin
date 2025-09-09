@@ -22,6 +22,7 @@ public final class Permissions {
     public static final String CMD_BOSSBAR = PREFIX + "command.bossbar";
     public static final String CMD_HELP = PREFIX + "command.help";
     public static final String CMD_VERSION = PREFIX + "command.version";
+    public static final String CMD_LISTITEMS = PREFIX + "command.listitems";
 
     // Item Usage Permissions
     public static final String ITEM_USE_TRIDENT = PREFIX + "item.use.trident";

@@ -10,10 +10,11 @@ This project was developed by the AI assistant, Jules.
 -   **Advanced Item System**: Create custom items with unique display names, lore, enchantments, custom model data, and separate actions for left and right clicks.
 -   **Hotbar / Join Items**: Automatically equip players with specific items when they join or enter a hub world.
 -   **Item Protection**: Prevent players from dropping or moving specific items in hub worlds.
--   **Flexible Action System**: Define a series of actions to execute on item use or player join, including `[MESSAGE]`, `[CONSOLE]`, `[MENU]`, `[SOUND]`, and `[BUNGEE]`.
+-   **Per-World Inventories**: Automatically saves and restores player inventories when they move between hub worlds and other worlds, ensuring no items are lost.
+-   **Flexible Action System**: Define a series of actions to execute on item use or player join. Includes a wide range of built-in actions like `[MESSAGE]`, `[CONSOLE]`, `[MENU]`, and `[BUNGEE]`. The `[SOUND]` action is enhanced to support volume and pitch (`[SOUND]NAME;VOL;PITCH`). You can also create your own custom actions in `config.yml`.
 -   **Configurable GUI Menus**: Create fully custom GUI menus from YAML files. Items in menus support all the features of the advanced item system (lore, model data, etc.).
 -   **Advanced Announcements**: A powerful announcement system with per-world messages, multiple display types (`CHAT`, `TITLE`, `ACTION_BAR`, `BOSS_BAR`), and a randomized mode.
--   **Movement Items**: A unified listener handles all movement items (Trident, Grappling Hook, etc.), with configurable cooldowns and settings.
+-   **Movement Items**: A unified listener handles all movement items (Trident, Grappling Hook, Custom Elytra, etc.), with configurable cooldowns and settings.
 -   **Admin Commands**: A suite of commands to manage the server hub.
 -   **Per-World Event Cancellation**: Disable events like block breaking and hunger loss in specified hub worlds.
 -   **Multi-language Support**: All messages can be translated.
@@ -23,6 +24,7 @@ This project was developed by the AI assistant, Jules.
 | Command | Description | Permission |
 | --- | --- | --- |
 | `/ach <subcommand>` | Root command for the plugin. | `advancedcorehub.command.help` |
+| `/ach listitems` | Lists all available custom items. | `advancedcorehub.command.listitems` |
 | `/fly [player] [duration]` | Toggles flight. Duration can be specified (e.g., `10s`, `5m`, `1h`). | `advancedcorehub.command.fly` |
 | `/bossbar <create/remove/set> ...` | Manages global or per-player boss bars. | `advancedcorehub.command.bossbar` |
 | `/spawn` | Teleports you to the server spawn. | `advancedcorehub.command.spawn` |
@@ -54,7 +56,7 @@ items:
     left-click-actions:
       - "[MESSAGE] This is my awesome sword!"
     right-click-actions:
-      - "[SOUND] ENTITY_PLAYER_ATTACK_SWEEP"
+      - "[SOUND] ENTITY_PLAYER_ATTACK_SWEEP;1.0;1.2" # Format: [SOUND]SOUND_NAME;VOLUME;PITCH
     # (Optional) Protect the item from being moved or dropped
     protected: true
 ```
@@ -82,6 +84,25 @@ items:
     actions:
       - "[MESSAGE] You clicked the info item!"
       - "[CLOSE]" # Closes the menu
+```
+
+### `config.yml` - Custom Actions
+
+You can define your own reusable actions in `config.yml`.
+
+```yaml
+custom-actions:
+  # This action can be triggered with "[welcome_pack]"
+  welcome_pack:
+    actions:
+      - "[MESSAGE] <green>Here is your welcome pack!"
+      - "[CONSOLE] give %player_name% golden_apple 1"
+      - "[SOUND] ENTITY_PLAYER_LEVELUP;1.0;1.0"
+
+  # This action can be triggered with "[website_link]"
+  website_link:
+    actions:
+      - "[MESSAGE] <yellow>Our website is www.example.com"
 ```
 
 ### `config.yml` - Announcements

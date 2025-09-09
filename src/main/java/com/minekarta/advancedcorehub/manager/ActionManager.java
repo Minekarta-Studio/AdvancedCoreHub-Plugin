@@ -1,8 +1,10 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import com.minekarta.advancedcorehub.actions.types.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -21,6 +23,27 @@ public class ActionManager {
     public ActionManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
         registerDefaultActions();
+        loadCustomActions();
+    }
+
+    private void loadCustomActions() {
+        ConfigurationSection customActionsSection = plugin.getConfig().getConfigurationSection("custom-actions");
+        if (customActionsSection == null) return;
+
+        for (String key : customActionsSection.getKeys(false)) {
+            List<String> actions = customActionsSection.getStringList(key + ".actions");
+            if (actions.isEmpty()) {
+                plugin.getLogger().warning("Custom action '" + key + "' has no actions defined.");
+                continue;
+            }
+
+            registerAction(key, (player, data) -> {
+                // The 'data' parameter is ignored for custom actions for now.
+                // Could be used in the future to pass arguments to custom actions.
+                executeActions(player, actions);
+            });
+            plugin.getLogger().info("Registered custom action: " + key);
+        }
     }
 
     private void registerDefaultActions() {

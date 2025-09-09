@@ -3,15 +3,22 @@ package com.minekarta.advancedcorehub.manager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class InventoryManager {
 
     private final AdvancedCoreHub plugin;
     private List<String> hubWorlds;
     private boolean clearOnEnter;
+
+    private final Map<UUID, ItemStack[]> playerInventories = new HashMap<>();
+    private final Map<UUID, ItemStack[]> playerArmor = new HashMap<>();
 
     public InventoryManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -85,5 +92,24 @@ public class InventoryManager {
 
     public boolean isHubWorld(String worldName) {
         return hubWorlds != null && hubWorlds.contains(worldName);
+    }
+
+    public void savePlayerInventory(Player player) {
+        playerInventories.put(player.getUniqueId(), player.getInventory().getContents());
+        playerArmor.put(player.getUniqueId(), player.getInventory().getArmorContents());
+    }
+
+    public void restorePlayerInventory(Player player) {
+        ItemStack[] inventory = playerInventories.remove(player.getUniqueId());
+        ItemStack[] armor = playerArmor.remove(player.getUniqueId());
+
+        if (inventory != null) {
+            player.getInventory().clear();
+            player.getInventory().setContents(inventory);
+        }
+
+        if (armor != null) {
+            player.getInventory().setArmorContents(armor);
+        }
     }
 }

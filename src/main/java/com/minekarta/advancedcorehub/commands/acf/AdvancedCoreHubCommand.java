@@ -59,6 +59,20 @@ public class AdvancedCoreHubCommand extends BaseCommand {
         localeManager.sendMessage(sender, "item-given", String.valueOf(amount), itemName, target.getName());
     }
 
+    @Subcommand("listitems")
+    @CommandPermission(Permissions.CMD_LISTITEMS)
+    @Description("Lists all available custom items.")
+    public void onListItems(CommandSender sender) {
+        java.util.Set<String> itemNames = itemsManager.getItemKeys();
+        if (itemNames.isEmpty()) {
+            localeManager.sendMessage(sender, "no-items-found");
+            return;
+        }
+
+        String itemList = String.join(", ", itemNames);
+        localeManager.sendMessage(sender, "item-list", itemList);
+    }
+
     @Subcommand("worlds")
     @CommandPermission(Permissions.CMD_WORLDS)
     @Description("Manages the disabled worlds list.")

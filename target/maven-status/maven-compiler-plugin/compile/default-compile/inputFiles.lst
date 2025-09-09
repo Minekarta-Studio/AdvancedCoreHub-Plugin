@@ -29,7 +29,9 @@
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemProtectionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MovementItemListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerConnectionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerJoinListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerQuitListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldEventListeners.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ActionManager.java

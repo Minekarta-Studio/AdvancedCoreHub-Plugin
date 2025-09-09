@@ -17,11 +17,32 @@ public class SoundAction implements Action {
     public void execute(Player player, String data) {
         if (data == null || data.isEmpty()) return;
 
+        String[] parts = data.split(";");
+        String soundName = parts[0];
+
+        float volume = 1.0f;
+        if (parts.length > 1) {
+            try {
+                volume = Float.parseFloat(parts[1]);
+            } catch (NumberFormatException e) {
+                plugin.getLogger().warning("[SoundAction] Invalid volume format: " + parts[1]);
+            }
+        }
+
+        float pitch = 1.0f;
+        if (parts.length > 2) {
+            try {
+                pitch = Float.parseFloat(parts[2]);
+            } catch (NumberFormatException e) {
+                plugin.getLogger().warning("[SoundAction] Invalid pitch format: " + parts[2]);
+            }
+        }
+
         try {
-            Sound sound = Sound.valueOf(data.toUpperCase());
-            player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
+            Sound sound = Sound.valueOf(soundName.toUpperCase());
+            player.playSound(player.getLocation(), sound, volume, pitch);
         } catch (IllegalArgumentException e) {
-            plugin.getLogger().warning("[SoundAction] Invalid sound name: " + data);
+            plugin.getLogger().warning("[SoundAction] Invalid sound name: " + soundName);
         }
     }
 }
