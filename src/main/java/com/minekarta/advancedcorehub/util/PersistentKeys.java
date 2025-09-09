@@ -21,6 +21,10 @@ public final class PersistentKeys {
     // Key to store a list of actions for an item
     public static final NamespacedKey ACTIONS_KEY = new NamespacedKey(plugin, "actions");
 
+    // Keys for specific click actions
+    public static final NamespacedKey LEFT_CLICK_ACTIONS_KEY = new NamespacedKey(plugin, "left_click_actions");
+    public static final NamespacedKey RIGHT_CLICK_ACTIONS_KEY = new NamespacedKey(plugin, "right_click_actions");
+
     // Key to store the type of movement for an item
     public static final NamespacedKey MOVEMENT_TYPE_KEY = new NamespacedKey(plugin, "movement_type");
 
