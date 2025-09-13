@@ -8,11 +8,11 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.logging.Logger;
-import org.bukkit.NamespacedKey;
 
 public class ItemBuilder {
 
@@ -27,7 +27,9 @@ public class ItemBuilder {
             hdbApi = new HeadDatabaseAPI();
         }
 
-        if (materialString.toLowerCase().startsWith("headdatabase:") || materialString.toLowerCase().startsWith("hdb:")) {
+        String lowerMaterialString = materialString.toLowerCase();
+
+        if (lowerMaterialString.startsWith("headdatabase:") || lowerMaterialString.startsWith("hdb:")) {
             if (hdbApi == null) {
                 LOGGER.warning("HeadDatabase is not enabled, but an item tried to use it. Defaulting to PLAYER_HEAD.");
                 this.itemStack = new ItemStack(Material.PLAYER_HEAD);
@@ -44,7 +46,20 @@ public class ItemBuilder {
                     this.itemStack = new ItemStack(Material.PLAYER_HEAD);
                 }
             }
+        } else if (lowerMaterialString.startsWith("head:")) {
+            this.itemStack = new ItemStack(Material.PLAYER_HEAD);
+            try {
+                String playerName = materialString.split(":")[1];
+                SkullMeta skullMeta = (SkullMeta) this.itemStack.getItemMeta();
+                // Note: setOwningPlayer is deprecated and may perform a blocking lookup.
+                // Using it as a fallback since the modern PlayerProfile API is showing issues with the provided dependency.
+                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(playerName));
+                this.itemStack.setItemMeta(skullMeta);
+            } catch (Exception e) {
+                LOGGER.warning("Failed to parse player head name: " + materialString + ". Defaulting to PLAYER_HEAD.");
+            }
         } else {
+            // NOTE: The 'texture:<base64>' feature was temporarily removed due to compilation issues with the ProfileProperty API.
             try {
                 Material material = Material.valueOf(materialString.toUpperCase());
                 this.itemStack = new ItemStack(material);

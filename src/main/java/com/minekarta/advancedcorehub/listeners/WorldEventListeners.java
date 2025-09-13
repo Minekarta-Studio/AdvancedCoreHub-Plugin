@@ -23,8 +23,8 @@ public class WorldEventListeners implements Listener {
         if (player.isOp() || player.hasPermission("advancedcorehub.bypass.worldguard")) {
             return false;
         }
-        // Check if the world is in the disabled list
-        return plugin.getDisabledWorlds().isDisabled(player.getWorld().getName());
+        // Check if the world is in the hub worlds list
+        return plugin.getHubWorldManager().isHubWorld(player.getWorld().getName());
     }
 
     @EventHandler
@@ -62,7 +62,7 @@ public class WorldEventListeners implements Listener {
 
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent event) {
-        if (plugin.getDisabledWorlds().isDisabled(event.getWorld().getName()) &&
+        if (plugin.getHubWorldManager().isHubWorld(event.getWorld().getName()) &&
             plugin.getConfig().getBoolean("world_settings.cancel_weather_change", true)) {
             if (event.toWeatherState()) { // if it's starting to rain/thunder
                 event.setCancelled(true);

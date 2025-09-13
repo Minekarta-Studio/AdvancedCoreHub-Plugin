@@ -108,8 +108,11 @@ public class AnnouncementsManager {
         String message = (String) data.get("message");
         if (message == null) return;
 
+        String prefix = plugin.getLocaleManager().getPrefix();
+        String finalMessage = prefix + message;
+
         // Chat messages are sent globally to recipients, placeholders that are not player-specific will work
-        Component component = plugin.getLocaleManager().getComponentFromString(message, null);
+        Component component = plugin.getLocaleManager().getComponentFromString(finalMessage, null);
         recipients.forEach(player -> player.sendMessage(component));
     }
 

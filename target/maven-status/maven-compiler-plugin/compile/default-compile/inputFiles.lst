@@ -40,8 +40,8 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ChatManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/CommandManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/CooldownManager.java
-/app/src/main/java/com/minekarta/advancedcorehub/manager/DisabledWorlds.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/FileManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/manager/HubWorldManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/InventoryManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ItemsManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/LocaleManager.java

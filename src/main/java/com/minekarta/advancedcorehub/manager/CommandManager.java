@@ -48,7 +48,7 @@ public class CommandManager {
         manager.registerDependency(LocaleManager.class, plugin.getLocaleManager());
         manager.registerDependency(ChatManager.class, plugin.getChatManager());
         manager.registerDependency(ItemsManager.class, plugin.getItemsManager());
-        manager.registerDependency(DisabledWorlds.class, plugin.getDisabledWorlds());
+        manager.registerDependency(HubWorldManager.class, plugin.getHubWorldManager());
     }
 
     private void registerCommandCompletions() {

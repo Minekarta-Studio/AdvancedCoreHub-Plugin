@@ -14,18 +14,26 @@ spawn:
   yaw: 0.0
   pitch: 0.0
 
+# General message settings for the plugin.
+messages:
+  # This prefix will be added to the beginning of most plugin messages.
+  # You can leave it empty "" if you don't want a prefix.
+  prefix: "<dark_aqua>[AdvancedCoreHub] </dark_aqua>"
+
 # Actions to be executed when a player joins the server.
 # See the action format documentation for all available types.
 actions_on_join:
   - "[TITLE]<green>Welcome to the Server!;<gray>Enjoy your stay, %player_name%!;10;70;20"
   - "[SOUND]ENTITY_PLAYER_LEVELUP"
 
-# List of worlds where hub-specific rules should apply (e.g., event cancellation).
-disabled_worlds:
-  - hub
-  - lobby
+# This is the central list of worlds that are considered 'hub' worlds.
+# In these worlds, special rules (like event cancellation) and inventory management will apply.
+# Use the /setspawn command in a world to automatically add it to this list.
+hub-worlds:
+  - "hub"
+  - "lobby"
 
-# Settings for events to cancel in the disabled_worlds list.
+# Settings for events to cancel in the hub-worlds list.
 # Players with the 'advancedcorehub.bypass.worldguard' permission are immune.
 world_settings:
   cancel_block_break: true
@@ -37,11 +45,9 @@ world_settings:
 # --- Inventory Management ---
 # Settings for how inventories are handled in hub worlds.
 inventory_management:
-  # Worlds where inventory will be cleared and hub items will be given.
-  hub-worlds:
-    - "hub"
-    - "lobby"
-  # Clear inventory when a player enters a hub world.
+  # When enabled, inventory will be cleared and hub items will be given upon entering a hub world.
+  # This feature uses the 'hub-worlds' list defined above.
+  enable: true
   clear-on-enter: true
   # More features like save/restore can be added here later.
 
@@ -77,6 +83,7 @@ announcements:
       message: "<yellow>Don't forget to visit our website at <underline>www.example.com</underline></yellow>"
 
     # Example 2: An action bar message shown only to players in the 'hub' and 'lobby' worlds.
+    # Note: This 'worlds' list is specific to this announcement and is not affected by the main 'hub-worlds' list.
     - type: ACTION_BAR
       message: "<aqua>You are in the main lobby!"
       worlds:

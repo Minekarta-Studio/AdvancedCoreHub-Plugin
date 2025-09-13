@@ -12,6 +12,7 @@ public class LocaleManager {
     private final AdvancedCoreHub plugin;
     private final FileManager fileManager;
     private String defaultLang;
+    private String prefix;
 
     public LocaleManager(AdvancedCoreHub plugin, FileManager fileManager) {
         this.plugin = plugin;
@@ -20,6 +21,8 @@ public class LocaleManager {
 
     public void load() {
         this.defaultLang = plugin.getConfig().getString("language", "en");
+        this.prefix = plugin.getConfig().getString("messages.prefix", "<dark_aqua>[AdvancedCoreHub] </dark_aqua>");
+
         // PAPI check is now handled by the Formatter class, this is just for logging
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             plugin.getLogger().info("PlaceholderAPI found, placeholder support enabled in Formatter.");
@@ -60,6 +63,27 @@ public class LocaleManager {
     public void sendMessage(CommandSender sender, String key, Object... placeholders) {
         Player player = (sender instanceof Player) ? (Player) sender : null;
         String rawMessage = getRawString(key, player, placeholders);
+
+        // Don't send empty messages
+        if (rawMessage == null || rawMessage.isEmpty()) {
+            return;
+        }
+
+        String finalMessage = prefix + rawMessage;
+        Component formattedComponent = Formatter.format(player, finalMessage);
+        sender.sendMessage(formattedComponent);
+    }
+
+    /**
+     * Sends a formatted message without the global prefix.
+     *
+     * @param sender       The sender to receive the message.
+     * @param key          The translation key from the language file.
+     * @param placeholders The placeholders to insert into the message.
+     */
+    public void sendMessageNoPrefix(CommandSender sender, String key, Object... placeholders) {
+        Player player = (sender instanceof Player) ? (Player) sender : null;
+        String rawMessage = getRawString(key, player, placeholders);
         Component formattedComponent = Formatter.format(player, rawMessage);
         sender.sendMessage(formattedComponent);
     }
@@ -86,5 +110,9 @@ public class LocaleManager {
      */
     public Component getComponentFromString(String text, Player player) {
         return Formatter.format(player, text);
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 }
