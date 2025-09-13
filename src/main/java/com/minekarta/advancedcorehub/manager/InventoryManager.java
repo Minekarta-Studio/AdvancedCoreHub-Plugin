@@ -26,10 +26,18 @@ public class InventoryManager {
     }
 
     public void loadConfig() {
-        ConfigurationSection config = plugin.getConfig().getConfigurationSection("inventory_management");
-        if (config != null) {
-            this.hubWorlds = config.getStringList("hub-worlds");
-            this.clearOnEnter = config.getBoolean("clear-on-enter", true);
+        // Load the single source of truth for hub worlds from the root of the config
+        this.hubWorlds = plugin.getConfig().getStringList("hub-worlds");
+
+        ConfigurationSection invManagementConfig = plugin.getConfig().getConfigurationSection("inventory_management");
+        boolean inventoryManagementEnabled = invManagementConfig != null && invManagementConfig.getBoolean("enable", true);
+
+        if (inventoryManagementEnabled) {
+            this.clearOnEnter = invManagementConfig.getBoolean("clear-on-enter", true);
+        } else {
+            this.clearOnEnter = false;
+            // If the whole feature is disabled, clear the list so isHubWorld returns false
+            this.hubWorlds.clear();
         }
     }
 

@@ -13,7 +13,7 @@ items:
     lore:
       - "<gray>Click to activate a cool particle effect!"
       - "<yellow>(Requires a specific VIP rank)"
-    actions:
+    right-click-actions:
       # This is an example. The actual command might be different.
       - "[CONSOLE] party trails %player_name% hearts"
       - "[MESSAGE]<green>You activated the heart particle trail!"
@@ -25,7 +25,7 @@ items:
     lore:
       - "<gray>Click to get 5 minutes of flight!"
       - "<yellow>(Consumed on use)"
-    actions:
+    right-click-actions:
       # Assumes a command like /fly <player> <time> exists
       - "[CONSOLE] fly %player_name% 5m"
       - "[MESSAGE]<green>You have been given 5 minutes of flight!"
@@ -36,7 +36,7 @@ items:
     display-name: "<blue>Get a Special Hat"
     lore:
       - "<gray>Click to receive a cool cosmetic hat!"
-    actions:
+    right-click-actions:
       - "[ITEM] diamond_helmet name:&bCool_Hat 1"
       - "[MESSAGE]<green>You received a special hat!"
       - "[CLOSE]"

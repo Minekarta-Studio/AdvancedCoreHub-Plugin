@@ -3,7 +3,7 @@ package com.minekarta.advancedcorehub.commands.acf;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.manager.DisabledWorlds;
+import com.minekarta.advancedcorehub.manager.HubWorldManager;
 import com.minekarta.advancedcorehub.manager.ItemsManager;
 import com.minekarta.advancedcorehub.manager.LocaleManager;
 import com.minekarta.advancedcorehub.util.Permissions;
@@ -23,7 +23,7 @@ public class AdvancedCoreHubCommand extends BaseCommand {
     private ItemsManager itemsManager;
 
     @Dependency
-    private DisabledWorlds disabledWorlds;
+    private HubWorldManager hubWorldManager;
 
     @Default
     @HelpCommand
@@ -82,7 +82,7 @@ public class AdvancedCoreHubCommand extends BaseCommand {
         @Syntax("<world>")
         @CommandCompletion("@worlds")
         public void onAdd(CommandSender sender, String worldName) {
-            disabledWorlds.addWorld(worldName);
+            hubWorldManager.addWorld(worldName);
             localeManager.sendMessage(sender, "world-added", worldName);
         }
 
@@ -90,21 +90,21 @@ public class AdvancedCoreHubCommand extends BaseCommand {
         @Syntax("<world>")
         @CommandCompletion("@worlds")
         public void onRemove(CommandSender sender, String worldName) {
-            disabledWorlds.removeWorld(worldName);
+            hubWorldManager.removeWorld(worldName);
             localeManager.sendMessage(sender, "world-removed", worldName);
         }
 
         @Subcommand("list")
         public void onList(CommandSender sender) {
-            disabledWorlds.listWorlds(sender);
+            hubWorldManager.listWorlds(sender);
         }
 
         @Subcommand("check")
         @Syntax("<world>")
         @CommandCompletion("@worlds")
         public void onCheck(CommandSender sender, String worldName) {
-            boolean isDisabled = disabledWorlds.isDisabled(worldName);
-            localeManager.sendMessage(sender, "world-check-status", worldName, isDisabled ? "disabled" : "enabled");
+            boolean isHubWorld = hubWorldManager.isHubWorld(worldName);
+            localeManager.sendMessage(sender, "world-check-status", worldName, isHubWorld ? "a hub world" : "not a hub world");
         }
     }
 }

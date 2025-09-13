@@ -16,7 +16,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private ItemsManager itemsManager;
     private ActionManager actionManager;
     private CooldownManager cooldownManager;
-    private DisabledWorlds disabledWorlds;
+    private HubWorldManager hubWorldManager;
     private AnnouncementsManager announcementsManager;
     private BossBarManager bossBarManager;
     private MenuManager menuManager;
@@ -46,7 +46,7 @@ public class AdvancedCoreHub extends JavaPlugin {
 
         this.actionManager = new ActionManager(this);
         this.cooldownManager = new CooldownManager(this);
-        this.disabledWorlds = new DisabledWorlds(this);
+        this.hubWorldManager = new HubWorldManager(this);
         this.announcementsManager = new AnnouncementsManager(this);
         this.announcementsManager.load();
         this.bossBarManager = new BossBarManager(this);
@@ -83,7 +83,7 @@ public class AdvancedCoreHub extends JavaPlugin {
             this.itemsManager.loadItems();
             this.menuManager.loadMenus();
             this.actionManager = new ActionManager(this); // Re-register actions
-            this.disabledWorlds.load();
+            this.hubWorldManager.load();
             this.announcementsManager.load();
             this.bossBarManager.cleanup();
 
@@ -139,8 +139,8 @@ public class AdvancedCoreHub extends JavaPlugin {
         return cooldownManager;
     }
 
-    public DisabledWorlds getDisabledWorlds() {
-        return disabledWorlds;
+    public HubWorldManager getHubWorldManager() {
+        return hubWorldManager;
     }
 
     public AnnouncementsManager getAnnouncementsManager() {
