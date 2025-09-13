@@ -73,13 +73,13 @@ items:
       - "[MENU] info_menu"
 
   vip_gadget:
-    material: "hdb:1234"
+    material: PLAYER_HEAD
     displayname: "<gold>VIP Gadget"
     lore:
       - "<gray>A special gadget for our VIPs!"
     # The 'actions' key is deprecated but still supported for backward compatibility.
     # It will be treated as 'right-click-actions'.
-    actions:
+    right-click-actions:
       - "[MENU] vip_gadget"
     protected: true
 
