@@ -14,10 +14,10 @@ public class ConsoleAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
-        String command = data;
+        String command = (String) data;
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             command = PlaceholderAPI.setPlaceholders(player, command);
         }

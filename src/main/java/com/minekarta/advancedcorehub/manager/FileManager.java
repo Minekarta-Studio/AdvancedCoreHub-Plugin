@@ -36,6 +36,8 @@ public class FileManager {
         loadConfigFile("items.yml");
         loadConfigFile("menus/selector.yml");
         loadConfigFile("menus/socials.yml");
+        loadConfigFile("menus/vip_gadget.yml");
+        loadConfigFile("menus/info_menu.yml");
 
         // Load language files
         loadConfigFile("languages/en.yml");

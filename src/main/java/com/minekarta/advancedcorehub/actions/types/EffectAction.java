@@ -15,11 +15,12 @@ public class EffectAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
+        String effectData = (String) data;
         // Data: effect_type;duration_seconds;strength
-        String[] parts = data.split(";");
+        String[] parts = effectData.split(";");
         if (parts.length < 3) {
             plugin.getLogger().warning("[EffectAction] Invalid data. Expected: effect_type;duration;strength");
             return;
@@ -37,7 +38,7 @@ public class EffectAction implements Action {
             player.addPotionEffect(new PotionEffect(effectType, duration, strength));
 
         } catch (Exception e) {
-            plugin.getLogger().warning("[EffectAction] Failed to parse effect data: " + data + " | Error: " + e.getMessage());
+            plugin.getLogger().warning("[EffectAction] Failed to parse effect data: " + effectData + " | Error: " + e.getMessage());
         }
     }
 }

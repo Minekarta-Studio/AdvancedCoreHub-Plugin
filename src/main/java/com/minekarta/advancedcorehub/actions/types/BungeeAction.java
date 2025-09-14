@@ -15,15 +15,16 @@ public class BungeeAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) {
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) {
             plugin.getLogger().warning("[BungeeAction] Server name cannot be empty.");
             return;
         }
 
+        String serverName = (String) data;
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
-        out.writeUTF(data); // server name
+        out.writeUTF(serverName); // server name
 
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }

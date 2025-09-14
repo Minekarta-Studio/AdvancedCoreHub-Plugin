@@ -14,12 +14,14 @@ public class BroadcastAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+
+        String message = (String) data;
 
         // Since this is a broadcast, we can't parse per-player placeholders.
         // We pass null for the player to use global placeholders if any.
-        Component componentMessage = plugin.getLocaleManager().getComponentFromString(data, null);
+        Component componentMessage = plugin.getLocaleManager().getComponentFromString(message, null);
 
         plugin.getServer().broadcast(componentMessage);
     }

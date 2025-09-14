@@ -44,7 +44,7 @@ public class MenuListener implements Listener {
                 if (slotActions.stream().anyMatch(s -> s.toLowerCase().startsWith("[menu]"))) {
                     player.closeInventory();
                 }
-                plugin.getActionManager().executeActions(player, slotActions);
+                plugin.getActionManager().executeStringActions(player, slotActions);
             }
         }
     }

@@ -15,7 +15,7 @@ public class ClearAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
+    public void execute(Player player, Object data) {
         player.getInventory().clear();
         player.getPersistentDataContainer().set(PersistentKeys.INVENTORY_CLEARED, PersistentDataType.BYTE, (byte) 1);
     }

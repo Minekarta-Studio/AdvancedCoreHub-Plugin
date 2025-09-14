@@ -15,8 +15,8 @@ public class MovementAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || !data.equalsIgnoreCase("aote")) {
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || !((String) data).equalsIgnoreCase("aote")) {
             return;
         }
 

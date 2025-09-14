@@ -12,8 +12,8 @@ public interface Action {
      * Executes the action for a specific player.
      *
      * @param player The player context for the action.
-     * @param data   The data or arguments for the action, following the identifier.
+     * @param data   The data or arguments for the action, which can be a String or a Map.
      */
-    void execute(Player player, String data);
+    void execute(Player player, Object data);
 
 }
