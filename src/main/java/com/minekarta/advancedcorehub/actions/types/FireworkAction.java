@@ -18,11 +18,12 @@ public class FireworkAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        // Data: type;r;g;b;power;delay (type = BALL, BURST, etc. color 0-255)
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
-        String[] parts = data.split(";");
+        String fireworkData = (String) data;
+        // Data: type;r;g;b;power;delay (type = BALL, BURST, etc. color 0-255)
+        String[] parts = fireworkData.split(";");
         if (parts.length < 6) {
             plugin.getLogger().warning("[FireworkAction] Invalid data. Expected: type;r;g;b;power;delay");
             return;
@@ -54,7 +55,7 @@ public class FireworkAction implements Action {
             }
 
         } catch (Exception e) {
-            plugin.getLogger().warning("[FireworkAction] Failed to parse firework data: " + data + " | Error: " + e.getMessage());
+            plugin.getLogger().warning("[FireworkAction] Failed to parse firework data: " + fireworkData + " | Error: " + e.getMessage());
         }
     }
 }

@@ -13,11 +13,12 @@ public class ItemAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        // Data: item_name;amount;slot
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
-        String[] parts = data.split(";");
+        String itemData = (String) data;
+        // Data: item_name;amount;slot
+        String[] parts = itemData.split(";");
         if (parts.length == 0) return;
 
         String itemName = parts[0];

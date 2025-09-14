@@ -13,18 +13,19 @@ public class SlotAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
+        String slotData = (String) data;
         try {
-            int slot = Integer.parseInt(data);
+            int slot = Integer.parseInt(slotData);
             if (slot < 0 || slot > 8) {
                 plugin.getLogger().warning("[SlotAction] Invalid slot number: " + slot + ". Must be between 0 and 8.");
                 return;
             }
             player.getInventory().setHeldItemSlot(slot);
         } catch (NumberFormatException e) {
-            plugin.getLogger().warning("[SlotAction] Invalid number format for slot: " + data);
+            plugin.getLogger().warning("[SlotAction] Invalid number format for slot: " + slotData);
         }
     }
 }

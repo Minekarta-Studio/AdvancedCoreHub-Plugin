@@ -117,12 +117,13 @@ public class AnnouncementsManager {
     }
 
     private void sendTitleAnnouncement(Collection<? extends Player> recipients, Map<?, ?> data) {
-        String message = (String) data.get("message");
-        if (message == null) return;
+        String titleStr = (String) data.get("title");
+        String subtitleStr = (String) data.get("subtitle");
 
-        String[] parts = message.split(";", 2);
-        String titleStr = parts[0];
-        String subtitleStr = parts.length > 1 ? parts[1] : "";
+        if (titleStr == null && subtitleStr == null) {
+            plugin.getLogger().warning("Title announcement is missing both title and subtitle.");
+            return;
+        }
 
         Object fadeInObj = data.get("fade-in");
         int fadeIn = (fadeInObj != null) ? Formatter.parseInt(fadeInObj.toString(), 10) : 10;
@@ -136,8 +137,8 @@ public class AnnouncementsManager {
         Title.Times times = Title.Times.times(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L));
 
         for (Player player : recipients) {
-            Component title = plugin.getLocaleManager().getComponentFromString(titleStr, player);
-            Component subtitle = plugin.getLocaleManager().getComponentFromString(subtitleStr, player);
+            Component title = titleStr != null ? plugin.getLocaleManager().getComponentFromString(titleStr, player) : Component.empty();
+            Component subtitle = subtitleStr != null ? plugin.getLocaleManager().getComponentFromString(subtitleStr, player) : Component.empty();
             player.showTitle(Title.title(title, subtitle, times));
         }
     }

@@ -14,14 +14,15 @@ public class GamemodeAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
+        String gamemode = (String) data;
         try {
-            GameMode gm = GameMode.valueOf(data.toUpperCase());
+            GameMode gm = GameMode.valueOf(gamemode.toUpperCase());
             player.setGameMode(gm);
         } catch (IllegalArgumentException e) {
-            plugin.getLogger().warning("[GamemodeAction] Invalid gamemode: " + data);
+            plugin.getLogger().warning("[GamemodeAction] Invalid gamemode: " + gamemode);
         }
     }
 }

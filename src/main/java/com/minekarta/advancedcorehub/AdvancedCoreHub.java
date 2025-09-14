@@ -43,6 +43,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.itemsManager.loadItems();
 
         this.menuManager = new MenuManager(this);
+        this.menuManager.loadMenus();
 
         this.actionManager = new ActionManager(this);
         this.cooldownManager = new CooldownManager(this);

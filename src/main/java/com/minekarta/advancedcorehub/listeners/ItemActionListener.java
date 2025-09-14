@@ -58,7 +58,7 @@ public class ItemActionListener implements Listener {
         if (actionString != null && !actionString.isEmpty()) {
             event.setCancelled(true); // Prevent default item actions
             List<String> actions = Arrays.asList(actionString.split("\n"));
-            plugin.getActionManager().executeActions(player, actions);
+            plugin.getActionManager().executeStringActions(player, actions);
         }
     }
 }

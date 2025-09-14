@@ -1,7 +1,6 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import com.minekarta.advancedcorehub.actions.types.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -31,16 +30,14 @@ public class ActionManager {
         if (customActionsSection == null) return;
 
         for (String key : customActionsSection.getKeys(false)) {
-            List<String> actions = customActionsSection.getStringList(key + ".actions");
+            List<Map<?, ?>> actions = customActionsSection.getMapList(key + ".actions");
             if (actions.isEmpty()) {
-                plugin.getLogger().warning("Custom action '" + key + "' has no actions defined.");
+                plugin.getLogger().warning("Custom action '" + key + "' has no actions defined or is in the old format.");
                 continue;
             }
 
             registerAction(key, (player, data) -> {
-                // The 'data' parameter is ignored for custom actions for now.
-                // Could be used in the future to pass arguments to custom actions.
-                executeActions(player, actions);
+                executeMapActions(player, actions);
             });
             plugin.getLogger().info("Registered custom action: " + key);
         }
@@ -49,13 +46,13 @@ public class ActionManager {
     private void registerDefaultActions() {
         registerAction("PLAYER", new PlayerAction(plugin));
         registerAction("CONSOLE", new ConsoleAction(plugin));
-        registerAction("MENU", new MenuAction(plugin)); // Will be implemented fully later
+        registerAction("MENU", new MenuAction(plugin));
         registerAction("LINK", new LinkAction(plugin));
         registerAction("TITLE", new TitleAction(plugin));
         registerAction("SOUND", new SoundAction(plugin));
         registerAction("FIREWORK", new FireworkAction(plugin));
         registerAction("BROADCAST", new BroadcastAction(plugin));
-        registerAction("ITEM", new ItemAction(plugin)); // Will depend on ItemsManager
+        registerAction("ITEM", new ItemAction(plugin));
         registerAction("BUNGEE", new BungeeAction(plugin));
         registerAction("CLOSE", new CloseAction(plugin));
         registerAction("CLEAR", new ClearAction(plugin));
@@ -64,13 +61,42 @@ public class ActionManager {
         registerAction("EFFECT", new EffectAction(plugin));
         registerAction("GAMEMODE", new GamemodeAction(plugin));
         registerAction("MOVEMENT", new MovementAction(plugin));
+        registerAction("MESSAGE", new MessageAction(plugin));
     }
 
     public void registerAction(String identifier, Action action) {
         actionMap.put(identifier.toUpperCase(), action);
     }
 
-    public void executeActions(Player player, List<String> actionStrings) {
+    public void executeMapActions(Player player, List<Map<?, ?>> actionMaps) {
+        if (actionMaps == null) return;
+        for (Map<?, ?> actionMap : actionMaps) {
+            executeAction(player, actionMap);
+        }
+    }
+
+    public void executeAction(Player player, Map<?, ?> actionMap) {
+        if (actionMap == null || !actionMap.containsKey("type")) {
+            plugin.getLogger().warning("Invalid action map format: 'type' key is missing.");
+            return;
+        }
+
+        String identifier = actionMap.get("type").toString().toUpperCase();
+        Object data = actionMap.get("data");
+
+        Action action = this.actionMap.get(identifier);
+        if (action != null) {
+            try {
+                action.execute(player, data);
+            } catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "Error executing action: " + actionMap, e);
+            }
+        } else {
+            plugin.getLogger().warning("Unknown action identifier: " + identifier);
+        }
+    }
+
+    public void executeStringActions(Player player, List<String> actionStrings) {
         for (String actionString : actionStrings) {
             executeAction(player, actionString);
         }

@@ -13,8 +13,8 @@ public class MenuAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
-        plugin.getMenuManager().openMenu(player, data);
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        plugin.getMenuManager().openMenu(player, (String) data);
     }
 }

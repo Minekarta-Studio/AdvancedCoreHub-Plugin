@@ -1,7 +1,8 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.util.PersistentKeys;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,13 +26,32 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        // 1. Handle Join Message (can be customized or disabled)
+        // 1. Teleport to spawn
+        if (plugin.getConfig().getBoolean("spawn-on-join.enabled", true)) {
+            ConfigurationSection spawnConfig = plugin.getConfig().getConfigurationSection("spawn");
+            if (spawnConfig != null) {
+                String worldName = spawnConfig.getString("world");
+                World world = plugin.getServer().getWorld(worldName);
+                if (world != null) {
+                    double x = spawnConfig.getDouble("x");
+                    double y = spawnConfig.getDouble("y");
+                    double z = spawnConfig.getDouble("z");
+                    float yaw = (float) spawnConfig.getDouble("yaw");
+                    float pitch = (float) spawnConfig.getDouble("pitch");
+                    player.teleport(new Location(world, x, y, z, yaw, pitch));
+                } else {
+                    plugin.getLogger().warning("Spawn world '" + worldName + "' not found!");
+                }
+            }
+        }
+
+        // 2. Handle Join Message (can be customized or disabled)
         event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
 
         // 2. Execute actions_on_join from config.yml
-        List<String> joinActions = plugin.getConfig().getStringList("actions_on_join");
+        List<java.util.Map<?, ?>> joinActions = plugin.getConfig().getMapList("actions_on_join");
         if (!joinActions.isEmpty()) {
-            plugin.getActionManager().executeActions(player, joinActions);
+            plugin.getActionManager().executeMapActions(player, joinActions);
         }
 
         // 3. Handle Hub Inventory

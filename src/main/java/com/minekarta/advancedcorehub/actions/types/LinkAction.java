@@ -16,10 +16,11 @@ public class LinkAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
-        String[] parts = data.split(";", 3);
+        String linkData = (String) data;
+        String[] parts = linkData.split(";", 3);
         if (parts.length < 3) {
             plugin.getLogger().warning("[LinkAction] Invalid data format. Expected: message;hoverText;link");
             return;

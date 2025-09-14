@@ -14,10 +14,11 @@ public class LaunchAction implements Action {
     }
 
     @Override
-    public void execute(Player player, String data) {
-        if (data == null || data.isEmpty()) return;
+    public void execute(Player player, Object data) {
+        if (!(data instanceof String) || ((String) data).isEmpty()) return;
 
-        String[] parts = data.split(";");
+        String launchData = (String) data;
+        String[] parts = launchData.split(";");
         if (parts.length < 2) {
             plugin.getLogger().warning("[LaunchAction] Invalid data. Expected: power;powerY");
             return;
@@ -31,7 +32,7 @@ public class LaunchAction implements Action {
             player.setVelocity(direction);
 
         } catch (NumberFormatException e) {
-            plugin.getLogger().warning("[LaunchAction] Invalid number format in data: " + data);
+            plugin.getLogger().warning("[LaunchAction] Invalid number format in data: " + launchData);
         }
     }
 }
