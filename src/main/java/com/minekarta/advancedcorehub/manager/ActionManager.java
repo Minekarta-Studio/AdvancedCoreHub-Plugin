@@ -17,7 +17,6 @@ public class ActionManager {
 
     private final AdvancedCoreHub plugin;
     private final Map<String, Action> actionMap = new HashMap<>();
-    private static final Pattern ACTION_PATTERN = Pattern.compile("\\[([A-Z_]+)\\]\\s*(.*)");
 
     public ActionManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -30,14 +29,25 @@ public class ActionManager {
         if (customActionsSection == null) return;
 
         for (String key : customActionsSection.getKeys(false)) {
-            List<Map<?, ?>> actions = customActionsSection.getMapList(key + ".actions");
-            if (actions.isEmpty()) {
-                plugin.getLogger().warning("Custom action '" + key + "' has no actions defined or is in the old format.");
+            final List<String> actionStrings = customActionsSection.getStringList(key + ".actions");
+            if (actionStrings.isEmpty()) {
+                plugin.getLogger().warning("Custom action '" + key + "' has no actions defined.");
                 continue;
             }
 
-            registerAction(key, (player, data) -> {
-                executeMapActions(player, actions);
+            registerAction(key.toUpperCase(), (player, data) -> {
+                List<String> args = (List<String>) data; // data is the list of arguments from the call
+                List<String> processedActionStrings = new java.util.ArrayList<>();
+
+                for (String actionString : actionStrings) {
+                    String processedAction = actionString;
+                    // args[0] is the action name itself, so we start from args[1] for the arguments
+                    for (int i = 1; i < args.size(); i++) {
+                        processedAction = processedAction.replace("%arg" + i + "%", args.get(i));
+                    }
+                    processedActionStrings.add(processedAction);
+                }
+                executeStringActions(player, processedActionStrings);
             });
             plugin.getLogger().info("Registered custom action: " + key);
         }
@@ -97,29 +107,33 @@ public class ActionManager {
     }
 
     public void executeStringActions(Player player, List<String> actionStrings) {
+        if (actionStrings == null) return;
         for (String actionString : actionStrings) {
             executeAction(player, actionString);
         }
     }
 
     public void executeAction(Player player, String actionString) {
-        if (actionString == null || actionString.isEmpty()) {
+        if (actionString == null || actionString.isEmpty() || !actionString.startsWith("[") || !actionString.endsWith("]")) {
             return;
         }
 
-        Matcher matcher = ACTION_PATTERN.matcher(actionString);
-        if (!matcher.matches()) {
-            plugin.getLogger().warning("Invalid action format: " + actionString);
+        // Extract content inside brackets: [ACTION:ARG1:ARG2] -> ACTION:ARG1:ARG2
+        String content = actionString.substring(1, actionString.length() - 1);
+        if (content.isEmpty()) {
             return;
         }
 
-        String identifier = matcher.group(1).toUpperCase();
-        String data = matcher.group(2);
+        // Split by colon to get identifier and arguments
+        List<String> parts = new java.util.ArrayList<>(java.util.Arrays.asList(content.split(":")));
+        String identifier = parts.get(0).toUpperCase();
 
         Action action = actionMap.get(identifier);
         if (action != null) {
             try {
-                action.execute(player, data);
+                // We pass the whole list of parts, including the identifier, as the data.
+                // The action itself will parse it. This is crucial for custom actions.
+                action.execute(player, parts);
             } catch (Exception e) {
                 plugin.getLogger().log(Level.SEVERE, "Error executing action: " + actionString, e);
             }

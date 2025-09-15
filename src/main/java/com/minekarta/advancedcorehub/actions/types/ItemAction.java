@@ -4,6 +4,8 @@ import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class ItemAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -14,25 +16,24 @@ public class ItemAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) return;
+        List<String> args = (List<String>) data;
 
-        String itemData = (String) data;
-        // Data: item_name;amount;slot
-        String[] parts = itemData.split(";");
-        if (parts.length == 0) return;
+        // Args: [ITEM, item_name, amount, slot]
+        if (args.size() < 2) return;
 
-        String itemName = parts[0];
+        String itemName = args.get(1);
         int amount = 1;
         int slot = -1; // Default to adding to inventory
 
-        if (parts.length > 1) {
+        if (args.size() > 2) {
             try {
-                amount = Integer.parseInt(parts[1]);
+                amount = Integer.parseInt(args.get(2));
             } catch (NumberFormatException ignored) {}
         }
-        if (parts.length > 2) {
+        if (args.size() > 3) {
             try {
-                slot = Integer.parseInt(parts[2]);
+                slot = Integer.parseInt(args.get(3));
             } catch (NumberFormatException ignored) {}
         }
 

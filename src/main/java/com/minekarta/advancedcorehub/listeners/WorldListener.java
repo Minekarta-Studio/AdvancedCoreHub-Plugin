@@ -23,6 +23,11 @@ public class WorldListener implements Listener {
         String newWorld = player.getWorld().getName();
         String fromWorld = event.getFrom().getName();
 
+        // Check if the save and restore feature is enabled first
+        if (!inventoryManager.isSaveAndRestoreEnabled()) {
+            return;
+        }
+
         boolean isEnteringHub = inventoryManager.isHubWorld(newWorld) && !inventoryManager.isHubWorld(fromWorld);
         boolean isLeavingHub = !inventoryManager.isHubWorld(newWorld) && inventoryManager.isHubWorld(fromWorld);
 

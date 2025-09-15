@@ -1,3 +1,4 @@
+com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.class
 com/minekarta/advancedcorehub/commands/acf/AdvancedCoreHubCommand.class
 com/minekarta/advancedcorehub/commands/acf/BossBarCommand.class
 com/minekarta/advancedcorehub/actions/types/ClearAction.class
@@ -13,6 +14,7 @@ com/minekarta/advancedcorehub/commands/acf/FlyCommand.class
 com/minekarta/advancedcorehub/commands/acf/LockChatCommand.class
 com/minekarta/advancedcorehub/actions/types/SlotAction.class
 com/minekarta/advancedcorehub/listeners/MenuListener.class
+com/minekarta/advancedcorehub/commands/acf/CosmeticsCommand.class
 com/minekarta/advancedcorehub/listeners/PlayerJoinListener.class
 com/minekarta/advancedcorehub/actions/types/ItemAction.class
 com/minekarta/advancedcorehub/manager/MenuHolder.class
@@ -28,6 +30,7 @@ com/minekarta/advancedcorehub/AdvancedCoreHub.class
 com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.class
 com/minekarta/advancedcorehub/util/Formatter.class
 com/minekarta/advancedcorehub/manager/FileManager.class
+com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.class
 com/minekarta/advancedcorehub/actions/types/MovementAction.class
 com/minekarta/advancedcorehub/commands/acf/AdvancedCoreHubCommand$WorldsGroup.class
 com/minekarta/advancedcorehub/util/Permissions.class
@@ -37,6 +40,7 @@ com/minekarta/advancedcorehub/manager/AnnouncementsManager.class
 com/minekarta/advancedcorehub/util/PersistentKeys.class
 com/minekarta/advancedcorehub/actions/types/LaunchAction.class
 com/minekarta/advancedcorehub/actions/types/BungeeAction.class
+com/minekarta/advancedcorehub/manager/ServerInfoManager.class
 com/minekarta/advancedcorehub/listeners/ChatListener.class
 com/minekarta/advancedcorehub/actions/types/TitleAction.class
 com/minekarta/advancedcorehub/actions/types/GamemodeAction.class
@@ -44,11 +48,13 @@ com/minekarta/advancedcorehub/manager/CommandManager.class
 com/minekarta/advancedcorehub/actions/types/CloseAction.class
 com/minekarta/advancedcorehub/listeners/ItemProtectionListener.class
 com/minekarta/advancedcorehub/manager/HubWorldManager.class
+com/minekarta/advancedcorehub/actions/types/MessageAction.class
 com/minekarta/advancedcorehub/listeners/MovementItemListener.class
 com/minekarta/advancedcorehub/actions/types/ConsoleAction.class
 com/minekarta/advancedcorehub/actions/types/BroadcastAction.class
 com/minekarta/advancedcorehub/manager/CooldownManager.class
 com/minekarta/advancedcorehub/actions/Action.class
+com/minekarta/advancedcorehub/cosmetics/ParticleTrail.class
 com/minekarta/advancedcorehub/listeners/WorldEventListeners.class
 com/minekarta/advancedcorehub/manager/BossBarManager.class
 com/minekarta/advancedcorehub/manager/ActionManager.class

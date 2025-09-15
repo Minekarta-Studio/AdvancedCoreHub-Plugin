@@ -1,0 +1,26 @@
+# ----------------------------------------------------------------
+# Cosmetics Configuration
+# ----------------------------------------------------------------
+
+# Define all available particle trails here.
+particle-trails:
+  flame:
+    name: "<gold>Flame Trail"
+    particle: FLAME
+    permission: "advancedcorehub.cosmetics.trail.flame"
+  heart:
+    name: "<red>Heart Trail"
+    particle: HEART
+    permission: "advancedcorehub.cosmetics.trail.heart"
+  note:
+    name: "<aqua>Note Trail"
+    particle: NOTE
+    permission: "advancedcorehub.cosmetics.trail.note"
+  ender:
+    name: "<dark_purple>Ender Trail"
+    particle: PORTAL
+    permission: "advancedcorehub.cosmetics.trail.ender"
+  none:
+    name: "<gray>None"
+    particle: "" # Special case to disable trail
+    permission: "advancedcorehub.cosmetics.trail.none"

@@ -2,13 +2,9 @@ package com.minekarta.advancedcorehub.manager;
 
 import co.aikar.commands.PaperCommandManager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.commands.acf.BossBarCommand;
-import com.minekarta.advancedcorehub.commands.acf.ClearChatCommand;
-import com.minekarta.advancedcorehub.commands.acf.FlyCommand;
-import com.minekarta.advancedcorehub.commands.acf.AdvancedCoreHubCommand;
-import com.minekarta.advancedcorehub.commands.acf.LockChatCommand;
-import com.minekarta.advancedcorehub.commands.acf.SetSpawnCommand;
-import com.minekarta.advancedcorehub.commands.acf.SpawnCommand;
+import co.aikar.commands.PaperCommandManager;
+import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.commands.acf.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 
@@ -41,6 +37,7 @@ public class CommandManager {
         manager.registerCommand(new SpawnCommand());
         manager.registerCommand(new SetSpawnCommand());
         manager.registerCommand(new AdvancedCoreHubCommand());
+        manager.registerCommand(new CosmeticsCommand());
     }
 
     private void registerDependencies() {
@@ -49,6 +46,7 @@ public class CommandManager {
         manager.registerDependency(ChatManager.class, plugin.getChatManager());
         manager.registerDependency(ItemsManager.class, plugin.getItemsManager());
         manager.registerDependency(HubWorldManager.class, plugin.getHubWorldManager());
+        manager.registerDependency(com.minekarta.advancedcorehub.cosmetics.CosmeticsManager.class, plugin.getCosmeticsManager());
     }
 
     private void registerCommandCompletions() {
@@ -60,5 +58,9 @@ public class CommandManager {
                 Arrays.asList("10s", "30s", "1m", "5m", "10m", "30m", "1h"));
         manager.getCommandCompletions().registerCompletion("customitems", c ->
                 plugin.getItemsManager().getItemKeys());
+        manager.getCommandCompletions().registerCompletion("worlds", c ->
+                plugin.getServer().getWorlds().stream().map(org.bukkit.World::getName).collect(Collectors.toList()));
+        manager.getCommandCompletions().registerCompletion("particletrails", c ->
+                plugin.getCosmeticsManager().getAvailableTrails().keySet());
     }
 }

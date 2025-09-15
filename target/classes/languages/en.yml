@@ -3,12 +3,13 @@
 # General messages
 no-permission: "<red>You do not have permission to execute this command."
 players-only: "<red>This command can only be run by a player."
-player-not-found: "<red>Player '{0}' not found."
-invalid-usage: "<red>Invalid usage. Use: {0}"
-invalid-number: "<red>'{0}' is not a valid number."
+player-not-found: "<red>Player <yellow>{0}</yellow> not found."
+invalid-usage: "<red>Invalid usage. Use: <yellow>{0}</yellow>"
+invalid-number: "<red><yellow>{0}</yellow> is not a valid number."
 reload-success: "<green>AdvancedCoreHub configuration has been reloaded."
 version-info: "<green>AdvancedCoreHub is running version <yellow>{0}</yellow>."
-unknown-command: "<red>Unknown subcommand '{0}'. Use /ach help for a list of commands."
+unknown-command: "<red>Unknown subcommand <yellow>{0}</yellow>. Use <green>/ach help</green> for a list of commands."
+action-not-found: "<red>The action <yellow>{0}</yellow> was not found."
 
 # Item related messages
 item-not-found: "<red>The item '{0}' does not exist."
@@ -39,22 +40,22 @@ fly-expired: "<red>Your temporary flight has expired."
 invalid-duration-format: "<red>Invalid duration format: {0}. Use formats like 10s, 5m, 1h."
 
 # Join/Quit messages
-join-message: "<yellow>%player_name% <green>joined the server."
-quit-message: "<yellow>%player_name% <red>left the server."
+join-message: "<gray>[<green>+</green>] <yellow>%player_name%</yellow>"
+quit-message: "<gray>[<red>-</red>] <yellow>%player_name%</yellow>"
 
 # Announcements
-announcement-prefix: "<aqua>[Announcement] <reset>"
+announcement-prefix: "<aqua><bold>ANNOUNCEMENT</bold> <reset>"
 
 # AOTE message
 aote-no-space: "<red>There is not enough space to teleport."
 
 # BossBar Command
 bossbar-help-header: "<gold>--- BossBar Command Help ---"
-bossbar-help-create: "<yellow>/bossbar create <player|@a> <color> <style> <title...>"
-bossbar-help-remove: "<yellow>/bossbar remove <player|@a>"
-bossbar-help-set: "<yellow>/bossbar set <player|@a> <title|color|style> <value...>"
+bossbar-help-create: "<aqua>/bossbar create <player|@a> <color> <style> <title...>"
+bossbar-help-remove: "<aqua>/bossbar remove <player|@a>"
+bossbar-help-set: "<aqua>/bossbar set <player|@a> <title|color|style> <value...>"
 bossbar-created: "<green>Boss bar created for <yellow>{0}</yellow>."
 bossbar-removed: "<green>Boss bar removed for <yellow>{0}</yellow>."
-bossbar-set-success: "<green>Boss bar <yellow>{0}</yellow> set to '<yellow>{1}</yellow>' for <yellow>{2}</yellow>."
-bossbar-invalid-color: "<red>Invalid color: {0}. Valid colors are: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
-bossbar-invalid-style: "<red>Invalid style: {0}. Valid styles are: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
+bossbar-set-success: "<green>Boss bar <yellow>{0}</yellow> set to <yellow>{1}</yellow> for <yellow>{2}</yellow>."
+bossbar-invalid-color: "<red>Invalid color: <yellow>{0}</yellow>. Valid colors are: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
+bossbar-invalid-style: "<red>Invalid style: <yellow>{0}</yellow>. Valid styles are: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."

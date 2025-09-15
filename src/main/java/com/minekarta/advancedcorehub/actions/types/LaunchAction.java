@@ -5,6 +5,8 @@ import com.minekarta.advancedcorehub.actions.Action;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+
 public class LaunchAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -15,24 +17,23 @@ public class LaunchAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) return;
+        List<String> args = (List<String>) data;
 
-        String launchData = (String) data;
-        String[] parts = launchData.split(";");
-        if (parts.length < 2) {
-            plugin.getLogger().warning("[LaunchAction] Invalid data. Expected: power;powerY");
+        if (args.size() < 3) {
+            plugin.getLogger().warning("[LaunchAction] Invalid data. Expected: [LAUNCH:power:powerY]");
             return;
         }
 
         try {
-            double power = Double.parseDouble(parts[0]);
-            double powerY = Double.parseDouble(parts[1]);
+            double power = Double.parseDouble(args.get(1));
+            double powerY = Double.parseDouble(args.get(2));
 
             Vector direction = player.getLocation().getDirection().multiply(power).setY(powerY);
             player.setVelocity(direction);
 
         } catch (NumberFormatException e) {
-            plugin.getLogger().warning("[LaunchAction] Invalid number format in data: " + launchData);
+            plugin.getLogger().warning("[LaunchAction] Invalid number format in data: " + args);
         }
     }
 }

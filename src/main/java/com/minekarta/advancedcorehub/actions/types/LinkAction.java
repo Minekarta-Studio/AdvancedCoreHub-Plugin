@@ -7,6 +7,8 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class LinkAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -17,23 +19,22 @@ public class LinkAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) return;
+        List<String> args = (List<String>) data;
 
-        String linkData = (String) data;
-        String[] parts = linkData.split(";", 3);
-        if (parts.length < 3) {
-            plugin.getLogger().warning("[LinkAction] Invalid data format. Expected: message;hoverText;link");
+        if (args.size() < 4) {
+            plugin.getLogger().warning("[LinkAction] Invalid data format. Expected: [LINK:message:hoverText:link]");
             return;
         }
 
         // The link part should not be formatted, so we just replace placeholders.
-        String link = parts[2];
+        String link = args.get(3);
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             link = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, link);
         }
 
-        Component message = plugin.getLocaleManager().getComponentFromString(parts[0], player)
-                .hoverEvent(HoverEvent.showText(plugin.getLocaleManager().getComponentFromString(parts[1], player)))
+        Component message = plugin.getLocaleManager().getComponentFromString(args.get(1), player)
+                .hoverEvent(HoverEvent.showText(plugin.getLocaleManager().getComponentFromString(args.get(2), player)))
                 .clickEvent(ClickEvent.openUrl(link));
 
         player.sendMessage(message);

@@ -54,16 +54,43 @@ public class MenuManager {
                 if (itemConfig == null) continue;
 
                 try {
-                    String materialString = itemConfig.getString("material", "STONE");
-                    ItemBuilder builder = new ItemBuilder(materialString);
+                    ServerInfoManager serverInfoManager = plugin.getServerInfoManager();
+                    String serverName = itemConfig.getString("server-name");
+                    int playerCount = -1;
+
+                    if (serverName != null && !serverName.isEmpty()) {
+                        playerCount = serverInfoManager.getPlayerCount(serverName);
+                    }
+
+                    Material material = Material.matchMaterial(itemConfig.getString("material", "STONE"));
+                    ItemBuilder builder;
+
+                    // Dynamically change material based on server status
+                    if (serverName != null && !serverName.isEmpty()) {
+                        material = playerCount >= 0 ? Material.LIME_WOOL : Material.RED_WOOL;
+                    }
+
+                    builder = new ItemBuilder(material != null ? material : Material.STONE);
+
 
                     // Parse display name and lore with player-specific placeholders
                     Component displayName = plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player);
                     builder.setDisplayName(displayName);
 
                     if (itemConfig.contains("lore")) {
+                        final int finalPlayerCount = playerCount;
                         List<Component> lore = itemConfig.getStringList("lore").stream()
-                                .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                                .map(line -> {
+                                    String processedLine = line;
+                                    if (finalPlayerCount != -1) {
+                                        processedLine = processedLine.replace("%players%", String.valueOf(finalPlayerCount));
+                                        processedLine = processedLine.replace("%status%", "<green>Online</green>");
+                                    } else {
+                                        processedLine = processedLine.replace("%players%", "N/A");
+                                        processedLine = processedLine.replace("%status%", "<red>Offline</red>");
+                                    }
+                                    return plugin.getLocaleManager().getComponentFromString(processedLine, player);
+                                })
                                 .collect(Collectors.toList());
                         builder.setLore(lore);
                     }

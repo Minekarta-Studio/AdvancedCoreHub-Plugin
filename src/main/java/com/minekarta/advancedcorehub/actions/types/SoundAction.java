@@ -5,6 +5,8 @@ import com.minekarta.advancedcorehub.actions.Action;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class SoundAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -15,27 +17,27 @@ public class SoundAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) return;
+        List<String> args = (List<String>) data;
+        if (args.size() < 2) return;
 
-        String soundData = (String) data;
-        String[] parts = soundData.split(";");
-        String soundName = parts[0];
+        String soundName = args.get(1);
 
         float volume = 1.0f;
-        if (parts.length > 1) {
+        if (args.size() > 2) {
             try {
-                volume = Float.parseFloat(parts[1]);
+                volume = Float.parseFloat(args.get(2));
             } catch (NumberFormatException e) {
-                plugin.getLogger().warning("[SoundAction] Invalid volume format: " + parts[1]);
+                plugin.getLogger().warning("[SoundAction] Invalid volume format: " + args.get(2));
             }
         }
 
         float pitch = 1.0f;
-        if (parts.length > 2) {
+        if (args.size() > 3) {
             try {
-                pitch = Float.parseFloat(parts[2]);
+                pitch = Float.parseFloat(args.get(3));
             } catch (NumberFormatException e) {
-                plugin.getLogger().warning("[SoundAction] Invalid pitch format: " + parts[2]);
+                plugin.getLogger().warning("[SoundAction] Invalid pitch format: " + args.get(3));
             }
         }
 
