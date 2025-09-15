@@ -4,6 +4,8 @@ import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class SlotAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -14,9 +16,11 @@ public class SlotAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) return;
+        List<String> args = (List<String>) data;
+        if (args.size() < 2) return;
 
-        String slotData = (String) data;
+        String slotData = args.get(1);
         try {
             int slot = Integer.parseInt(slotData);
             if (slot < 0 || slot > 8) {

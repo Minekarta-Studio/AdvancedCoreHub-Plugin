@@ -14,6 +14,10 @@ spawn:
   yaw: 0.0
   pitch: 0.0
 
+# Teleport player to spawn on join.
+spawn-on-join:
+  enabled: true
+
 # General message settings for the plugin.
 messages:
   # This prefix will be added to the beginning of most plugin messages.
@@ -23,8 +27,15 @@ messages:
 # Actions to be executed when a player joins the server.
 # See the action format documentation for all available types.
 actions_on_join:
-  - "[TITLE]<green>Welcome to the Server!;<gray>Enjoy your stay, %player_name%!;10;70;20"
-  - "[SOUND]ENTITY_PLAYER_LEVELUP"
+  - type: TITLE
+    data:
+      title: "<green>Welcome to the Server!</green>"
+      subtitle: "<gray>Enjoy your stay, %player_name%!</gray>"
+      fade-in: 10
+      stay: 70
+      fade-out: 20
+  - type: SOUND
+    data: "ENTITY_PLAYER_LEVELUP;1.0;1.2"
 
 # This is the central list of worlds that are considered 'hub' worlds.
 # In these worlds, special rules (like event cancellation) and inventory management will apply.
@@ -48,8 +59,19 @@ inventory_management:
   # When enabled, inventory will be cleared and hub items will be given upon entering a hub world.
   # This feature uses the 'hub-worlds' list defined above.
   enable: true
+  # If true, player inventories will be saved when entering a hub world and restored when leaving.
+  # This prevents item loss when moving between game worlds and hub worlds.
+  save-and-restore: true
   clear-on-enter: true
-  # More features like save/restore can be added here later.
+
+# Settings for the server selector menu
+server-selector:
+  # A list of BungeeCord/Velocity server names to get player counts for.
+  # This must match the server names in your proxy's configuration.
+  servers:
+    - "survival"
+    - "creative"
+    - "skyblock"
 
 # Settings for movement items.
 movement_items:
@@ -90,13 +112,14 @@ announcements:
         - "hub"
         - "lobby"
 
-    # Example 3: A title message. The message is split by ';' into title and subtitle.
+    # Example 3: A title message with structured data.
     - type: TITLE
-      message: "<green>TIP<gray>;<white>You can use <gold>/vote</gold> to support the server!"
-      # Optional timing parameters for the title.
+      title: "<green>TIP</green>"
+      subtitle: "<white>You can use <gold>/vote</gold> to support the server!</white>"
       fade-in: 10
       stay: 80
       fade-out: 10
+      worlds: ["hub"] # This title will only show in the 'hub' world
 
     # Example 4: A boss bar message.
     - type: BOSS_BAR
@@ -109,18 +132,23 @@ announcements:
 bossbar:
   show_on_join: true
   title: "<gradient:#5e4fa2:#f79459>Welcome, %player_name%!</gradient>"
-  color: WHITE # Can be BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
-  style: SOLID # Can be SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+  color: WHITE # Valid colors: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
+  style: SOLID # Valid styles: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
   duration: 10 # in seconds, use -1 to make it stay forever
 
 # ----------------------------------------------------------------
 # Custom Actions
 # ----------------------------------------------------------------
 # Define your own custom actions here. Each key is the action name you will use in other configs.
-# For example, you can then use "[my_custom_action]" in your items or menus.
+# For example, you can then use "[example_action]" or "[greet:Jules]" in your items or menus.
 custom-actions:
   example_action:
     actions:
       - "[MESSAGE] <green>This is a custom action!"
-      - "[SOUND] ENTITY_EXPERIENCE_ORB_PICKUP;1.0;1.5"
+      - "[SOUND] ENTITY_EXPERIENCE_ORB_PICKUP:1.0:1.5"
       - "[CONSOLE] say The player %player_name% just triggered a custom action."
+  greet:
+    # Usage: [greet:PlayerName] -> will be replaced with %arg1%
+    actions:
+      - "[MESSAGE] <wave> Hello, %arg1%! Welcome to the server!"
+      - "[SOUND] ENTITY_VILLAGER_AMBIENT:1.0:1.0"

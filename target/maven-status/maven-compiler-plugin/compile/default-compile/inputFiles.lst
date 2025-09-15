@@ -12,6 +12,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/LaunchAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/LinkAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/MenuAction.java
+/app/src/main/java/com/minekarta/advancedcorehub/actions/types/MessageAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/MovementAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/PlayerAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/SlotAction.java
@@ -20,10 +21,14 @@
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/AdvancedCoreHubCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/BossBarCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/ClearChatCommand.java
+/app/src/main/java/com/minekarta/advancedcorehub/commands/acf/CosmeticsCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/FlyCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/LockChatCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SpawnCommand.java
+/app/src/main/java/com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/cosmetics/ParticleTrail.java
+/app/src/main/java/com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemActionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemProtectionListener.java
@@ -47,6 +52,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/LocaleManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuHolder.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/manager/ServerInfoManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Formatter.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/ItemBuilder.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Permissions.java

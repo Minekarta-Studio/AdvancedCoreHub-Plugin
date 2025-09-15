@@ -1,0 +1,54 @@
+# ----------------------------------------------------------------
+# Cosmetics Menu
+# ----------------------------------------------------------------
+
+title: "<gold>Cosmetics"
+size: 27
+
+items:
+  particle_trails:
+    material: NETHER_STAR
+    slot: 11
+    display-name: "<aqua>Particle Trails"
+    lore:
+      - "<gray>Choose a particle effect that"
+      - "<gray>follows you as you move."
+      - ""
+      - "<yellow>Click to open!"
+    actions:
+      - "[MENU] particle_trails" # This menu doesn't exist yet
+
+  hats:
+    material: LEATHER_HELMET
+    slot: 13
+    display-name: "<green>Hats"
+    lore:
+      - "<gray>Wear any block or item"
+      - "<gray>as a hat!"
+      - ""
+      - "<yellow>Click to open!"
+    actions:
+      - "[MENU] hats" # This menu doesn't exist yet
+
+  pets:
+    material: BONE
+    slot: 15
+    display-name: "<red>Pets"
+    lore:
+      - "<gray>Cosmetic pets that follow you."
+      - ""
+      - "<dark_gray>(Coming Soon)"
+    actions:
+      - "[MESSAGE] <red>This feature is coming soon!"
+
+  close_button:
+    material: BARRIER
+    slot: 22
+    display-name: "<red>Close Menu"
+    actions:
+      - "[CLOSE]"
+
+  filler_glass:
+    material: BLACK_STAINED_GLASS_PANE
+    display-name: " "
+    slots: [0,1,2,3,4,5,6,7,8,9,10,12,14,16,17,18,19,20,21,23,24,25,26]

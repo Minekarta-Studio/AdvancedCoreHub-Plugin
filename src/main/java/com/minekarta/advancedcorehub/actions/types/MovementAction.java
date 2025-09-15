@@ -6,6 +6,8 @@ import com.minekarta.advancedcorehub.util.TeleportUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class MovementAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -16,10 +18,23 @@ public class MovementAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || !((String) data).equalsIgnoreCase("aote")) {
-            return;
-        }
+        if (!(data instanceof List)) return;
+        List<String> args = (List<String>) data;
+        if (args.size() < 2) return;
 
+        String movementType = args.get(1).toLowerCase();
+
+        switch (movementType) {
+            case "aote":
+                handleAote(player);
+                break;
+            // Other movement types can be added here
+            default:
+                plugin.getLogger().warning("[MovementAction] Unknown movement type: " + movementType);
+        }
+    }
+
+    private void handleAote(Player player) {
         if (handleCooldown(player, "aote", "movement_items.aote.cooldown", 2)) {
             return;
         }

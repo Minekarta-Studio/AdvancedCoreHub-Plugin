@@ -16,6 +16,7 @@ public class InventoryManager {
     private final AdvancedCoreHub plugin;
     private List<String> hubWorlds;
     private boolean clearOnEnter;
+    private boolean saveAndRestore;
 
     private final Map<UUID, ItemStack[]> playerInventories = new HashMap<>();
     private final Map<UUID, ItemStack[]> playerArmor = new HashMap<>();
@@ -34,8 +35,10 @@ public class InventoryManager {
 
         if (inventoryManagementEnabled) {
             this.clearOnEnter = invManagementConfig.getBoolean("clear-on-enter", true);
+            this.saveAndRestore = invManagementConfig.getBoolean("save-and-restore", true);
         } else {
             this.clearOnEnter = false;
+            this.saveAndRestore = false;
             // If the whole feature is disabled, clear the list so isHubWorld returns false
             this.hubWorlds.clear();
         }
@@ -100,6 +103,10 @@ public class InventoryManager {
 
     public boolean isHubWorld(String worldName) {
         return hubWorlds != null && hubWorlds.contains(worldName);
+    }
+
+    public boolean isSaveAndRestoreEnabled() {
+        return saveAndRestore;
     }
 
     public void savePlayerInventory(Player player) {

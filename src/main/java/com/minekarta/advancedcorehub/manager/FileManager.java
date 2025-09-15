@@ -34,6 +34,7 @@ public class FileManager {
 
         // Load other configs
         loadConfigFile("items.yml");
+        loadConfigFile("cosmetics.yml");
         loadConfigFile("menus/selector.yml");
         loadConfigFile("menus/socials.yml");
         loadConfigFile("menus/vip_gadget.yml");

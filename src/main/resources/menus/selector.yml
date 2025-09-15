@@ -7,35 +7,41 @@ size: 27 # 3 rows
 
 items:
   survival:
-    material: GRASS_BLOCK
+    material: LIME_WOOL # Will be updated dynamically
     slot: 11
+    server-name: "survival"
     display-name: "<green>Survival"
     lore:
       - "<gray>Click to join the Survival server!"
       - ""
-      - "<yellow>Players online: %papi_server_survival_online%"
+      - "<gray>Players: <white>%players%</white>"
+      - "<gray>Status: %status%"
     actions:
       - "[BUNGEE] survival"
       - "[CLOSE]"
   skyblock:
-    material: GRASS_BLOCK # Should be a skyblock-related item
+    material: LIME_WOOL # Will be updated dynamically
     slot: 13
+    server-name: "skyblock"
     display-name: "<aqua>Skyblock"
     lore:
       - "<gray>Click to join the Skyblock server!"
       - ""
-      - "<yellow>Players online: %papi_server_skyblock_online%"
+      - "<gray>Players: <white>%players%</white>"
+      - "<gray>Status: %status%"
     actions:
       - "[BUNGEE] skyblock"
       - "[CLOSE]"
   creative:
-    material: QUARTZ_BLOCK
+    material: LIME_WOOL # Will be updated dynamically
     slot: 15
+    server-name: "creative"
     display-name: "<yellow>Creative"
     lore:
       - "<gray>Click to join the Creative server!"
       - ""
-      - "<yellow>Players online: %papi_server_creative_online%"
+      - "<gray>Players: <white>%players%</white>"
+      - "<gray>Status: %status%"
     actions:
       - "[BUNGEE] creative"
       - "[CLOSE]"

@@ -9,6 +9,8 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.util.List;
+
 public class FireworkAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -19,23 +21,25 @@ public class FireworkAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) {
+            plugin.getLogger().warning("[FireworkAction] Invalid data type for FireworkAction. Expected a List of strings.");
+            return;
+        }
+        List<String> args = (List<String>) data;
 
-        String fireworkData = (String) data;
-        // Data: type;r;g;b;power;delay (type = BALL, BURST, etc. color 0-255)
-        String[] parts = fireworkData.split(";");
-        if (parts.length < 6) {
-            plugin.getLogger().warning("[FireworkAction] Invalid data. Expected: type;r;g;b;power;delay");
+        // Args: [FIREWORK, type, r, g, b, power, delay]
+        if (args.size() < 7) {
+            plugin.getLogger().warning("[FireworkAction] Invalid data. Expected: [FIREWORK:type:r:g:b:power:delay]");
             return;
         }
 
         try {
-            FireworkEffect.Type type = FireworkEffect.Type.valueOf(parts[0].toUpperCase());
-            int r = Integer.parseInt(parts[1]);
-            int g = Integer.parseInt(parts[2]);
-            int b = Integer.parseInt(parts[3]);
-            int power = Integer.parseInt(parts[4]);
-            long delay = Long.parseLong(parts[5]);
+            FireworkEffect.Type type = FireworkEffect.Type.valueOf(args.get(1).toUpperCase());
+            int r = Integer.parseInt(args.get(2));
+            int g = Integer.parseInt(args.get(3));
+            int b = Integer.parseInt(args.get(4));
+            int power = Integer.parseInt(args.get(5));
+            long delay = Long.parseLong(args.get(6));
 
             Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
@@ -55,7 +59,7 @@ public class FireworkAction implements Action {
             }
 
         } catch (Exception e) {
-            plugin.getLogger().warning("[FireworkAction] Failed to parse firework data: " + fireworkData + " | Error: " + e.getMessage());
+            plugin.getLogger().warning("[FireworkAction] Failed to parse firework data: " + args + " | Error: " + e.getMessage());
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.minekarta.advancedcorehub;
 
+import com.minekarta.advancedcorehub.cosmetics.CosmeticsManager;
+import com.minekarta.advancedcorehub.cosmetics.PlayerMoveListener;
 import com.minekarta.advancedcorehub.listeners.*;
 import com.minekarta.advancedcorehub.manager.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +25,8 @@ public class AdvancedCoreHub extends JavaPlugin {
     private ChatManager chatManager;
     private CommandManager commandManager;
     private InventoryManager inventoryManager;
+    private ServerInfoManager serverInfoManager;
+    private CosmeticsManager cosmeticsManager;
 
 
     @Override
@@ -53,6 +57,8 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.bossBarManager = new BossBarManager(this);
         this.chatManager = new ChatManager();
         this.commandManager = new CommandManager(this);
+        this.serverInfoManager = new ServerInfoManager(this);
+        this.cosmeticsManager = new CosmeticsManager(this);
 
 
         // Load other components
@@ -108,10 +114,12 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemActionListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
     }
 
     private void registerChannels() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
     }
 
     // --- Getters ---
@@ -162,5 +170,13 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public InventoryManager getInventoryManager() {
         return inventoryManager;
+    }
+
+    public ServerInfoManager getServerInfoManager() {
+        return serverInfoManager;
+    }
+
+    public CosmeticsManager getCosmeticsManager() {
+        return cosmeticsManager;
     }
 }

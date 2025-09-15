@@ -5,6 +5,8 @@ import com.minekarta.advancedcorehub.actions.Action;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class BroadcastAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -15,9 +17,19 @@ public class BroadcastAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        String message;
+        if (data instanceof List) {
+            List<String> args = (List<String>) data;
+            if (args.size() < 2) return; // Need at least [BROADCAST, message]
+            // Remove the action name and join the rest
+            message = String.join(":", args.subList(1, args.size()));
+        } else if (data instanceof String) {
+            message = (String) data;
+        } else {
+            return;
+        }
 
-        String message = (String) data;
+        if (message.isEmpty()) return;
 
         // Since this is a broadcast, we can't parse per-player placeholders.
         // We pass null for the player to use global placeholders if any.

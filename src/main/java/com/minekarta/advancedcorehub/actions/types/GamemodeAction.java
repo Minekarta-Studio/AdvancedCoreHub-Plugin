@@ -5,6 +5,8 @@ import com.minekarta.advancedcorehub.actions.Action;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class GamemodeAction implements Action {
 
     private final AdvancedCoreHub plugin;
@@ -15,9 +17,12 @@ public class GamemodeAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof String) || ((String) data).isEmpty()) return;
+        if (!(data instanceof List)) return;
 
-        String gamemode = (String) data;
+        List<String> args = (List<String>) data;
+        if (args.size() < 2) return;
+
+        String gamemode = args.get(1);
         try {
             GameMode gm = GameMode.valueOf(gamemode.toUpperCase());
             player.setGameMode(gm);
