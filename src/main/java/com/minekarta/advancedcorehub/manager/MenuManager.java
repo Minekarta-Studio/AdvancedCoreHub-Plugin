@@ -1,7 +1,9 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.cosmetics.Gadget;
 import com.minekarta.advancedcorehub.util.ItemBuilder;
+import com.minekarta.advancedcorehub.util.PersistentKeys;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,15 +22,13 @@ import java.util.stream.Collectors;
 public class MenuManager {
 
     private final AdvancedCoreHub plugin;
-    // Cache for menu actions to avoid file reads on every click
-    private final Map<String, Map<Integer, List<String>>> menuActionsCache = new HashMap<>();
+    private final Map<String, Map<Integer, Map<String, List<String>>>> menuActionsCache = new HashMap<>();
 
     public MenuManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
     }
 
     public void loadMenus() {
-        // This method now simply clears the action cache on reload.
         menuActionsCache.clear();
         plugin.getLogger().info("Menu action cache cleared.");
     }
@@ -40,13 +41,23 @@ public class MenuManager {
             return;
         }
 
-        // Parse title with player-specific placeholders
         Component title = plugin.getLocaleManager().getComponentFromString(config.getString("title", "<red>Invalid Title"), player);
         int size = config.getInt("size", 27);
 
-        // Create inventory with our custom holder
         Inventory inventory = Bukkit.createInventory(new MenuHolder(menuId), size, title);
 
+        // Special handling for the dynamic gadget menu
+        if (menuId.equalsIgnoreCase("vip_gadget")) {
+            populateGadgetMenu(player, inventory);
+        } else {
+            // Standard static menu population
+            populateStaticMenu(player, inventory, config, menuId);
+        }
+
+        player.openInventory(inventory);
+    }
+
+    private void populateStaticMenu(Player player, Inventory inventory, FileConfiguration config, String menuId) {
         ConfigurationSection itemsSection = config.getConfigurationSection("items");
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {
@@ -62,18 +73,13 @@ public class MenuManager {
                         playerCount = serverInfoManager.getPlayerCount(serverName);
                     }
 
-                    Material material = Material.matchMaterial(itemConfig.getString("material", "STONE"));
-                    ItemBuilder builder;
+                    String materialString = itemConfig.getString("material", "STONE");
+                    ItemBuilder builder = new ItemBuilder(materialString);
 
-                    // Dynamically change material based on server status
                     if (serverName != null && !serverName.isEmpty()) {
-                        material = playerCount >= 0 ? Material.LIME_WOOL : Material.RED_WOOL;
+                        builder.setMaterial(playerCount >= 0 ? Material.LIME_WOOL : Material.RED_WOOL);
                     }
 
-                    builder = new ItemBuilder(material != null ? material : Material.STONE);
-
-
-                    // Parse display name and lore with player-specific placeholders
                     Component displayName = plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player);
                     builder.setDisplayName(displayName);
 
@@ -81,33 +87,24 @@ public class MenuManager {
                         final int finalPlayerCount = playerCount;
                         List<Component> lore = itemConfig.getStringList("lore").stream()
                                 .map(line -> {
-                                    String processedLine = line;
-                                    if (finalPlayerCount != -1) {
-                                        processedLine = processedLine.replace("%players%", String.valueOf(finalPlayerCount));
-                                        processedLine = processedLine.replace("%status%", "<green>Online</green>");
-                                    } else {
-                                        processedLine = processedLine.replace("%players%", "N/A");
-                                        processedLine = processedLine.replace("%status%", "<red>Offline</red>");
-                                    }
+                                    String processedLine = line.replace("%players%", finalPlayerCount != -1 ? String.valueOf(finalPlayerCount) : "N/A")
+                                            .replace("%status%", finalPlayerCount != -1 ? "<green>Online</green>" : "<red>Offline</red>");
                                     return plugin.getLocaleManager().getComponentFromString(processedLine, player);
                                 })
                                 .collect(Collectors.toList());
                         builder.setLore(lore);
                     }
 
-                    // Add custom model data if it exists
                     if (itemConfig.isInt("custom-model-data")) {
                         builder.setCustomModelData(itemConfig.getInt("custom-model-data"));
                     }
 
-                    // Add enchantments if they exist
                     if (itemConfig.contains("enchantments")) {
                         builder.addEnchantments(itemConfig.getStringList("enchantments"));
                     }
 
                     ItemStack itemStack = builder.build();
 
-                    // Place item(s) in the inventory
                     if (itemConfig.contains("slot")) {
                         inventory.setItem(itemConfig.getInt("slot"), itemStack);
                     } else if (itemConfig.contains("slots")) {
@@ -120,39 +117,71 @@ public class MenuManager {
                 }
             }
         }
-        player.openInventory(inventory);
     }
 
-    public Map<Integer, List<String>> getActionsForMenu(String menuId) {
-        // Check cache first
+    private void populateGadgetMenu(Player player, Inventory inventory) {
+        Map<String, Gadget> gadgets = plugin.getGadgetManager().getPlayerGadgets(player);
+        int slot = 10; // Starting slot for gadgets
+        for (Gadget gadget : gadgets.values()) {
+            if (slot > 16) break; // Limit to one row for now
+
+            ItemBuilder builder = new ItemBuilder(gadget.material());
+            builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(gadget.displayName(), player));
+            List<Component> lore = gadget.lore().stream()
+                    .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                    .collect(Collectors.toList());
+            builder.setLore(lore);
+            builder.addPdcValue(PersistentKeys.GADGET_ID, PersistentDataType.STRING, gadget.id());
+
+            inventory.setItem(slot, builder.build());
+            slot++;
+        }
+    }
+
+
+    public Map<Integer, Map<String, List<String>>> getActionsForMenu(String menuId) {
         if (menuActionsCache.containsKey(menuId)) {
             return menuActionsCache.get(menuId);
         }
 
         FileConfiguration config = plugin.getFileManager().getConfig("menus/" + menuId + ".yml");
         if (config == null) {
-            return null; // Or an empty map
+            return new HashMap<>();
         }
 
-        Map<Integer, List<String>> actions = new HashMap<>();
+        Map<Integer, Map<String, List<String>>> menuActions = new HashMap<>();
         ConfigurationSection itemsSection = config.getConfigurationSection("items");
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {
                 ConfigurationSection itemConfig = itemsSection.getConfigurationSection(key);
-                if (itemConfig != null && itemConfig.contains("actions")) {
-                    List<String> itemActions = itemConfig.getStringList("actions");
+                if (itemConfig == null) continue;
+
+                Map<String, List<String>> clickActions = new HashMap<>();
+                if (itemConfig.contains("left-click-actions")) {
+                    clickActions.put("LEFT", itemConfig.getStringList("left-click-actions"));
+                }
+                if (itemConfig.contains("right-click-actions")) {
+                    clickActions.put("RIGHT", itemConfig.getStringList("right-click-actions"));
+                }
+                if (itemConfig.contains("actions")) {
+                    plugin.getLogger().warning("Menu '" + menuId + "', item '" + key + "' uses deprecated 'actions' key. Please use 'left-click-actions' or 'right-click-actions'.");
+                    clickActions.putIfAbsent("RIGHT", itemConfig.getStringList("actions"));
+                }
+
+                if (!clickActions.isEmpty()) {
                     if (itemConfig.contains("slot")) {
-                        actions.put(itemConfig.getInt("slot"), itemActions);
+                        int slot = itemConfig.getInt("slot");
+                        menuActions.put(slot, clickActions);
                     } else if (itemConfig.contains("slots")) {
                         for (int slot : itemConfig.getIntegerList("slots")) {
-                            actions.put(slot, itemActions);
+                            menuActions.put(slot, clickActions);
                         }
                     }
                 }
             }
         }
 
-        menuActionsCache.put(menuId, actions);
-        return actions;
+        menuActionsCache.put(menuId, menuActions);
+        return menuActions;
     }
 }

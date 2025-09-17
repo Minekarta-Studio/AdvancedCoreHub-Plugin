@@ -1,0 +1,62 @@
+# ----------------------------------------------------------------
+# AdvancedCoreHub Gadgets Configuration
+# ----------------------------------------------------------------
+# This file defines all available VIP gadgets.
+#
+# Gadget Properties:
+#   id: A unique identifier for the gadget.
+#   material: The material of the item (e.g., 'DIAMOND_SWORD'). Supports HeadDatabase with 'hdb:<id>'.
+#   displayname: The name of the item. Supports MiniMessage and PlaceholderAPI.
+#   lore: A list of strings for the item's description. Supports MiniMessage and PlaceholderAPI.
+#   permission: (Optional) The permission required to use this gadget.
+#   cooldown: (Optional) The cooldown in seconds before this gadget can be used again.
+#   actions: A list of actions to run when the gadget is used.
+# ----------------------------------------------------------------
+gadgets:
+  particle_trail:
+    material: NETHER_STAR
+    display-name: "<aqua>Particle Trail"
+    lore:
+      - "<gray>Click to activate a heart particle trail."
+    permission: "advancedcorehub.gadget.particletrail"
+    cooldown: 10
+    actions:
+      - "[CONSOLE] party trails %player_name% hearts"
+      - "[MESSAGE]<green>You activated the heart particle trail!"
+      - "[CLOSE]"
+
+  super_jump:
+    material: FEATHER
+    display-name: "<white>Super Jump"
+    lore:
+      - "<gray>Click to get a massive jump boost!"
+    permission: "advancedcorehub.gadget.superjump"
+    cooldown: 5
+    actions:
+      - "[EFFECT] JUMP;200;4" # PotionEffectType;duration_in_ticks;amplifier
+      - "[MESSAGE]<green>You feel lighter!"
+      - "[CLOSE]"
+
+  cowboy:
+    material: SADDLE
+    display-name: "<gold>Cowboy"
+    lore:
+      - "<gray>Click to ride a horse for 30 seconds."
+    permission: "advancedcorehub.gadget.cowboy"
+    cooldown: 60
+    actions:
+      - "[CONSOLE] summon horse ~ ~ ~ {Tame:1b,SaddleItem:{id:saddle,Count:1b},OwnerUUID:%player_uuid%}"
+      - "[MESSAGE]<green>Yeehaw! A horse has been summoned for you."
+      - "[CLOSE]"
+
+  firework_show:
+    material: FIREWORK_ROCKET
+    display-name: "<red>Firework Show"
+    lore:
+      - "<gray>Launch a spectacular firework!"
+    permission: "advancedcorehub.gadget.firework"
+    cooldown: 15
+    actions:
+      - "[FIREWORK] location:player type:BALL_LARGE color:RED,BLUE fade:YELLOW,ORANGE"
+      - "[MESSAGE]<aqua>Ooh, pretty colors!"
+      - "[CLOSE]"

@@ -27,6 +27,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private InventoryManager inventoryManager;
     private ServerInfoManager serverInfoManager;
     private CosmeticsManager cosmeticsManager;
+    private GadgetManager gadgetManager;
 
 
     @Override
@@ -59,6 +60,8 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.commandManager = new CommandManager(this);
         this.serverInfoManager = new ServerInfoManager(this);
         this.cosmeticsManager = new CosmeticsManager(this);
+        this.gadgetManager = new GadgetManager(this);
+        this.gadgetManager.loadGadgets();
 
 
         // Load other components
@@ -88,6 +91,7 @@ public class AdvancedCoreHub extends JavaPlugin {
             this.fileManager.reloadAll();
             this.localeManager.load();
             this.itemsManager.loadItems();
+            this.gadgetManager.loadGadgets();
             this.menuManager.loadMenus();
             this.actionManager = new ActionManager(this); // Re-register actions
             this.hubWorldManager.load();
@@ -178,5 +182,9 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public CosmeticsManager getCosmeticsManager() {
         return cosmeticsManager;
+    }
+
+    public GadgetManager getGadgetManager() {
+        return gadgetManager;
     }
 }

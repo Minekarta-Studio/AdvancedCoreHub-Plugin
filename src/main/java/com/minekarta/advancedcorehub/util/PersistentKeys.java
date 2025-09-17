@@ -33,4 +33,7 @@ public final class PersistentKeys {
 
     // Key to prevent item giving on join after inventory clear
     public static final NamespacedKey INVENTORY_CLEARED = new NamespacedKey(plugin, "inventory_cleared");
+
+    // Key to identify a gadget in the gadget menu
+    public static final NamespacedKey GADGET_ID = new NamespacedKey(plugin, "gadget_id");
 }
