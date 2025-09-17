@@ -52,7 +52,9 @@ public class FileManager {
             if (file.getParentFile() != null) {
                 file.getParentFile().mkdirs();
             }
-            plugin.saveResource(fileName, false);
+            if (plugin.getResource(fileName) != null) {
+                plugin.saveResource(fileName, false);
+            }
         }
 
         files.put(fileName, file);
