@@ -101,6 +101,9 @@ public class ItemsManager {
             return false;
         }
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
         String itemId = meta.getPersistentDataContainer().get(PersistentKeys.ITEM_ID, PersistentDataType.STRING);
         return itemId != null && protectedItemIds.contains(itemId);
     }

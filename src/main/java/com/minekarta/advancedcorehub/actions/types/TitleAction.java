@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TitleAction implements Action {
 
@@ -20,6 +21,7 @@ public class TitleAction implements Action {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void execute(Player player, Object data) {
         String titleStr = "";
         String subtitleStr = "";
@@ -27,32 +29,36 @@ public class TitleAction implements Action {
 
         if (data instanceof Map) {
             Map<String, Object> dataMap = (Map<String, Object>) data;
-            titleStr = (String) dataMap.get("title");
-            subtitleStr = (String) dataMap.get("subtitle");
+            titleStr = dataMap.getOrDefault("title", "").toString().trim();
+            subtitleStr = dataMap.getOrDefault("subtitle", "").toString().trim();
             fadeIn = Formatter.parseInt(dataMap.getOrDefault("fade-in", fadeIn).toString(), fadeIn);
             stay = Formatter.parseInt(dataMap.getOrDefault("stay", stay).toString(), stay);
             fadeOut = Formatter.parseInt(dataMap.getOrDefault("fade-out", fadeOut).toString(), fadeOut);
         } else if (data instanceof List) {
             List<String> args = (List<String>) data;
-            if (args.size() < 2) return; // Needs at least [TITLE, title_text]
-            titleStr = args.get(1);
-            if (args.size() > 2) subtitleStr = args.get(2);
-            if (args.size() > 3) fadeIn = Formatter.parseInt(args.get(3), fadeIn);
-            if (args.size() > 4) stay = Formatter.parseInt(args.get(4), stay);
-            if (args.size() > 5) fadeOut = Formatter.parseInt(args.get(5), fadeOut);
+            if (args.size() < 2) return;
+
+            String fullData = args.subList(1, args.size()).stream().collect(Collectors.joining(" "));
+            String[] parts = fullData.split("\\|", 5);
+
+            if (parts.length > 0) titleStr = parts[0].trim();
+            if (parts.length > 1) subtitleStr = parts[1].trim();
+            if (parts.length > 2) fadeIn = Formatter.parseInt(parts[2].trim(), fadeIn);
+            if (parts.length > 3) stay = Formatter.parseInt(parts[3].trim(), stay);
+            if (parts.length > 4) fadeOut = Formatter.parseInt(parts[4].trim(), fadeOut);
         } else {
             return;
         }
 
-        if (titleStr == null && subtitleStr == null) {
+        if (titleStr.isEmpty() && subtitleStr.isEmpty()) {
             plugin.getLogger().warning("[TitleAction] Title and subtitle are both missing.");
             return;
         }
 
-        Component title = titleStr != null ? plugin.getLocaleManager().getComponentFromString(titleStr, player) : Component.empty();
-        Component subtitle = subtitleStr != null ? plugin.getLocaleManager().getComponentFromString(subtitleStr, player) : Component.empty();
+        Component title = !titleStr.isEmpty() ? plugin.getLocaleManager().getComponentFromString(titleStr, player) : Component.empty();
+        Component subtitle = !subtitleStr.isEmpty() ? plugin.getLocaleManager().getComponentFromString(subtitleStr, player) : Component.empty();
 
-        Title.Times times = Title.Times.times(Duration.ofMillis(fadeIn * 50), Duration.ofMillis(stay * 50), Duration.ofMillis(fadeOut * 50));
+        Title.Times times = Title.Times.times(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L));
         Title finalTitle = Title.title(title, subtitle, times);
 
         player.showTitle(finalTitle);

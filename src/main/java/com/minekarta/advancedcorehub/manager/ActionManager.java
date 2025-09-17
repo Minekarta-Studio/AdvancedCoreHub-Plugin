@@ -6,17 +6,22 @@ import com.minekarta.advancedcorehub.actions.types.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ActionManager {
 
     private final AdvancedCoreHub plugin;
     private final Map<String, Action> actionMap = new HashMap<>();
+    // Pattern to match actions like [ACTION] data or [ACTION:data]
+    private static final Pattern ACTION_PATTERN = Pattern.compile("\\[([A-Z_]+)(?::\\s*(.*?))?\\](.*)");
 
     public ActionManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
@@ -36,14 +41,15 @@ public class ActionManager {
             }
 
             registerAction(key.toUpperCase(), (player, data) -> {
-                List<String> args = (List<String>) data; // data is the list of arguments from the call
-                List<String> processedActionStrings = new java.util.ArrayList<>();
+                if (!(data instanceof List)) return;
+                List<String> args = (List<String>) data;
+                List<String> processedActionStrings = new ArrayList<>();
 
                 for (String actionString : actionStrings) {
                     String processedAction = actionString;
-                    // args[0] is the action name itself, so we start from args[1] for the arguments
+                    // args[0] is the action name, so args start from index 1.
                     for (int i = 1; i < args.size(); i++) {
-                        processedAction = processedAction.replace("%arg" + i + "%", args.get(i));
+                        processedAction = processedAction.replace("%arg" + (i) + "%", args.get(i));
                     }
                     processedActionStrings.add(processedAction);
                 }
@@ -114,26 +120,41 @@ public class ActionManager {
     }
 
     public void executeAction(Player player, String actionString) {
-        if (actionString == null || actionString.isEmpty() || !actionString.startsWith("[") || !actionString.endsWith("]")) {
+        if (actionString == null || actionString.isEmpty()) {
             return;
         }
 
-        // Extract content inside brackets: [ACTION:ARG1:ARG2] -> ACTION:ARG1:ARG2
-        String content = actionString.substring(1, actionString.length() - 1);
-        if (content.isEmpty()) {
+        Matcher matcher = ACTION_PATTERN.matcher(actionString.trim());
+        if (!matcher.matches()) {
+            // This string doesn't match our action format, so we ignore it.
+            // This can be useful for comments or other text in action lists.
             return;
         }
 
-        // Split by colon to get identifier and arguments
-        List<String> parts = new java.util.ArrayList<>(java.util.Arrays.asList(content.split(":")));
-        String identifier = parts.get(0).toUpperCase();
+        String identifier = matcher.group(1).toUpperCase();
+        String dataInBrackets = matcher.group(2);
+        String dataOutsideBrackets = matcher.group(3);
+
+        List<String> args = new ArrayList<>();
+        args.add(identifier);
+
+        String combinedData;
+        if (dataInBrackets != null && !dataInBrackets.isEmpty()) {
+            combinedData = dataInBrackets;
+        } else {
+            combinedData = dataOutsideBrackets;
+        }
+
+        if (combinedData != null && !combinedData.trim().isEmpty()) {
+            // Split the data part by spaces to handle multiple arguments
+            args.addAll(Arrays.stream(combinedData.trim().split("\\s+"))
+                    .collect(Collectors.toList()));
+        }
 
         Action action = actionMap.get(identifier);
         if (action != null) {
             try {
-                // We pass the whole list of parts, including the identifier, as the data.
-                // The action itself will parse it. This is crucial for custom actions.
-                action.execute(player, parts);
+                action.execute(player, args);
             } catch (Exception e) {
                 plugin.getLogger().log(Level.SEVERE, "Error executing action: " + actionString, e);
             }

@@ -20,12 +20,13 @@ public class BungeeAction implements Action {
     public void execute(Player player, Object data) {
         String serverName = "";
         if (data instanceof List) {
+            @SuppressWarnings("unchecked")
             List<String> args = (List<String>) data;
             if (args.size() > 1) {
-                serverName = args.get(1);
+                serverName = args.get(1).trim();
             }
         } else if (data instanceof String) {
-            serverName = (String) data;
+            serverName = ((String) data).trim();
         }
 
         if (serverName.isEmpty()) {
@@ -33,10 +34,13 @@ public class BungeeAction implements Action {
             return;
         }
 
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Connect");
-        out.writeUTF(serverName); // server name
-
-        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Connect");
+            out.writeUTF(serverName);
+            player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+        } catch (Exception e) {
+            plugin.getLogger().severe("Could not send BungeeCord plugin message: " + e.getMessage());
+        }
     }
 }

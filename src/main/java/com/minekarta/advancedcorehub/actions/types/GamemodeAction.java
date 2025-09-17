@@ -19,10 +19,11 @@ public class GamemodeAction implements Action {
     public void execute(Player player, Object data) {
         if (!(data instanceof List)) return;
 
+        @SuppressWarnings("unchecked")
         List<String> args = (List<String>) data;
         if (args.size() < 2) return;
 
-        String gamemode = args.get(1);
+        String gamemode = args.get(1).trim();
         try {
             GameMode gm = GameMode.valueOf(gamemode.toUpperCase());
             player.setGameMode(gm);

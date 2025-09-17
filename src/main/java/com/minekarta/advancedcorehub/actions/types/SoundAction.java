@@ -18,15 +18,16 @@ public class SoundAction implements Action {
     @Override
     public void execute(Player player, Object data) {
         if (!(data instanceof List)) return;
+        @SuppressWarnings("unchecked")
         List<String> args = (List<String>) data;
         if (args.size() < 2) return;
 
-        String soundName = args.get(1);
+        String soundName = args.get(1).trim();
 
         float volume = 1.0f;
         if (args.size() > 2) {
             try {
-                volume = Float.parseFloat(args.get(2));
+                volume = Float.parseFloat(args.get(2).trim());
             } catch (NumberFormatException e) {
                 plugin.getLogger().warning("[SoundAction] Invalid volume format: " + args.get(2));
             }
@@ -35,7 +36,7 @@ public class SoundAction implements Action {
         float pitch = 1.0f;
         if (args.size() > 3) {
             try {
-                pitch = Float.parseFloat(args.get(3));
+                pitch = Float.parseFloat(args.get(3).trim());
             } catch (NumberFormatException e) {
                 plugin.getLogger().warning("[SoundAction] Invalid pitch format: " + args.get(3));
             }
