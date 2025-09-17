@@ -54,10 +54,17 @@ public class PlayerJoinListener implements Listener {
             plugin.getActionManager().executeMapActions(player, joinActions);
         }
 
-        // 3. Handle Hub Inventory
+        // 3. Handle Hub Inventory and Join Items
         if (plugin.getInventoryManager().isHubWorld(player.getWorld().getName())) {
-            plugin.getInventoryManager().savePlayerInventory(player);
-            plugin.getInventoryManager().setupHubInventory(player);
+            // Player is in a hub world, run the full setup
+            if (plugin.getInventoryManager().isSaveAndRestoreEnabled()) {
+                plugin.getInventoryManager().savePlayerInventory(player);
+            }
+            plugin.getInventoryManager().setupHubInventory(player); // This also gives items
+        } else {
+            // Player is not in a hub world, just give them any applicable join items
+            // without clearing or saving their inventory.
+            plugin.getInventoryManager().giveJoinItems(player);
         }
 
         // 4. Handle Boss Bar on join
