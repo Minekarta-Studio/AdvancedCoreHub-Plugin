@@ -102,6 +102,11 @@ public class ItemBuilder {
         this.itemStack = itemStack.clone();
     }
 
+    public ItemBuilder setMaterial(Material material) {
+        itemStack.setType(material);
+        return this;
+    }
+
     public ItemBuilder setDisplayName(Component name) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {

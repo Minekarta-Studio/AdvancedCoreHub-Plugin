@@ -16,7 +16,7 @@ items:
       - ""
       - "<gray>Players: <white>%players%</white>"
       - "<gray>Status: %status%"
-    actions:
+    left-click-actions:
       - "[BUNGEE] survival"
       - "[CLOSE]"
   skyblock:
@@ -29,7 +29,7 @@ items:
       - ""
       - "<gray>Players: <white>%players%</white>"
       - "<gray>Status: %status%"
-    actions:
+    left-click-actions:
       - "[BUNGEE] skyblock"
       - "[CLOSE]"
   creative:
@@ -42,7 +42,7 @@ items:
       - ""
       - "<gray>Players: <white>%players%</white>"
       - "<gray>Status: %status%"
-    actions:
+    left-click-actions:
       - "[BUNGEE] creative"
       - "[CLOSE]"
 
@@ -50,7 +50,7 @@ items:
     material: BARRIER
     slot: 22
     display-name: "<red>Close Menu"
-    actions:
+    left-click-actions:
       - "[CLOSE]"
 
   filler_glass:
