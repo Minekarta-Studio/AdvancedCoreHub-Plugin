@@ -90,13 +90,9 @@ public class InventoryManager {
             // --- Give Item ---
             int amount = itemData.get("amount") != null ? (int) itemData.get("amount") : 1;
             int slot = itemData.get("slot") != null ? (int) itemData.get("slot") : -1;
-            boolean force = itemData.get("force") != null ? (boolean) itemData.get("force") : false;
 
-            // Prevent item duplication if not forced
-            if (!force && player.getInventory().contains(plugin.getItemsManager().getItem(itemName))) {
-                continue;
-            }
-
+            // The duplication check was removed as it was redundant after clearing the inventory
+            // and was likely causing issues with ItemStack equality checks, preventing items from being given.
             plugin.getItemsManager().giveItem(player, itemName, amount, slot);
         }
     }
