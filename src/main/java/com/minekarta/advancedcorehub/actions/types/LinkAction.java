@@ -8,6 +8,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LinkAction implements Action {
 
@@ -20,23 +21,30 @@ public class LinkAction implements Action {
     @Override
     public void execute(Player player, Object data) {
         if (!(data instanceof List)) return;
+        @SuppressWarnings("unchecked")
         List<String> args = (List<String>) data;
 
-        if (args.size() < 4) {
-            plugin.getLogger().warning("[LinkAction] Invalid data format. Expected: [LINK:message:hoverText:link]");
+        // Re-join the arguments from index 1 to handle spaces in message/hover text
+        String fullData = args.subList(1, args.size()).stream().collect(Collectors.joining(" "));
+        String[] parts = fullData.split(":", 3);
+
+        if (parts.length < 3) {
+            plugin.getLogger().warning("[LinkAction] Invalid data format. Expected: [LINK] <message>:<hoverText>:<link>");
             return;
         }
 
-        // The link part should not be formatted, so we just replace placeholders.
-        String link = args.get(3);
+        String messageText = parts[0].trim();
+        String hoverText = parts[1].trim();
+        String link = parts[2].trim();
+
         if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             link = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, link);
         }
 
-        Component message = plugin.getLocaleManager().getComponentFromString(args.get(1), player)
-                .hoverEvent(HoverEvent.showText(plugin.getLocaleManager().getComponentFromString(args.get(2), player)))
+        Component messageComponent = plugin.getLocaleManager().getComponentFromString(messageText, player)
+                .hoverEvent(HoverEvent.showText(plugin.getLocaleManager().getComponentFromString(hoverText, player)))
                 .clickEvent(ClickEvent.openUrl(link));
 
-        player.sendMessage(message);
+        player.sendMessage(messageComponent);
     }
 }

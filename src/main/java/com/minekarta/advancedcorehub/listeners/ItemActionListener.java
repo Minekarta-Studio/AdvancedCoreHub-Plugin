@@ -28,35 +28,35 @@ public class ItemActionListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
+        // Guard clauses: exit early if item is null, has no meta, or the action is not a click
         if (item == null || !item.hasItemMeta()) {
+            return;
+        }
+        if (!event.getAction().isLeftClick() && !event.getAction().isRightClick()) {
             return;
         }
 
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        Action action = event.getAction();
-
-        boolean isLeftClick = action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK;
-        boolean isRightClick = action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK;
-
-        if (!isLeftClick && !isRightClick) {
-            return;
-        }
-
         String actionString = null;
-        if (isLeftClick && container.has(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING)) {
-            actionString = container.get(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING);
-        } else if (isRightClick) {
+
+        if (event.getAction().isLeftClick()) {
+            if (container.has(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING)) {
+                actionString = container.get(PersistentKeys.LEFT_CLICK_ACTIONS_KEY, PersistentDataType.STRING);
+            }
+        } else if (event.getAction().isRightClick()) {
+            // Check for the new key first
             if (container.has(PersistentKeys.RIGHT_CLICK_ACTIONS_KEY, PersistentDataType.STRING)) {
                 actionString = container.get(PersistentKeys.RIGHT_CLICK_ACTIONS_KEY, PersistentDataType.STRING);
-            } else if (container.has(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING)) {
-                // Backward compatibility
+            }
+            // Fallback for backward compatibility with the old 'actions' key
+            else if (container.has(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING)) {
                 actionString = container.get(PersistentKeys.ACTIONS_KEY, PersistentDataType.STRING);
             }
         }
 
         if (actionString != null && !actionString.isEmpty()) {
-            event.setCancelled(true); // Prevent default item actions
+            event.setCancelled(true); // Prevent default item actions (e.g., eating, placing blocks)
             List<String> actions = Arrays.asList(actionString.split("\n"));
             plugin.getActionManager().executeStringActions(player, actions);
         }

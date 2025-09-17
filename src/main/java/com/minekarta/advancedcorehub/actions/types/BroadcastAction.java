@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BroadcastAction implements Action {
 
@@ -19,12 +20,13 @@ public class BroadcastAction implements Action {
     public void execute(Player player, Object data) {
         String message;
         if (data instanceof List) {
+            @SuppressWarnings("unchecked")
             List<String> args = (List<String>) data;
             if (args.size() < 2) return; // Need at least [BROADCAST, message]
-            // Remove the action name and join the rest
-            message = String.join(":", args.subList(1, args.size()));
+            // Join all arguments after the identifier, trimming each part
+            message = args.subList(1, args.size()).stream().map(String::trim).collect(Collectors.joining(" "));
         } else if (data instanceof String) {
-            message = (String) data;
+            message = ((String) data).trim();
         } else {
             return;
         }
@@ -34,7 +36,6 @@ public class BroadcastAction implements Action {
         // Since this is a broadcast, we can't parse per-player placeholders.
         // We pass null for the player to use global placeholders if any.
         Component componentMessage = plugin.getLocaleManager().getComponentFromString(message, null);
-
         plugin.getServer().broadcast(componentMessage);
     }
 }

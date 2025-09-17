@@ -17,8 +17,11 @@ public class MenuAction implements Action {
     @Override
     public void execute(Player player, Object data) {
         if (!(data instanceof List)) return;
+        @SuppressWarnings("unchecked")
         List<String> args = (List<String>) data;
         if (args.size() < 2) return;
-        plugin.getMenuManager().openMenu(player, args.get(1));
+
+        String menuName = args.get(1).trim();
+        plugin.getMenuManager().openMenu(player, menuName);
     }
 }

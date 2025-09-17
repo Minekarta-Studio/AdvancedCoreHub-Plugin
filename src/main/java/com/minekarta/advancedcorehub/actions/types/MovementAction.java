@@ -4,9 +4,12 @@ import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import com.minekarta.advancedcorehub.util.TeleportUtil;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Set;
+import org.bukkit.Material;
 
 public class MovementAction implements Action {
 
@@ -19,10 +22,11 @@ public class MovementAction implements Action {
     @Override
     public void execute(Player player, Object data) {
         if (!(data instanceof List)) return;
+        @SuppressWarnings("unchecked")
         List<String> args = (List<String>) data;
         if (args.size() < 2) return;
 
-        String movementType = args.get(1).toLowerCase();
+        String movementType = args.get(1).trim().toLowerCase();
 
         switch (movementType) {
             case "aote":
@@ -38,7 +42,14 @@ public class MovementAction implements Action {
         if (handleCooldown(player, "aote", "movement_items.aote.cooldown", 2)) {
             return;
         }
-        Location targetLocation = player.getTargetBlock(null, plugin.getConfig().getInt("movement_items.aote.distance", 8)).getLocation();
+
+        int distance = plugin.getConfig().getInt("movement_items.aote.distance", 8);
+        Block targetBlock = player.getTargetBlock((Set<Material>) null, distance);
+
+        Location targetLocation = targetBlock.getLocation();
+        // Set player rotation to look forward after teleport
+        targetLocation.setDirection(player.getLocation().getDirection());
+
         TeleportUtil.safeTeleport(player, targetLocation.add(0.5, 1, 0.5));
     }
 
