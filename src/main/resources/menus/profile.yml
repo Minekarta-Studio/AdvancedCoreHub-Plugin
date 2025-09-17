@@ -1,0 +1,72 @@
+# ----------------------------------------------------------------
+# Menu Configuration: Player Profile
+# ----------------------------------------------------------------
+
+title: "<dark_gray>Your Profile"
+size: 45 # 5 rows
+
+items:
+  player_info:
+    material: PLAYER_HEAD
+    slot: 13
+    # Note: Using PLAYER_HEAD material will automatically use the skin of the player opening the menu.
+    display-name: "<green>Player Information"
+    lore:
+      - "<gray>Name: <white>%player_name%"
+      - "<gray>Ping: <white>%player_ping% ms"
+      - "<gray>Gamemode: <white>%player_gamemode%"
+      - "<gray>World: <white>%player_world%"
+      - ""
+      - "<yellow>More stats coming soon!"
+
+  server_info:
+    material: OBSERVER
+    slot: 29
+    display-name: "<aqua>Server Information"
+    lore:
+      - "<gray>Server Name: <white>Minekarta" # Example name
+      - "<gray>Players Online: <white>%server_online%"
+      - "<gray>Server Version: <white>%server_version%"
+      - ""
+      - "<gray>Connect with: <white>play.minekarta.com"
+
+  social_discord:
+    material: "hdb:862" # Discord Head
+    slot: 32
+    display-name: "<blue>Discord"
+    lore:
+      - "<gray>Click to join our community!"
+    left-click-actions:
+      - "[LINK]<blue>Click to join!;Click to open the link;https://discord.gg/example"
+      - "[CLOSE]"
+
+  social_website:
+    material: "hdb:2361" # Website/Earth Head
+    slot: 33
+    display-name: "<green>Website"
+    lore:
+      - "<gray>Click to visit our homepage!"
+    left-click-actions:
+      - "[LINK]<green>Visit our site!;Click to open the link;https://www.example.com"
+      - "[CLOSE]"
+
+  rules:
+    material: WRITABLE_BOOK
+    slot: 31
+    display-name: "<gold>Server Rules"
+    lore:
+      - "<gray>Click to read the server rules."
+    left-click-actions:
+      - "[MENU] rules"
+
+  close_button:
+    material: BARRIER
+    slot: 40
+    display-name: "<red>Close"
+    left-click-actions:
+      - "[CLOSE]"
+
+  filler_glass:
+    material: GRAY_STAINED_GLASS_PANE
+    display-name: " "
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,37,38,39,41,42,43,44]

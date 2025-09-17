@@ -32,13 +32,14 @@ items:
       - "[MENU] selector"
     protected: true
 
-  socials_menu:
-    material: BOOK
-    displayname: "<aqua>Social Media <gray>(Right Click)"
+  profile_menu:
+    material: PLAYER_HEAD
+    displayname: "<green>My Profile <gray>(Right Click)"
     lore:
-      - "<gray>Click to see our social links!"
+      - "<gray>Click to view your profile,"
+      - "<gray>server info, and more."
     right-click-actions:
-      - "[MENU] socials"
+      - "[MENU] profile"
     protected: true
 
   teleport_trident:
@@ -59,19 +60,6 @@ items:
       - "<gray>Cast this at a block to be"
       - "<gray>pulled towards it."
 
-  multi_tool:
-    material: DIAMOND_SWORD
-    displayname: "<blue>Multi-Tool"
-    lore:
-      - "<gray>Right-click to teleport 8 blocks."
-      - "<gray>Left-click to open the info menu."
-      - ""
-      - "<red>2 second cooldown on teleport."
-    right-click-actions:
-      - "[MOVEMENT] aote"
-    left-click-actions:
-      - "[MENU] info_menu"
-
   vip_gadget:
     material: PLAYER_HEAD
     displayname: "<gold>VIP Gadget"
@@ -88,10 +76,8 @@ items:
 join_items:
   - item_name: server_selector
     slot: 0
-  - item_name: socials_menu
+  - item_name: profile_menu
     slot: 8
-  - item_name: multi_tool
-    slot: 1
   - item_name: vip_gadget
     slot: 4
     permission: "advancedcorehub.item.vip"
