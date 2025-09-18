@@ -53,6 +53,34 @@ world_settings:
   cancel_hunger_loss: true
   cancel_weather_change: true
 
+# --- Chat Protection ---
+# Settings for anti-swear and command blocking.
+chat_protection:
+  anti_swear:
+    enabled: true
+    # A list of words to block in chat. Not case-sensitive.
+    blocked_words:
+      - "badword1"
+      - "example"
+      - "swear"
+  command_blocker:
+    enabled: true
+    # A list of commands to block. Do not include the leading '/'.
+    # This will block '/plugins' and '/pl', and also variants like '/bukkit:plugins'.
+    blocked_commands:
+      - "plugins"
+      - "pl"
+      - "ver"
+      - "version"
+      - "?"
+      - "about"
+      - "icanhasbukkit"
+
+# --- Anti World Downloader ---
+# Prevents players from using World Downloader mods.
+anti_world_downloader:
+  enabled: true
+
 # --- Inventory Management ---
 # Settings for how inventories are handled in hub worlds.
 inventory_management:
@@ -89,6 +117,19 @@ movement_items:
   custom_elytra:
     cooldown: 10
     speed_boost: 1.8
+
+# Settings for the Double Jump feature.
+double_jump:
+  enabled: true
+  # Cooldown in seconds between each double jump.
+  cooldown: 2
+  # The vertical power of the jump.
+  power: 1.2
+  # Sound played on double jump.
+  sound:
+    name: "ENTITY_FIREWORK_ROCKET_LAUNCH"
+    volume: 1.0
+    pitch: 1.0
 
 # ----------------------------------------------------------------
 # Automatic Announcements

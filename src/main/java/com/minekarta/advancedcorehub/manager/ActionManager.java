@@ -78,6 +78,7 @@ public class ActionManager {
         registerAction("GAMEMODE", new GamemodeAction(plugin));
         registerAction("MOVEMENT", new MovementAction(plugin));
         registerAction("MESSAGE", new MessageAction(plugin));
+        registerAction("TOGGLE_VISIBILITY", (player, data) -> plugin.getPlayerVisibilityManager().togglePlayerVisibility(player));
     }
 
     public void registerAction(String identifier, Action action) {
