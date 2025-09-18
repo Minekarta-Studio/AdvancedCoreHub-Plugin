@@ -117,5 +117,8 @@ public class PlayerJoinListener implements Listener {
                 }, remainingTicks);
             }
         }
+
+        // 6. Handle Player Visibility
+        plugin.getPlayerVisibilityManager().handlePlayerJoin(player);
     }
 }

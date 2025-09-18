@@ -28,6 +28,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private ServerInfoManager serverInfoManager;
     private CosmeticsManager cosmeticsManager;
     private GadgetManager gadgetManager;
+    private PlayerVisibilityManager playerVisibilityManager;
 
 
     @Override
@@ -62,6 +63,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.cosmeticsManager = new CosmeticsManager(this);
         this.gadgetManager = new GadgetManager(this);
         this.gadgetManager.loadGadgets();
+        this.playerVisibilityManager = new PlayerVisibilityManager(this);
 
 
         // Load other components
@@ -119,11 +121,33 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+
+        // Register Double Jump Listener if enabled
+        if (getConfig().getBoolean("double_jump.enabled", false)) {
+            getServer().getPluginManager().registerEvents(new DoubleJumpListener(this), this);
+            getLogger().info("Double Jump feature enabled.");
+        }
+
+        // Register Chat Protection Listener if either feature is enabled
+        if (getConfig().getBoolean("chat_protection.anti_swear.enabled", false) ||
+            getConfig().getBoolean("chat_protection.command_blocker.enabled", false)) {
+            getServer().getPluginManager().registerEvents(new ChatProtectionListener(this), this);
+            getLogger().info("Chat Protection feature enabled.");
+        }
     }
 
     private void registerChannels() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
+
+        // Register Anti-World Downloader channels if enabled
+        if (getConfig().getBoolean("anti_world_downloader.enabled", true)) {
+            AntiWorldDownloaderListener wdlListener = new AntiWorldDownloaderListener(this);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "WDL|INIT", wdlListener);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "WDL|REQUEST", wdlListener);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "worlddownloader:init", wdlListener);
+            getLogger().info("Anti-World Downloader feature enabled.");
+        }
     }
 
     // --- Getters ---
@@ -186,5 +210,9 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public GadgetManager getGadgetManager() {
         return gadgetManager;
+    }
+
+    public PlayerVisibilityManager getPlayerVisibilityManager() {
+        return playerVisibilityManager;
     }
 }
