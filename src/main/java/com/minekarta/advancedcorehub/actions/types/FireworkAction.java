@@ -41,7 +41,7 @@ public class FireworkAction implements Action {
             int power = Integer.parseInt(args.get(5));
             long delay = Long.parseLong(args.get(6));
 
-            Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+            Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET);
             FireworkMeta fwm = fw.getFireworkMeta();
 
             fwm.setPower(power);
