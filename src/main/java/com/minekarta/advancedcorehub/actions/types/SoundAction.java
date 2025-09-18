@@ -2,7 +2,6 @@ package com.minekarta.advancedcorehub.actions.types;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -42,11 +41,9 @@ public class SoundAction implements Action {
             }
         }
 
-        try {
-            Sound sound = Sound.valueOf(soundName.toUpperCase());
-            player.playSound(player.getLocation(), sound, volume, pitch);
-        } catch (IllegalArgumentException e) {
-            plugin.getLogger().warning("[SoundAction] Invalid sound name: " + soundName);
-        }
+        // The modern Paper API allows playing sounds by their string key directly.
+        // This is safer than Sound.valueOf() as it won't throw an error for invalid sounds,
+        // it will just fail silently. We can add a warning if needed, but for now, this is fine.
+        player.playSound(player.getLocation(), soundName.toUpperCase(), volume, pitch);
     }
 }

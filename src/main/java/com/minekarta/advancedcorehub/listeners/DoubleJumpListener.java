@@ -26,7 +26,7 @@ public class DoubleJumpListener implements Listener {
         Player player = event.getPlayer();
 
         // Ensure this feature only works in configured hub worlds
-        if (!plugin.getHubWorlds().contains(player.getWorld().getName())) {
+        if (!plugin.getHubWorldManager().isHubWorld(player.getWorld().getName())) {
             return;
         }
 
