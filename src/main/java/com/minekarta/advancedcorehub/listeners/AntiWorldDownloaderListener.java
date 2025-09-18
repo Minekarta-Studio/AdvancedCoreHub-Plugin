@@ -1,6 +1,7 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,8 @@ public class AntiWorldDownloaderListener implements PluginMessageListener {
         // The content of the message doesn't matter, just the fact that we received it.
         // We run this on the main server thread to ensure thread safety with the Bukkit API.
         plugin.getServer().getScheduler().runTask(plugin, () -> {
-            String kickMessage = plugin.getLocaleManager().getString("anti_wdl_kick_message", player);
-            player.kickPlayer(kickMessage);
+            Component kickMessage = plugin.getLocaleManager().getComponent("anti_wdl_kick_message", player);
+            player.kick(kickMessage);
             plugin.getLogger().info("Kicked player " + player.getName() + " for using a World Downloader mod (channel: " + channel + ").");
         });
     }
