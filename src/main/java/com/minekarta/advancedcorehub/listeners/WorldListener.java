@@ -32,10 +32,28 @@ public class WorldListener implements Listener {
         boolean isLeavingHub = !inventoryManager.isHubWorld(newWorld) && inventoryManager.isHubWorld(fromWorld);
 
         if (isEnteringHub) {
-            inventoryManager.savePlayerInventory(player);
-            inventoryManager.setupHubInventory(player);
+            // Handle inventory
+            if (inventoryManager.isSaveAndRestoreEnabled()) {
+                inventoryManager.savePlayerInventory(player);
+                inventoryManager.setupHubInventory(player);
+            }
+            // Handle double jump flight
+            if (plugin.getConfig().getBoolean("movement_features.double_jump.enabled", true)) {
+                 if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
+                    player.setAllowFlight(true);
+                }
+            }
         } else if (isLeavingHub) {
-            inventoryManager.restorePlayerInventory(player);
+            // Handle inventory
+            if (inventoryManager.isSaveAndRestoreEnabled()) {
+                inventoryManager.restorePlayerInventory(player);
+            }
+            // Handle double jump flight
+            if (plugin.getConfig().getBoolean("movement_features.double_jump.enabled", true)) {
+                if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
+                    player.setAllowFlight(false);
+                }
+            }
         }
     }
 }

@@ -38,10 +38,12 @@ public class CommandManager {
         manager.registerCommand(new SetSpawnCommand());
         manager.registerCommand(new AdvancedCoreHubCommand());
         manager.registerCommand(new CosmeticsCommand());
+        manager.registerCommand(new VanishCommand(plugin));
     }
 
     private void registerDependencies() {
         manager.registerDependency(BossBarManager.class, plugin.getBossBarManager());
+        manager.registerDependency(VanishManager.class, plugin.getVanishManager());
         manager.registerDependency(LocaleManager.class, plugin.getLocaleManager());
         manager.registerDependency(ChatManager.class, plugin.getChatManager());
         manager.registerDependency(ItemsManager.class, plugin.getItemsManager());

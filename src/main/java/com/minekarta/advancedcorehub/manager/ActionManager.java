@@ -84,11 +84,52 @@ public class ActionManager {
         actionMap.put(identifier.toUpperCase(), action);
     }
 
-    public void executeMapActions(Player player, List<Map<?, ?>> actionMaps) {
+    public void executeMapActions(Player player, List<Map<?, ?>> actionMaps, String... args) {
         if (actionMaps == null) return;
         for (Map<?, ?> actionMap : actionMaps) {
-            executeAction(player, actionMap);
+            // Deep copy the map to avoid modifying the original config
+            Map<String, Object> newActionMap = new HashMap<>();
+            for (Map.Entry<?, ?> entry : actionMap.entrySet()) {
+                newActionMap.put(entry.getKey().toString(), entry.getValue());
+            }
+
+            // Process placeholders in the data
+            Object data = newActionMap.get("data");
+            if (data instanceof String) {
+                String processedData = (String) data;
+                for (int i = 0; i < args.length; i++) {
+                    processedData = processedData.replace("%arg" + (i + 1) + "%", args[i]);
+                }
+                newActionMap.put("data", processedData);
+            } else if (data instanceof Map) {
+                // Recursively process placeholders in nested maps (e.g., for TITLE action)
+                Map<String, Object> newNestedMap = processNestedMap((Map<?, ?>) data, args);
+                newActionMap.put("data", newNestedMap);
+            }
+
+            executeAction(player, newActionMap);
         }
+    }
+
+    private Map<String, Object> processNestedMap(Map<?, ?> nestedMap, String... args) {
+        Map<String, Object> newNestedMap = new HashMap<>();
+        for (Map.Entry<?, ?> entry : nestedMap.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                String processedValue = (String) value;
+                for (int i = 0; i < args.length; i++) {
+                    processedValue = processedValue.replace("%arg" + (i + 1) + "%", args[i]);
+                }
+                newNestedMap.put(entry.getKey().toString(), processedValue);
+            } else {
+                newNestedMap.put(entry.getKey().toString(), value);
+            }
+        }
+        return newNestedMap;
+    }
+
+    public void executeMapActions(Player player, List<Map<?, ?>> actionMaps) {
+        executeMapActions(player, actionMaps, new String[0]);
     }
 
     public void executeAction(Player player, Map<?, ?> actionMap) {

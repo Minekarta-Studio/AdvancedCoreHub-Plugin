@@ -2,11 +2,15 @@ package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import org.bukkit.Location;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -46,7 +50,14 @@ public class PlayerJoinListener implements Listener {
         }
 
         // 2. Handle Join Message (can be customized or disabled)
-        event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
+        if (!plugin.getVanishManager().isVanished(player)) {
+            event.joinMessage(plugin.getLocaleManager().getComponent("join-message", player));
+        } else {
+            event.joinMessage(null);
+        }
+
+        // Handle vanish visibility for the joining player
+        plugin.getVanishManager().handlePlayerJoin(player);
 
         // 2. Execute actions_on_join from config.yml
         List<java.util.Map<?, ?>> joinActions = plugin.getConfig().getMapList("actions_on_join");
@@ -61,6 +72,13 @@ public class PlayerJoinListener implements Listener {
                 plugin.getInventoryManager().savePlayerInventory(player);
             }
             plugin.getInventoryManager().setupHubInventory(player); // This also gives items
+
+            // Handle double jump flight
+            if (plugin.getConfig().getBoolean("movement_features.double_jump.enabled", true)) {
+                if (player.getGameMode() != org.bukkit.GameMode.CREATIVE && player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
+                    player.setAllowFlight(true);
+                }
+            }
         } else {
             // Player is not in a hub world, just give them any applicable join items
             // without clearing or saving their inventory.
@@ -94,7 +112,18 @@ public class PlayerJoinListener implements Listener {
             }
         }
 
-        // 5. Check for persistent timed flight
+        // 5. Handle Join Firework
+        ConfigurationSection fireworkConfig = plugin.getConfig().getConfigurationSection("cosmetics.join_firework");
+        if (fireworkConfig != null && fireworkConfig.getBoolean("enabled", true)) {
+            if (plugin.getHubWorldManager().isHubWorld(player.getWorld().getName())) {
+                spawnFirework(player, fireworkConfig);
+            }
+        }
+
+        // 6. Create Scoreboard
+        plugin.getScoreboardManager().createBoard(player);
+
+        // 7. Check for persistent timed flight
         if (player.getPersistentDataContainer().has(com.minekarta.advancedcorehub.util.PersistentKeys.FLY_EXPIRATION, org.bukkit.persistence.PersistentDataType.LONG)) {
             long expirationTime = player.getPersistentDataContainer().get(com.minekarta.advancedcorehub.util.PersistentKeys.FLY_EXPIRATION, org.bukkit.persistence.PersistentDataType.LONG);
             long currentTime = System.currentTimeMillis();
@@ -117,5 +146,52 @@ public class PlayerJoinListener implements Listener {
                 }, remainingTicks);
             }
         }
+    }
+
+    private void spawnFirework(Player player, ConfigurationSection config) {
+        Location loc = player.getLocation();
+        Firework fw = player.getWorld().spawn(loc, Firework.class);
+        FireworkMeta fwm = fw.getFireworkMeta();
+
+        try {
+            // Set type
+            FireworkEffect.Type type = FireworkEffect.Type.valueOf(config.getString("type", "STAR"));
+
+            // Build colors
+            FireworkEffect.Builder builder = FireworkEffect.builder().with(type);
+            for (String colorStr : config.getStringList("colors")) {
+                builder.withColor(parseColor(colorStr));
+            }
+
+            // Build fade colors
+            for (String colorStr : config.getStringList("fade_colors")) {
+                builder.withFade(parseColor(colorStr));
+            }
+
+            // Set flicker and trail
+            if (config.getBoolean("flicker", false)) {
+                builder.withFlicker();
+            }
+            if (config.getBoolean("trail", false)) {
+                builder.withTrail();
+            }
+
+            fwm.addEffect(builder.build());
+            fwm.setPower(config.getInt("power", 0));
+            fw.setFireworkMeta(fwm);
+
+        } catch (Exception e) {
+            plugin.getLogger().warning("Could not spawn join firework due to an error in the configuration.");
+            e.printStackTrace();
+            fw.detonate(); // detonate immediately to remove the entity
+        }
+    }
+
+    private Color parseColor(String str) {
+        String[] rgb = str.split(",");
+        int r = Integer.parseInt(rgb[0].trim());
+        int g = Integer.parseInt(rgb[1].trim());
+        int b = Integer.parseInt(rgb[2].trim());
+        return Color.fromRGB(r, g, b);
     }
 }

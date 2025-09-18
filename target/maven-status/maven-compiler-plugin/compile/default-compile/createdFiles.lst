@@ -1,4 +1,6 @@
 com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.class
+com/minekarta/advancedcorehub/manager/CustomCommandManager.class
+com/minekarta/advancedcorehub/manager/VanishManager.class
 com/minekarta/advancedcorehub/commands/acf/AdvancedCoreHubCommand.class
 com/minekarta/advancedcorehub/commands/acf/BossBarCommand.class
 com/minekarta/advancedcorehub/actions/types/ClearAction.class
@@ -6,6 +8,7 @@ com/minekarta/advancedcorehub/listeners/ItemActionListener.class
 com/minekarta/advancedcorehub/manager/MenuManager.class
 com/minekarta/advancedcorehub/listeners/PlayerConnectionListener.class
 com/minekarta/advancedcorehub/actions/types/PlayerAction.class
+com/minekarta/advancedcorehub/manager/ScoreboardManager$1.class
 com/minekarta/advancedcorehub/commands/acf/ClearChatCommand.class
 com/minekarta/advancedcorehub/actions/types/LinkAction.class
 com/minekarta/advancedcorehub/manager/ItemsManager.class
@@ -20,14 +23,17 @@ com/minekarta/advancedcorehub/actions/types/ItemAction.class
 com/minekarta/advancedcorehub/manager/MenuHolder.class
 com/minekarta/advancedcorehub/util/ItemBuilder.class
 com/minekarta/advancedcorehub/commands/acf/SpawnCommand.class
+com/minekarta/advancedcorehub/listeners/SecurityListener.class
 com/minekarta/advancedcorehub/util/TeleportUtil.class
 com/minekarta/advancedcorehub/listeners/PlayerQuitListener.class
 com/minekarta/advancedcorehub/manager/InventoryManager.class
 com/minekarta/advancedcorehub/actions/types/FireworkAction.class
 com/minekarta/advancedcorehub/manager/LocaleManager.class
 com/minekarta/advancedcorehub/actions/types/SoundAction.class
+com/minekarta/advancedcorehub/commands/acf/VanishCommand.class
 com/minekarta/advancedcorehub/AdvancedCoreHub.class
 com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.class
+com/minekarta/advancedcorehub/listeners/CommandListener.class
 com/minekarta/advancedcorehub/util/Formatter.class
 com/minekarta/advancedcorehub/manager/FileManager.class
 com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.class
@@ -39,6 +45,7 @@ com/minekarta/advancedcorehub/listeners/WorldListener.class
 com/minekarta/advancedcorehub/manager/AnnouncementsManager.class
 com/minekarta/advancedcorehub/util/PersistentKeys.class
 com/minekarta/advancedcorehub/actions/types/LaunchAction.class
+com/minekarta/advancedcorehub/listeners/MovementFeaturesListener.class
 com/minekarta/advancedcorehub/actions/types/BungeeAction.class
 com/minekarta/advancedcorehub/manager/ServerInfoManager.class
 com/minekarta/advancedcorehub/listeners/ChatListener.class
@@ -49,6 +56,7 @@ com/minekarta/advancedcorehub/actions/types/CloseAction.class
 com/minekarta/advancedcorehub/listeners/ItemProtectionListener.class
 com/minekarta/advancedcorehub/manager/HubWorldManager.class
 com/minekarta/advancedcorehub/manager/GadgetManager.class
+com/minekarta/advancedcorehub/commands/CustomCommand.class
 com/minekarta/advancedcorehub/actions/types/MessageAction.class
 com/minekarta/advancedcorehub/listeners/MovementItemListener.class
 com/minekarta/advancedcorehub/actions/types/ConsoleAction.class
@@ -58,6 +66,7 @@ com/minekarta/advancedcorehub/actions/Action.class
 com/minekarta/advancedcorehub/cosmetics/ParticleTrail.class
 com/minekarta/advancedcorehub/listeners/WorldEventListeners.class
 com/minekarta/advancedcorehub/manager/BossBarManager.class
+com/minekarta/advancedcorehub/manager/ScoreboardManager.class
 com/minekarta/advancedcorehub/manager/ActionManager.class
 com/minekarta/advancedcorehub/actions/types/EffectAction.class
 com/minekarta/advancedcorehub/cosmetics/Gadget.class

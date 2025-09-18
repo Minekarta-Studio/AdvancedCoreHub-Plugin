@@ -1,0 +1,35 @@
+# ----------------------------------------------------------------
+# AdvancedCoreHub Scoreboard & Tablist
+# ----------------------------------------------------------------
+#
+# This file controls the scoreboard and tablist shown to players in hub worlds.
+# It supports PlaceholderAPI placeholders. Make sure you have PlaceholderAPI installed
+# and the necessary expansions (e.g., /papi ecloud download Vault) for placeholders to work.
+
+scoreboard:
+  enabled: true
+  # How often the scoreboard and tablist should update (in ticks). 20 ticks = 1 second.
+  update_interval_ticks: 20
+
+  title: "<gradient:#5e4fa2:#f79459>&lMy Server</gradient>"
+
+  lines:
+    - ""
+    - "<gray>Player: <white>%player_name%"
+    - "<gray>Rank: <white>%vault_rank%"
+    - "<gray>Online: <white>%server_online%<gray>/<white>%server_max_players%"
+    - ""
+    - "<gray>Balance: <gold>$%vault_eco_balance%"
+    - ""
+    - "<aqua>www.example.com"
+
+tablist:
+  enabled: true
+  # The header is displayed at the top of the tablist. Use \n for a new line.
+  header: |-
+    <dark_aqua>Welcome to the <bold>AdvancedCoreHub</bold> Server!</dark_aqua>
+    <gray>Player: %player_name%</gray>
+  # The footer is displayed at the bottom of the tablist. Use \n for a new line.
+  footer: |-
+    <yellow>Visit our website: <underline>www.example.com</underline></yellow>
+    <gold>Join our Discord: /discord</gold>

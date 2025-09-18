@@ -4,6 +4,7 @@ import com.minekarta.advancedcorehub.cosmetics.CosmeticsManager;
 import com.minekarta.advancedcorehub.cosmetics.PlayerMoveListener;
 import com.minekarta.advancedcorehub.listeners.*;
 import com.minekarta.advancedcorehub.manager.*;
+import com.minekarta.advancedcorehub.util.TeleportUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -28,6 +29,9 @@ public class AdvancedCoreHub extends JavaPlugin {
     private ServerInfoManager serverInfoManager;
     private CosmeticsManager cosmeticsManager;
     private GadgetManager gadgetManager;
+    private VanishManager vanishManager;
+    private CustomCommandManager customCommandManager;
+    private ScoreboardManager scoreboardManager;
 
 
     @Override
@@ -62,12 +66,16 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.cosmeticsManager = new CosmeticsManager(this);
         this.gadgetManager = new GadgetManager(this);
         this.gadgetManager.loadGadgets();
+        this.vanishManager = new VanishManager(this);
+        this.customCommandManager = new CustomCommandManager(this);
+        this.scoreboardManager = new ScoreboardManager(this);
 
 
         // Load other components
         registerCommands();
         registerListeners();
         registerChannels();
+        this.customCommandManager.registerCustomCommands();
 
         getLogger().info("AdvancedCoreHub has been enabled successfully.");
     }
@@ -80,6 +88,9 @@ public class AdvancedCoreHub extends JavaPlugin {
         }
         if (bossBarManager != null) {
             bossBarManager.cleanup();
+        }
+        if (scoreboardManager != null) {
+            scoreboardManager.cleanup();
         }
         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
         getLogger().info("AdvancedCoreHub has been disabled.");
@@ -119,11 +130,22 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+        getServer().getPluginManager().registerEvents(new CommandListener(this), this);
+        getServer().getPluginManager().registerEvents(new MovementFeaturesListener(this), this);
+        // SecurityListener is a PluginMessageListener, registered in registerChannels()
     }
 
     private void registerChannels() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
+
+        // Register World Downloader channels
+        if (getConfig().getBoolean("security.anti_world_downloader.enabled", true)) {
+            SecurityListener securityListener = new SecurityListener(this);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "WDL|INIT", securityListener);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "worlddownloader:init", securityListener);
+            getLogger().info("Anti-World Downloader listener registered.");
+        }
     }
 
     // --- Getters ---
@@ -186,5 +208,13 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public GadgetManager getGadgetManager() {
         return gadgetManager;
+    }
+
+    public VanishManager getVanishManager() {
+        return vanishManager;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
     }
 }

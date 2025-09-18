@@ -49,9 +49,20 @@ hub-worlds:
 world_settings:
   cancel_block_break: true
   cancel_block_place: true
+  cancel_block_interact: true
   cancel_player_damage: true
+  cancel_player_pvp: true
   cancel_hunger_loss: true
+  cancel_item_drop: true
+  cancel_item_pickup: true
+  cancel_mob_spawning: true
   cancel_weather_change: true
+  cancel_fire_spread: true
+  cancel_block_burn: true
+  cancel_leaf_decay: true
+  cancel_death_messages: true
+  # If true, when a player falls into the void, they will be teleported to the spawn instead of dying.
+  void_teleport_to_spawn: true
 
 # --- Inventory Management ---
 # Settings for how inventories are handled in hub worlds.
@@ -74,6 +85,33 @@ server-selector:
     - "skyblock"
 
 # Settings for movement items.
+movement_features:
+  launchpad:
+    enabled: true
+    # The type of pressure plate that acts as the launchpad.
+    # A list of valid materials can be found here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+    plate_type: "HEAVY_WEIGHTED_PRESSURE_PLATE"
+    # The block type that must be underneath the pressure plate.
+    base_block: "REDSTONE_BLOCK"
+    # The vertical (upwards) and horizontal (forwards) power of the launch.
+    power_vertical: 2.0
+    power_horizontal: 1.0
+    # (Optional) Sound to play on launch. Format: SOUND_NAME;VOLUME;PITCH
+    launch_sound: "ENTITY_FIREWORK_ROCKET_LAUNCH;1.0;1.0"
+  double_jump:
+    enabled: true
+    # The vertical (upwards) and horizontal (forwards) power of the jump.
+    power_vertical: 1.2
+    power_horizontal: 0.8
+    # Cooldown in seconds before a player can double jump again.
+    cooldown: 3
+    # (Optional) Sound to play on double jump.
+    jump_sound: "ENTITY_GHAST_SHOOT;0.8;1.2"
+    # (Optional) Particle effect to show on double jump.
+    # Format: PARTICLE_NAME;COUNT;OFFSET_X;OFFSET_Y;OFFSET_Z
+    particle_effect: "CLOUD;20;0.5;0.5;0.5"
+
+
 movement_items:
   trident:
     return_trident: true
@@ -135,6 +173,73 @@ bossbar:
   color: WHITE # Valid colors: BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
   style: SOLID # Valid styles: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
   duration: 10 # in seconds, use -1 to make it stay forever
+
+# ----------------------------------------------------------------
+# Chat and Command Management
+# ----------------------------------------------------------------
+# Players with the 'advancedcorehub.bypass.filter' permission are immune to these checks.
+chat_and_commands:
+  anti_swear:
+    enabled: true
+    # The message sent to a player when they use a blocked word.
+    warning_message: "<red>Please watch your language!</red>"
+    # Words to block from chat. These are case-insensitive.
+    blocked_words:
+      - "badword1"
+      - "swear2"
+      - "example3"
+  command_blocker:
+    enabled: true
+    # The message sent when a player tries to use a blocked command.
+    warning_message: "<red>You are not allowed to use that command.</red>"
+    # Commands to block. Do not include the starting '/'.
+    # This will block commands like /plugins, /pl, /bukkit:plugins, etc.
+    blocked_commands:
+      - "pl"
+      - "plugins"
+      - "ver"
+      - "version"
+      - "about"
+      - "?"
+      - "bukkit:plugins"
+      - "bukkit:pl"
+      - "bukkit:ver"
+      - "bukkit:version"
+      - "bukkit:about"
+      - "bukkit:?"
+      - "minecraft:help"
+      - "icanhasbukkit"
+
+# ----------------------------------------------------------------
+# Security Features
+# ----------------------------------------------------------------
+security:
+  anti_world_downloader:
+    enabled: true
+    kick_message: "<red>Using a world downloader is not allowed on this server."
+
+# ----------------------------------------------------------------
+# Cosmetic Features
+# ----------------------------------------------------------------
+cosmetics:
+  join_firework:
+    enabled: true
+    # FireworkType: BALL, BALL_LARGE, BURST, CREEPER, STAR
+    type: "STAR"
+    # List of RGB colors for the initial explosion.
+    # Format: "R,G,B" - e.g., "255,0,0" is red.
+    colors:
+      - "64,224,208"  # Turquoise
+      - "255,255,255" # White
+    # (Optional) List of RGB colors for the fade effect.
+    fade_colors:
+      - "40,150,140"
+    # (Optional) Power of the firework (how high it flies). 0 is an instant explosion.
+    power: 0
+    # (Optional) Whether the firework should have a flicker/twinkle effect.
+    flicker: true
+    # (Optional) Whether the firework should have a trail effect.
+    trail: false
 
 # ----------------------------------------------------------------
 # Custom Actions
