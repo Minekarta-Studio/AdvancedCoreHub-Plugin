@@ -84,11 +84,14 @@ public class MenuManager {
                     builder.setDisplayName(displayName);
 
                     if (itemConfig.contains("lore")) {
-                        final int finalPlayerCount = playerCount;
+                        final String finalServerName = serverName; // Capture server name for lambda
                         List<Component> lore = itemConfig.getStringList("lore").stream()
                                 .map(line -> {
-                                    String processedLine = line.replace("%players%", finalPlayerCount != -1 ? String.valueOf(finalPlayerCount) : "N/A")
-                                            .replace("%status%", finalPlayerCount != -1 ? "<green>Online</green>" : "<red>Offline</red>");
+                                    String processedLine = line;
+                                    if (finalServerName != null && !finalServerName.isEmpty()) {
+                                        processedLine = processedLine.replace("%players%", "%advancedcorehub_players_" + finalServerName + "%")
+                                                                     .replace("%status%", "%advancedcorehub_status_" + finalServerName + "%");
+                                    }
                                     return plugin.getLocaleManager().getComponentFromString(processedLine, player);
                                 })
                                 .collect(Collectors.toList());

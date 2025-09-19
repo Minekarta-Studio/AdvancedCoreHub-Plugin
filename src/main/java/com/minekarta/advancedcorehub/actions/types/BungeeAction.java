@@ -34,6 +34,8 @@ public class BungeeAction implements Action {
             return;
         }
 
+        plugin.getLocaleManager().sendMessage(player, "server-selector.connecting", serverName);
+
         try {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");
@@ -41,6 +43,7 @@ public class BungeeAction implements Action {
             player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
         } catch (Exception e) {
             plugin.getLogger().severe("Could not send BungeeCord plugin message: " + e.getMessage());
+            plugin.getLocaleManager().sendMessage(player, "server-selector.failed", serverName);
         }
     }
 }
