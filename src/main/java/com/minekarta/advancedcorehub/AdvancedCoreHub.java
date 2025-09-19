@@ -143,8 +143,8 @@ public class AdvancedCoreHub extends JavaPlugin {
         // Register Anti-World Downloader channels if enabled
         if (getConfig().getBoolean("anti_world_downloader.enabled", true)) {
             AntiWorldDownloaderListener wdlListener = new AntiWorldDownloaderListener(this);
-            this.getServer().getMessenger().registerIncomingPluginChannel(this, "WDL|INIT", wdlListener);
-            this.getServer().getMessenger().registerIncomingPluginChannel(this, "WDL|REQUEST", wdlListener);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:init", wdlListener);
+            this.getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:request", wdlListener);
             this.getServer().getMessenger().registerIncomingPluginChannel(this, "worlddownloader:init", wdlListener);
             getLogger().info("Anti-World Downloader feature enabled.");
         }
