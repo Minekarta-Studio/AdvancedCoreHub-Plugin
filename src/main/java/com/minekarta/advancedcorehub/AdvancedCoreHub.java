@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub;
 import com.minekarta.advancedcorehub.cosmetics.CosmeticsManager;
 import com.minekarta.advancedcorehub.cosmetics.PlayerMoveListener;
 import com.minekarta.advancedcorehub.listeners.*;
+import com.minekarta.advancedcorehub.manager.PlaceholderManager;
 import com.minekarta.advancedcorehub.manager.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
