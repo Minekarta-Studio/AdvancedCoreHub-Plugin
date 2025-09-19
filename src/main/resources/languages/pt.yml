@@ -57,3 +57,8 @@ bossbar-removed: "<green>Boss bar removida para <yellow>{0}</yellow>."
 bossbar-set-success: "<green>A boss bar <yellow>{0}</yellow> foi definida como <yellow>{1}</yellow> para <yellow>{2}</yellow>."
 bossbar-invalid-color: "<red>Cor inválida: <yellow>{0}</yellow>. Cores válidas são: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
 bossbar-invalid-style: "<red>Estilo inválido: <yellow>{0}</yellow>. Estilos válidos são: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
+
+# Seletor de Servidor
+server-selector-connecting: "<gray>Conectando você a <yellow>{0}</yellow>..."
+server-selector-success: "<green>Conectado com sucesso a <yellow>{0}</yellow>!"
+server-selector-failed: "<red>Falha ao conectar a <yellow>{0}</yellow>."

@@ -18,31 +18,38 @@ public class EffectAction implements Action {
 
     @Override
     public void execute(Player player, Object data) {
-        if (!(data instanceof List)) {
-            plugin.getLogger().warning("[EffectAction] Invalid data type for EffectAction. Expected a List of strings.");
+        String effectData;
+        if (data instanceof List) {
+            effectData = String.join(":", ((List<String>) data));
+        } else if (data instanceof String) {
+            effectData = (String) data;
+        } else {
+            plugin.getLogger().warning("[EffectAction] Invalid data type. Expected a List or a String.");
             return;
         }
 
-        List<String> args = (List<String>) data;
-        // Args from string: [EFFECT, type, duration, strength]
-        if (args.size() < 4) {
-            plugin.getLogger().warning("[EffectAction] Invalid data. Expected: [EFFECT:type:duration:strength]");
+        // Expected format: [EFFECT:type:duration:strength]
+        String[] parts = effectData.split(":");
+        if (parts.length < 4) {
+            plugin.getLogger().warning("[EffectAction] Invalid data. Expected: [EFFECT:type:duration:strength], got: " + effectData);
             return;
         }
 
         try {
-            PotionEffectType effectType = PotionEffectType.getByName(args.get(1).toUpperCase());
+            PotionEffectType effectType = PotionEffectType.getByName(parts[1].toUpperCase());
             if (effectType == null) {
-                plugin.getLogger().warning("[EffectAction] Invalid potion effect type: " + args.get(1));
+                plugin.getLogger().warning("[EffectAction] Invalid potion effect type: " + parts[1]);
                 return;
             }
-            int duration = Integer.parseInt(args.get(2)) * 20; // Convert seconds to ticks
-            int strength = Integer.parseInt(args.get(3)) - 1; // Convert 1-based strength to 0-based amplifier
+            int duration = Integer.parseInt(parts[2]) * 20; // Convert seconds to ticks
+            int strength = Integer.parseInt(parts[3]) - 1; // Convert 1-based strength to 0-based amplifier
 
             player.addPotionEffect(new PotionEffect(effectType, duration, strength));
 
+        } catch (NumberFormatException e) {
+            plugin.getLogger().warning("[EffectAction] Invalid number format in effect data: " + effectData);
         } catch (Exception e) {
-            plugin.getLogger().warning("[EffectAction] Failed to parse effect data: " + args + " | Error: " + e.getMessage());
+            plugin.getLogger().warning("[EffectAction] Failed to parse effect data: " + effectData + " | Error: " + e.getMessage());
         }
     }
 }

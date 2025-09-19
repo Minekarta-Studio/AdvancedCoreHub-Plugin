@@ -29,6 +29,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     private CosmeticsManager cosmeticsManager;
     private GadgetManager gadgetManager;
     private PlayerVisibilityManager playerVisibilityManager;
+    private PlaceholderManager placeholderManager;
 
 
     @Override
@@ -70,6 +71,12 @@ public class AdvancedCoreHub extends JavaPlugin {
         registerCommands();
         registerListeners();
         registerChannels();
+
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            this.placeholderManager = new PlaceholderManager(this);
+            this.placeholderManager.register();
+            getLogger().info("Registered custom placeholders with PlaceholderAPI.");
+        }
 
         getLogger().info("AdvancedCoreHub has been enabled successfully.");
     }
@@ -214,5 +221,9 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public PlayerVisibilityManager getPlayerVisibilityManager() {
         return playerVisibilityManager;
+    }
+
+    public PlaceholderManager getPlaceholderManager() {
+        return placeholderManager;
     }
 }

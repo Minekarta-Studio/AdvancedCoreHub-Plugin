@@ -70,3 +70,8 @@ chat-protection-command-warning: "<red>You are not allowed to use this command."
 # Player Hider
 player-hider-hidden: "<green>Players are now hidden."
 player-hider-shown: "<green>Players are now visible."
+
+# Server Selector
+server-selector-connecting: "<gray>Connecting you to <yellow>{0}</yellow>..."
+server-selector-success: "<green>Successfully connected to <yellow>{0}</yellow>!"
+server-selector-failed: "<red>Failed to connect to <yellow>{0}</yellow>."

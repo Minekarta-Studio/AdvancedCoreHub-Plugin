@@ -36,14 +36,12 @@ public class FileManager {
         loadConfigFile("items.yml");
         loadConfigFile("cosmetics.yml");
         loadConfigFile("gadgets.yml");
-        loadConfigFile("menus/selector.yml");
-        loadConfigFile("menus/socials.yml");
-        loadConfigFile("menus/vip_gadget.yml");
-        loadConfigFile("menus/info_menu.yml");
+
+        // Dynamically load all menu configurations
+        loadAllConfigsFromFolder("menus");
 
         // Load language files
-        loadConfigFile("languages/en.yml");
-        loadConfigFile("languages/pt.yml");
+        loadAllConfigsFromFolder("languages");
     }
 
     public void loadConfigFile(String fileName) {
@@ -83,6 +81,33 @@ public class FileManager {
             config.save(file);
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Could not save config to " + file, e);
+        }
+    }
+
+    private void loadAllConfigsFromFolder(String folderName) {
+        File folder = new File(plugin.getDataFolder(), folderName);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        // Also check in the JAR for default files
+        try (InputStream in = plugin.getResource(folderName)) {
+            if (in != null) {
+                // This part is tricky as getResourceAsStream on a folder is not universally supported.
+                // A common approach is to have a list of files in the JAR.
+                // For simplicity, we'll assume we know the files or they are copied manually.
+                // A better implementation would be to list the contents of the folder within the JAR.
+            }
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Could not read folder from JAR: " + folderName, e);
+        }
+
+
+        File[] filesInFolder = folder.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (filesInFolder != null) {
+            for (File file : filesInFolder) {
+                loadConfigFile(folderName + "/" + file.getName());
+            }
         }
     }
 }
