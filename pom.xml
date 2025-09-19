@@ -30,6 +30,9 @@
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
+                    <includes>
+                        <include>**/PlaceholderManager.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
