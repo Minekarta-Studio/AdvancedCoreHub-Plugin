@@ -41,7 +41,8 @@ public class FileManager {
         loadAllConfigsFromFolder("menus");
 
         // Load language files
-        loadAllConfigsFromFolder("languages");
+        loadConfigFile("languages/en.yml");
+        loadConfigFile("languages/pt.yml");
     }
 
     public void loadConfigFile(String fileName) {
