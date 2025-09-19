@@ -185,11 +185,11 @@ bossbar:
 custom-actions:
   example_action:
     actions:
-      - "[MESSAGE] <green>This is a custom action!"
+      - "[LANG] custom-actions.example_action.message"
       - "[SOUND] ENTITY_EXPERIENCE_ORB_PICKUP:1.0:1.5"
       - "[CONSOLE] say The player %player_name% just triggered a custom action."
   greet:
     # Usage: [greet:PlayerName] -> will be replaced with %arg1%
     actions:
-      - "[MESSAGE] <wave> Hello, %arg1%! Welcome to the server!"
+      - "[LANG] custom-actions.greet.message"
       - "[SOUND] ENTITY_VILLAGER_AMBIENT:1.0:1.0"

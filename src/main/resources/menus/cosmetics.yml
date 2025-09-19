@@ -39,7 +39,7 @@ items:
       - ""
       - "<dark_gray>(Coming Soon)"
     actions:
-      - "[MESSAGE] <red>This feature is coming soon!"
+      - "[LANG] cosmetics.coming-soon"
 
   close_button:
     material: BARRIER

@@ -59,6 +59,19 @@ bossbar-invalid-color: "<red>Cor inválida: <yellow>{0}</yellow>. Cores válidas
 bossbar-invalid-style: "<red>Estilo inválido: <yellow>{0}</yellow>. Estilos válidos são: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
 
 # Seletor de Servidor
-server-selector-connecting: "<gray>Conectando você a <yellow>{0}</yellow>..."
+server-selector.connecting: "<gray>Conectando você a <yellow>{0}</yellow>..."
 server-selector-success: "<green>Conectado com sucesso a <yellow>{0}</yellow>!"
 server-selector-failed: "<red>Falha ao conectar a <yellow>{0}</yellow>."
+
+# Mensagens de gadgets
+gadget.particle_trail.activate: "<green>Você ativou a trilha de partículas de coração!"
+gadget.super_jump.activate: "<green>Você se sente mais leve!"
+gadget.cowboy.activate: "<green>Yeehaw! Um cavalo foi invocado para você."
+gadget.firework_show.activate: "<aqua>Uau, que cores bonitas!"
+
+# Mensagens de ações personalizadas
+custom-actions.example_action.message: "<green>Esta é uma ação personalizada!"
+custom-actions.greet.message: "<wave> Olá, {0}! Bem-vindo ao servidor!"
+
+# Menu de cosméticos
+cosmetics.coming-soon: "<red>Este recurso estará disponível em breve!"

@@ -22,7 +22,7 @@ gadgets:
     cooldown: 10
     actions:
       - "[CONSOLE] party trails %player_name% hearts"
-      - "[MESSAGE]<green>You activated the heart particle trail!"
+      - "[LANG] gadget.particle_trail.activate"
       - "[CLOSE]"
 
   super_jump:
@@ -34,7 +34,7 @@ gadgets:
     cooldown: 5
     actions:
       - "[EFFECT] JUMP;200;4" # PotionEffectType;duration_in_ticks;amplifier
-      - "[MESSAGE]<green>You feel lighter!"
+      - "[LANG] gadget.super_jump.activate"
       - "[CLOSE]"
 
   cowboy:
@@ -46,7 +46,7 @@ gadgets:
     cooldown: 60
     actions:
       - "[CONSOLE] summon horse ~ ~ ~ {Tame:1b,SaddleItem:{id:saddle,Count:1b},OwnerUUID:\"%player_uuid%\"}"
-      - "[MESSAGE]<green>Yeehaw! A horse has been summoned for you."
+      - "[LANG] gadget.cowboy.activate"
       - "[CLOSE]"
 
   firework_show:
@@ -57,6 +57,6 @@ gadgets:
     permission: "advancedcorehub.gadget.firework"
     cooldown: 15
     actions:
-      - "[FIREWORK] location:player type:BALL_LARGE color:RED,BLUE fade:YELLOW,ORANGE"
-      - "[MESSAGE]<aqua>Ooh, pretty colors!"
+      - "[FIREWORK] type:BALL_LARGE color:RED,BLUE fade:YELLOW,ORANGE"
+      - "[LANG] gadget.firework_show.activate"
       - "[CLOSE]"
