@@ -8,10 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 public class FileManager {
 
@@ -86,28 +90,42 @@ public class FileManager {
     }
 
     private void loadAllConfigsFromFolder(String folderName) {
-        File folder = new File(plugin.getDataFolder(), folderName);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        // Also check in the JAR for default files
-        try (InputStream in = plugin.getResource(folderName)) {
-            if (in != null) {
-                // This part is tricky as getResourceAsStream on a folder is not universally supported.
-                // A common approach is to have a list of files in the JAR.
-                // For simplicity, we'll assume we know the files or they are copied manually.
-                // A better implementation would be to list the contents of the folder within the JAR.
+        // Discover and load default configs from the JAR. This copies them to the data folder if they don't exist.
+        try {
+            URI uri = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            FileSystem fileSystem;
+            try {
+                fileSystem = FileSystems.getFileSystem(uri);
+            } catch (FileSystemNotFoundException e) {
+                fileSystem = FileSystems.newFileSystem(Paths.get(uri), Collections.emptyMap());
             }
-        } catch (IOException e) {
-            plugin.getLogger().log(Level.WARNING, "Could not read folder from JAR: " + folderName, e);
+
+            Path folderPathInJar = fileSystem.getPath(folderName);
+            if (Files.exists(folderPathInJar)) {
+                try (Stream<Path> walk = Files.walk(folderPathInJar, 1)) {
+                    walk.filter(path -> path.getFileName() != null && path.toString().endsWith(".yml"))
+                            .forEach(path -> {
+                                String resourcePath = folderName + "/" + path.getFileName().toString();
+                                loadConfigFile(resourcePath); // This handles copying and loading
+                            });
+                }
+            }
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.WARNING, "Could not automatically discover and load configs from JAR folder: " + folderName, e);
         }
 
-
-        File[] filesInFolder = folder.listFiles((dir, name) -> name.endsWith(".yml"));
-        if (filesInFolder != null) {
-            for (File file : filesInFolder) {
-                loadConfigFile(folderName + "/" + file.getName());
+        // Also load any custom .yml files from the data folder that might not be in the JAR.
+        File folderOnDisk = new File(plugin.getDataFolder(), folderName);
+        if (folderOnDisk.isDirectory()) {
+            File[] filesInFolder = folderOnDisk.listFiles((dir, name) -> name.endsWith(".yml"));
+            if (filesInFolder != null) {
+                for (File file : filesInFolder) {
+                    String configPath = folderName + "/" + file.getName();
+                    // If not already loaded (e.g., a custom file not in the JAR), load it.
+                    if (!configs.containsKey(configPath)) {
+                        loadConfigFile(configPath);
+                    }
+                }
             }
         }
     }
