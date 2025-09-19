@@ -59,3 +59,14 @@ bossbar-removed: "<green>Boss bar removed for <yellow>{0}</yellow>."
 bossbar-set-success: "<green>Boss bar <yellow>{0}</yellow> set to <yellow>{1}</yellow> for <yellow>{2}</yellow>."
 bossbar-invalid-color: "<red>Invalid color: <yellow>{0}</yellow>. Valid colors are: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
 bossbar-invalid-style: "<red>Invalid style: <yellow>{0}</yellow>. Valid styles are: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
+
+# Anti-World Downloader
+anti_wdl_kick_message: "<red>Using a World Downloader mod is not allowed on this server."
+
+# Chat Protection
+chat-protection-swear-warning: "<red>Your message contains a blocked word."
+chat-protection-command-warning: "<red>You are not allowed to use this command."
+
+# Player Hider
+player-hider-hidden: "<green>Players are now hidden."
+player-hider-shown: "<green>Players are now visible."

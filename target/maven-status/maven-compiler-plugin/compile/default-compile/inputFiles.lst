@@ -30,7 +30,10 @@
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/Gadget.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/ParticleTrail.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/AntiWorldDownloaderListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatProtectionListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/listeners/DoubleJumpListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemActionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemProtectionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
@@ -54,6 +57,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/LocaleManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuHolder.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/manager/PlayerVisibilityManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ServerInfoManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Formatter.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/ItemBuilder.java
