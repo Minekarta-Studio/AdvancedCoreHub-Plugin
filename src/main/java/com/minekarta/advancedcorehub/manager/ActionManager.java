@@ -20,6 +20,7 @@ public class ActionManager {
 
     private final AdvancedCoreHub plugin;
     private final Map<String, Action> actionMap = new HashMap<>();
+    private final java.util.Set<String> customActionNames = new java.util.HashSet<>();
     // Pattern to match actions like [ACTION] data or [ACTION:data]
     private static final Pattern ACTION_PATTERN = Pattern.compile("\\[([A-Z_]+)(?::\\s*(.*?))?\\](.*)");
 
@@ -34,6 +35,7 @@ public class ActionManager {
         if (customActionsSection == null) return;
 
         for (String key : customActionsSection.getKeys(false)) {
+            customActionNames.add(key.toUpperCase());
             final List<String> actionStrings = customActionsSection.getStringList(key + ".actions");
             if (actionStrings.isEmpty()) {
                 plugin.getLogger().warning("Custom action '" + key + "' has no actions defined.");
@@ -77,7 +79,9 @@ public class ActionManager {
         registerAction("EFFECT", new EffectAction(plugin));
         registerAction("GAMEMODE", new GamemodeAction(plugin));
         registerAction("MOVEMENT", new MovementAction(plugin));
-        registerAction("MESSAGE", new MessageAction(plugin));
+        MessageAction messageAction = new MessageAction(plugin);
+        registerAction("MESSAGE", messageAction);
+        registerAction("LANG", messageAction);
         registerAction("TOGGLE_VISIBILITY", (player, data) -> plugin.getPlayerVisibilityManager().togglePlayerVisibility(player));
     }
 
@@ -155,7 +159,15 @@ public class ActionManager {
         Action action = actionMap.get(identifier);
         if (action != null) {
             try {
-                action.execute(player, args);
+                // Custom actions are designed to take a list of arguments for templating,
+                // where the first argument is the action name itself.
+                // Default actions, however, expect to receive the raw data string as a single argument.
+                // This logic correctly dispatches the data in the expected format for each type.
+                if (customActionNames.contains(identifier)) {
+                    action.execute(player, args);
+                } else {
+                    action.execute(player, combinedData != null ? combinedData.trim() : "");
+                }
             } catch (Exception e) {
                 plugin.getLogger().log(Level.SEVERE, "Error executing action: " + actionString, e);
             }

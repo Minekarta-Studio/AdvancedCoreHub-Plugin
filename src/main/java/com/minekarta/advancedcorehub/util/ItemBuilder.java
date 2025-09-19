@@ -26,15 +26,15 @@ public class ItemBuilder {
     private static final Logger LOGGER = Bukkit.getLogger();
 
     public ItemBuilder(String materialString) {
-        if (hdbApi == null && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
-            hdbApi = new HeadDatabaseAPI();
-        }
-
         String lowerMaterialString = materialString.toLowerCase();
 
         if (lowerMaterialString.startsWith("headdatabase:") || lowerMaterialString.startsWith("hdb:")) {
+            if (hdbApi == null && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
+                hdbApi = new HeadDatabaseAPI();
+            }
+
             if (hdbApi == null) {
-                LOGGER.warning("HeadDatabase is not enabled, but an item tried to use it. Defaulting to PLAYER_HEAD.");
+                LOGGER.warning("Tried to use a HeadDatabase item, but the HeadDatabase plugin is not enabled. Defaulting to PLAYER_HEAD.");
                 this.itemStack = new ItemStack(Material.PLAYER_HEAD);
             } else {
                 try {
