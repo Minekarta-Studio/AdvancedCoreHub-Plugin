@@ -92,12 +92,13 @@ public class FileManager {
     private void loadAllConfigsFromFolder(String folderName) {
         // Discover and load default configs from the JAR. This copies them to the data folder if they don't exist.
         try {
-            URI uri = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            URI codeSourceUri = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            URI jarUri = URI.create("jar:" + codeSourceUri.toString());
             FileSystem fileSystem;
             try {
-                fileSystem = FileSystems.getFileSystem(uri);
+                fileSystem = FileSystems.getFileSystem(jarUri);
             } catch (FileSystemNotFoundException e) {
-                fileSystem = FileSystems.newFileSystem(Paths.get(uri), Collections.emptyMap());
+                fileSystem = FileSystems.newFileSystem(jarUri, Collections.emptyMap());
             }
 
             Path folderPathInJar = fileSystem.getPath(folderName);
