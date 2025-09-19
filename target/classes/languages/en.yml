@@ -72,6 +72,19 @@ player-hider-hidden: "<green>Players are now hidden."
 player-hider-shown: "<green>Players are now visible."
 
 # Server Selector
-server-selector-connecting: "<gray>Connecting you to <yellow>{0}</yellow>..."
+server-selector.connecting: "<gray>Connecting you to <yellow>{0}</yellow>..."
 server-selector-success: "<green>Successfully connected to <yellow>{0}</yellow>!"
 server-selector-failed: "<red>Failed to connect to <yellow>{0}</yellow>."
+
+# Gadget messages
+gadget.particle_trail.activate: "<green>You activated the heart particle trail!"
+gadget.super_jump.activate: "<green>You feel lighter!"
+gadget.cowboy.activate: "<green>Yeehaw! A horse has been summoned for you."
+gadget.firework_show.activate: "<aqua>Ooh, pretty colors!"
+
+# Custom action messages
+custom-actions.example_action.message: "<green>This is a custom action!"
+custom-actions.greet.message: "<wave> Hello, {0}! Welcome to the server!"
+
+# Cosmetics menu
+cosmetics.coming-soon: "<red>This feature is coming soon!"

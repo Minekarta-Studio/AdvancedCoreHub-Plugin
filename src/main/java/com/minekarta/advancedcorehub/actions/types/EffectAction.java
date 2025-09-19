@@ -28,21 +28,26 @@ public class EffectAction implements Action {
             return;
         }
 
-        // Expected format: [EFFECT:type:duration:strength]
-        String[] parts = effectData.split(":");
-        if (parts.length < 4) {
-            plugin.getLogger().warning("[EffectAction] Invalid data. Expected: [EFFECT:type:duration:strength], got: " + effectData);
+        // Expected format: [EFFECT] type;duration;strength, e.g., JUMP;200;4
+        // The "EFFECT:" prefix is removed if present, for compatibility.
+        if (effectData.toUpperCase().startsWith("EFFECT:")) {
+            effectData = effectData.substring(7);
+        }
+
+        String[] parts = effectData.split(";");
+        if (parts.length < 3) {
+            plugin.getLogger().warning("[EffectAction] Invalid data. Expected: type;duration;strength, got: " + effectData);
             return;
         }
 
         try {
-            PotionEffectType effectType = PotionEffectType.getByName(parts[1].toUpperCase());
+            PotionEffectType effectType = PotionEffectType.getByName(parts[0].toUpperCase());
             if (effectType == null) {
-                plugin.getLogger().warning("[EffectAction] Invalid potion effect type: " + parts[1]);
+                plugin.getLogger().warning("[EffectAction] Invalid potion effect type: " + parts[0]);
                 return;
             }
-            int duration = Integer.parseInt(parts[2]) * 20; // Convert seconds to ticks
-            int strength = Integer.parseInt(parts[3]) - 1; // Convert 1-based strength to 0-based amplifier
+            int duration = Integer.parseInt(parts[1]); // Duration is in ticks
+            int strength = Integer.parseInt(parts[2]) - 1; // Convert 1-based strength to 0-based amplifier
 
             player.addPotionEffect(new PotionEffect(effectType, duration, strength));
 
