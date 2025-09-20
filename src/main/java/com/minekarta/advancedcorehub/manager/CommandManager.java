@@ -4,7 +4,15 @@ import co.aikar.commands.PaperCommandManager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import co.aikar.commands.PaperCommandManager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.commands.acf.*;
+import com.minekarta.advancedcorehub.commands.acf.AdvancedCoreHubCommand;
+import com.minekarta.advancedcorehub.commands.acf.BossBarCommand;
+import com.minekarta.advancedcorehub.commands.acf.ClearChatCommand;
+import com.minekarta.advancedcorehub.commands.acf.CosmeticsCommand;
+import com.minekarta.advancedcorehub.commands.acf.FlyCommand;
+import com.minekarta.advancedcorehub.commands.acf.LockChatCommand;
+import com.minekarta.advancedcorehub.commands.acf.ServerSelectorCommand;
+import com.minekarta.advancedcorehub.commands.acf.SetSpawnCommand;
+import com.minekarta.advancedcorehub.commands.acf.SpawnCommand;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 
@@ -38,6 +46,7 @@ public class CommandManager {
         manager.registerCommand(new SetSpawnCommand());
         manager.registerCommand(new AdvancedCoreHubCommand());
         manager.registerCommand(new CosmeticsCommand());
+        manager.registerCommand(new ServerSelectorCommand(plugin));
     }
 
     private void registerDependencies() {

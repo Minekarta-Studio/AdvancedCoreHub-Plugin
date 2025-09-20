@@ -97,3 +97,6 @@ join_items:
     slot: 4
     permission: "advancedcorehub.item.vip"
     # This item will only be given to players with the 'advancedcorehub.item.vip' permission.
+  - item_name: launch_gadget
+    slot: 6
+    permission: "advancedcorehub.gadget.launch"
