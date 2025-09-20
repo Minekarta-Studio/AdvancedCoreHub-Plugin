@@ -101,6 +101,29 @@ server-selector:
     - "creative"
     - "skyblock"
 
+# --- Player Visibility ---
+# Settings for the player visibility feature in hub worlds.
+player-visibility:
+  # If enabled, players will receive an item to toggle the visibility of other players.
+  enabled: true
+  # The default visibility state for players when they join.
+  # true = players are visible, false = players are hidden.
+  default_state: true
+  # The slot in the hotbar where the visibility item will be placed. (0-8)
+  item_slot: 8
+  # Settings for the item when players are visible.
+  item_visible:
+    material: "LIME_DYE"
+    name: "<green>Players: Visible</green>"
+    lore:
+      - "<gray>Click to hide all players."
+  # Settings for the item when players are hidden.
+  item_hidden:
+    material: "GRAY_DYE"
+    name: "<red>Players: Hidden</red>"
+    lore:
+      - "<gray>Click to show all players."
+
 # Settings for movement items.
 movement_items:
   trident:

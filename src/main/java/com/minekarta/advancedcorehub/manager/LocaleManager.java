@@ -112,6 +112,14 @@ public class LocaleManager {
         return Formatter.format(player, text);
     }
 
+    public java.util.List<Component> getComponentList(java.util.List<String> lines, Player player) {
+        java.util.List<Component> componentList = new java.util.ArrayList<>();
+        for (String line : lines) {
+            componentList.add(getComponentFromString(line, player));
+        }
+        return componentList;
+    }
+
     public String getPrefix() {
         return prefix;
     }

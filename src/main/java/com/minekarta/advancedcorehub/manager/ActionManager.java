@@ -82,7 +82,6 @@ public class ActionManager {
         MessageAction messageAction = new MessageAction(plugin);
         registerAction("MESSAGE", messageAction);
         registerAction("LANG", messageAction);
-        registerAction("TOGGLE_VISIBILITY", (player, data) -> plugin.getPlayerVisibilityManager().togglePlayerVisibility(player));
     }
 
     public void registerAction(String identifier, Action action) {
