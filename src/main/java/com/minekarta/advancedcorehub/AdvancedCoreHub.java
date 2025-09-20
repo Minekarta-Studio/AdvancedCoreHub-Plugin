@@ -142,6 +142,12 @@ public class AdvancedCoreHub extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new ChatProtectionListener(this), this);
             getLogger().info("Chat Protection feature enabled.");
         }
+
+        // Register Player Visibility Listener if enabled
+        if (playerVisibilityManager.isEnabled()) {
+            getServer().getPluginManager().registerEvents(new PlayerVisibilityListener(this), this);
+            getLogger().info("Player Visibility feature enabled.");
+        }
     }
 
     private void registerChannels() {
