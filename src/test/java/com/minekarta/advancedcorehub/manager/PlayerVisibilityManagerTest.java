@@ -1,8 +1,8 @@
 package com.minekarta.advancedcorehub.manager;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import org.mockbukkit.MockBukkit;
+import org.mockbukkit.ServerMock;
+import org.mockbukkit.entity.PlayerMock;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

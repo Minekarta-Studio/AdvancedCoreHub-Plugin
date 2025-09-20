@@ -24,6 +24,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/CosmeticsCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/FlyCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/LockChatCommand.java
+/app/src/main/java/com/minekarta/advancedcorehub/commands/acf/ServerSelectorCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.java

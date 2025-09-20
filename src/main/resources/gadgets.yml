@@ -60,3 +60,15 @@ gadgets:
       - "[FIREWORK] type:BALL_LARGE color:RED,BLUE fade:YELLOW,ORANGE"
       - "[LANG] gadget.firework_show.activate"
       - "[CLOSE]"
+
+  launch_gadget:
+    material: FEATHER
+    display-name: "<white>Launch"
+    lore:
+      - "<gray>Click to launch yourself into the air!"
+    permission: "advancedcorehub.gadget.launch"
+    cooldown: 10
+    actions:
+      - "[LAUNCH] power:2.0"
+      - "[LANG] gadget.launch.activate"
+      - "[CLOSE]"
