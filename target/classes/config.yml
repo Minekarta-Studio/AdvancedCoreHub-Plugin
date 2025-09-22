@@ -131,6 +131,22 @@ double_jump:
     volume: 1.0
     pitch: 1.0
 
+# --- Menu Sounds ---
+# Configure sounds that are played when players interact with menus.
+menu_sounds:
+  # Sound played when a player opens any menu.
+  open:
+    enabled: true
+    name: "ENTITY_CHICKEN_EGG"
+    volume: 1.0
+    pitch: 1.0
+  # Sound played when a player clicks any item in a menu.
+  click:
+    enabled: true
+    name: "UI_BUTTON_CLICK"
+    volume: 1.0
+    pitch: 1.0
+
 # ----------------------------------------------------------------
 # Automatic Announcements
 # ----------------------------------------------------------------

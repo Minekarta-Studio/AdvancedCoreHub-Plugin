@@ -84,6 +84,33 @@ items:
     actions:
       - "[MESSAGE] You clicked the info item!"
       - "[CLOSE]" # Closes the menu
+
+# Optional: Define a filler item to fill the empty slots in the menu.
+# This creates a background and prevents players from seeing their own inventory.
+filler-item:
+  material: GRAY_STAINED_GLASS_PANE
+  display-name: " "
+```
+
+### `config.yml` - Menu Sounds
+
+You can configure sounds to be played when a player opens or clicks within a GUI menu. This is configured in `config.yml`.
+
+```yaml
+# config.yml
+menu_sounds:
+  # Sound played when a player opens any menu.
+  open:
+    enabled: true
+    name: "ENTITY_CHICKEN_EGG"
+    volume: 1.0
+    pitch: 1.0
+  # Sound played when a player clicks any item in a menu.
+  click:
+    enabled: true
+    name: "UI_BUTTON_CLICK"
+    volume: 1.0
+    pitch: 1.0
 ```
 
 ### `config.yml` - Custom Actions

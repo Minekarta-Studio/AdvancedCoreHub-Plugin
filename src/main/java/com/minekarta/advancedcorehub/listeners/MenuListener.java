@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub.listeners;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.manager.MenuHolder;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -65,6 +66,15 @@ public class MenuListener implements Listener {
         }
 
         if (actionsToExecute != null && !actionsToExecute.isEmpty()) {
+            // Play the click sound, if configured
+            ConfigurationSection clickSoundSection = plugin.getConfig().getConfigurationSection("menu_sounds.click");
+            if (clickSoundSection != null && clickSoundSection.getBoolean("enabled", false)) {
+                String soundName = clickSoundSection.getString("name", "UI_BUTTON_CLICK");
+                float volume = (float) clickSoundSection.getDouble("volume", 1.0);
+                float pitch = (float) clickSoundSection.getDouble("pitch", 1.0);
+                player.playSound(player.getLocation(), soundName, volume, pitch);
+            }
+
             plugin.getActionManager().executeStringActions(player, actionsToExecute);
         }
     }
