@@ -1,7 +1,6 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.cosmetics.Gadget;
 import com.minekarta.advancedcorehub.util.ItemBuilder;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
 import net.kyori.adventure.text.Component;
@@ -46,13 +45,8 @@ public class MenuManager {
 
         Inventory inventory = Bukkit.createInventory(new MenuHolder(menuId), size, title);
 
-        // Special handling for the dynamic gadget menu
-        if (menuId.equalsIgnoreCase("vip_gadget")) {
-            populateGadgetMenu(player, inventory);
-        } else {
-            // Standard static menu population
-            populateStaticMenu(player, inventory, config, menuId);
-        }
+        // Standard static menu population
+        populateStaticMenu(player, inventory, config, menuId);
 
         player.openInventory(inventory);
     }
@@ -67,35 +61,33 @@ public class MenuManager {
                 try {
                     ServerInfoManager serverInfoManager = plugin.getServerInfoManager();
                     String serverName = itemConfig.getString("server-name");
-                    int playerCount = -1;
+                    ItemBuilder builder;
 
                     if (serverName != null && !serverName.isEmpty()) {
-                        playerCount = serverInfoManager.getPlayerCount(serverName);
-                    }
+                        // Dynamic server item
+                        int playerCount = serverInfoManager.getPlayerCount(serverName);
+                        boolean isOnline = playerCount >= 0;
+                        ConfigurationSection displayConfig = itemConfig.getConfigurationSection(isOnline ? "online-item" : "offline-item");
 
-                    String materialString = itemConfig.getString("material", "STONE");
-                    ItemBuilder builder = new ItemBuilder(materialString);
+                        if (displayConfig == null) {
+                            plugin.getLogger().warning("Menu '" + menuId + "', item '" + key + "' is missing " + (isOnline ? "online-item" : "offline-item") + " section.");
+                            continue;
+                        }
+                        builder = new ItemBuilder(displayConfig.getString("material", "STONE"));
+                        builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(displayConfig.getString("display-name", " "), player));
+                        builder.setLore(displayConfig.getStringList("lore").stream()
+                                .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                                .collect(Collectors.toList()));
 
-                    if (serverName != null && !serverName.isEmpty()) {
-                        builder.setMaterial(playerCount >= 0 ? Material.LIME_WOOL : Material.RED_WOOL);
-                    }
-
-                    Component displayName = plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player);
-                    builder.setDisplayName(displayName);
-
-                    if (itemConfig.contains("lore")) {
-                        final String finalServerName = serverName; // Capture server name for lambda
-                        List<Component> lore = itemConfig.getStringList("lore").stream()
-                                .map(line -> {
-                                    String processedLine = line;
-                                    if (finalServerName != null && !finalServerName.isEmpty()) {
-                                        processedLine = processedLine.replace("%players%", "%advancedcorehub_players_" + finalServerName + "%")
-                                                                     .replace("%status%", "%advancedcorehub_status_" + finalServerName + "%");
-                                    }
-                                    return plugin.getLocaleManager().getComponentFromString(processedLine, player);
-                                })
-                                .collect(Collectors.toList());
-                        builder.setLore(lore);
+                    } else {
+                        // Static item
+                        builder = new ItemBuilder(itemConfig.getString("material", "STONE"));
+                        builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player));
+                        if (itemConfig.contains("lore")) {
+                             builder.setLore(itemConfig.getStringList("lore").stream()
+                                .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                                .collect(Collectors.toList()));
+                        }
                     }
 
                     if (itemConfig.isInt("custom-model-data")) {
@@ -116,28 +108,9 @@ public class MenuManager {
                         }
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid material '" + itemConfig.getString("material") + "' in menu '" + menuId + "' for item '" + key + "'.");
+                    plugin.getLogger().warning("Invalid material in menu '" + menuId + "' for item '" + key + "'. Error: " + e.getMessage());
                 }
             }
-        }
-    }
-
-    private void populateGadgetMenu(Player player, Inventory inventory) {
-        Map<String, Gadget> gadgets = plugin.getGadgetManager().getPlayerGadgets(player);
-        int slot = 10; // Starting slot for gadgets
-        for (Gadget gadget : gadgets.values()) {
-            if (slot > 16) break; // Limit to one row for now
-
-            ItemBuilder builder = new ItemBuilder(gadget.material());
-            builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(gadget.displayName(), player));
-            List<Component> lore = gadget.lore().stream()
-                    .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
-                    .collect(Collectors.toList());
-            builder.setLore(lore);
-            builder.addPdcValue(PersistentKeys.GADGET_ID, PersistentDataType.STRING, gadget.id());
-
-            inventory.setItem(slot, builder.build());
-            slot++;
         }
     }
 

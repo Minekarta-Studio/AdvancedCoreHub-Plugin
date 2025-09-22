@@ -7,106 +7,170 @@ size: 36 # 4 rows
 
 items:
   survival:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 10
     server-name: "survival"
-    display-name: "<green>Survival"
-    lore:
-      - "<gray>Click to join the Survival server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<green>Survival"
+      lore:
+        - "<gray>Click to join the Survival server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_survival%</white>"
+        - "<gray>Status: %advancedcorehub_status_survival%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>Survival"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_survival%"
     left-click-actions:
       - "[BUNGEE] survival"
       - "[CLOSE]"
   skyblock:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 12
     server-name: "skyblock"
-    display-name: "<aqua>Skyblock"
-    lore:
-      - "<gray>Click to join the Skyblock server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<aqua>Skyblock"
+      lore:
+        - "<gray>Click to join the Skyblock server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_skyblock%</white>"
+        - "<gray>Status: %advancedcorehub_status_skyblock%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>Skyblock"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_skyblock%"
     left-click-actions:
       - "[BUNGEE] skyblock"
       - "[CLOSE]"
   creative:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 14
     server-name: "creative"
-    display-name: "<yellow>Creative"
-    lore:
-      - "<gray>Click to join the Creative server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<yellow>Creative"
+      lore:
+        - "<gray>Click to join the Creative server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_creative%</white>"
+        - "<gray>Status: %advancedcorehub_status_creative%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>Creative"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_creative%"
     left-click-actions:
       - "[BUNGEE] creative"
       - "[CLOSE]"
   factions:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 16
     server-name: "factions"
-    display-name: "<red>Factions"
-    lore:
-      - "<gray>Click to join the Factions server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<red>Factions"
+      lore:
+        - "<gray>Click to join the Factions server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_factions%</white>"
+        - "<gray>Status: %advancedcorehub_status_factions%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>Factions"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_factions%"
     left-click-actions:
       - "[BUNGEE] factions"
       - "[CLOSE]"
   bedwars:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 19
     server-name: "bedwars"
-    display-name: "<blue>Bedwars"
-    lore:
-      - "<gray>Click to join the Bedwars server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<blue>Bedwars"
+      lore:
+        - "<gray>Click to join the Bedwars server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_bedwars%</white>"
+        - "<gray>Status: %advancedcorehub_status_bedwars%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>Bedwars"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_bedwars%"
     left-click-actions:
       - "[BUNGEE] bedwars"
       - "[CLOSE]"
   prison:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 21
     server-name: "prison"
-    display-name: "<dark_purple>Prison"
-    lore:
-      - "<gray>Click to join the Prison server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<dark_purple>Prison"
+      lore:
+        - "<gray>Click to join the Prison server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_prison%</white>"
+        - "<gray>Status: %advancedcorehub_status_prison%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>Prison"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_prison%"
     left-click-actions:
       - "[BUNGEE] prison"
       - "[CLOSE]"
   kitpvp:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 23
     server-name: "kitpvp"
-    display-name: "<gold>KitPVP"
-    lore:
-      - "<gray>Click to join the KitPVP server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<gold>KitPVP"
+      lore:
+        - "<gray>Click to join the KitPVP server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_kitpvp%</white>"
+        - "<gray>Status: %advancedcorehub_status_kitpvp%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>KitPVP"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_kitpvp%"
     left-click-actions:
       - "[BUNGEE] kitpvp"
       - "[CLOSE]"
   smp:
-    material: LIME_WOOL # Will be updated dynamically
     slot: 25
     server-name: "smp"
-    display-name: "<dark_green>SMP"
-    lore:
-      - "<gray>Click to join the SMP server!"
-      - ""
-      - "<gray>Players: <white>%players%</white>"
-      - "<gray>Status: %status%"
+    online-item:
+      material: LIME_WOOL
+      display-name: "<dark_green>SMP"
+      lore:
+        - "<gray>Click to join the SMP server!"
+        - ""
+        - "<gray>Players: <white>%advancedcorehub_players_smp%</white>"
+        - "<gray>Status: %advancedcorehub_status_smp%"
+    offline-item:
+      material: RED_WOOL
+      display-name: "<red>SMP"
+      lore:
+        - "<dark_gray>This server is currently offline."
+        - ""
+        - "<gray>Status: %advancedcorehub_status_smp%"
     left-click-actions:
       - "[BUNGEE] smp"
       - "[CLOSE]"

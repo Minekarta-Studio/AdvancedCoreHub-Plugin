@@ -60,17 +60,6 @@ items:
       - "<gray>Cast this at a block to be"
       - "<gray>pulled towards it."
 
-  vip_gadget:
-    material: PLAYER_HEAD
-    displayname: "<gold>VIP Gadget"
-    lore:
-      - "<gray>A special gadget for our VIPs!"
-    # The 'actions' key is deprecated but still supported for backward compatibility.
-    # It will be treated as 'right-click-actions'.
-    right-click-actions:
-      - "[MENU] vip_gadget"
-    protected: true
-
   player_hider:
     material: LIME_DYE
     displayname: "<green>Players: Visible <gray>(Click)"
@@ -93,10 +82,3 @@ join_items:
     slot: 2
   - item_name: profile_menu
     slot: 8
-  - item_name: vip_gadget
-    slot: 4
-    permission: "advancedcorehub.item.vip"
-    # This item will only be given to players with the 'advancedcorehub.item.vip' permission.
-  - item_name: launch_gadget
-    slot: 6
-    permission: "advancedcorehub.gadget.launch"

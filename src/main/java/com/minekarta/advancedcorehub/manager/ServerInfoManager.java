@@ -40,17 +40,18 @@ public class ServerInfoManager implements PluginMessageListener {
     }
 
     public void requestPlayerCounts() {
-        if (serversToQuery == null || serversToQuery.isEmpty() || Bukkit.getOnlinePlayers().isEmpty()) {
+        if (serversToQuery == null || serversToQuery.isEmpty()) {
             return;
         }
-        // Get the first online player to send the message
-        Player player = Bukkit.getOnlinePlayers().iterator().next();
 
+        // We don't need a player to send a plugin message to Bungee.
+        // The server itself can do it, as long as the channel is registered.
         for (String serverName : serversToQuery) {
             com.google.common.io.ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("PlayerCount");
             out.writeUTF(serverName);
-            player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+            // Send the message from the server, not a specific player
+            plugin.getServer().sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
         }
     }
 
