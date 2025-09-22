@@ -1,7 +1,6 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.cosmetics.Gadget;
 import com.minekarta.advancedcorehub.manager.MenuHolder;
 import com.minekarta.advancedcorehub.util.PersistentKeys;
 import org.bukkit.entity.Player;
@@ -44,13 +43,6 @@ public class MenuListener implements Listener {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         String menuId = ((MenuHolder) holder).getMenuId();
 
-        // --- Gadget Handling ---
-        if (pdc.has(PersistentKeys.GADGET_ID, PersistentDataType.STRING)) {
-            String gadgetId = pdc.get(PersistentKeys.GADGET_ID, PersistentDataType.STRING);
-            handleGadgetClick(player, gadgetId);
-            return;
-        }
-
         // --- Static Menu Item Handling ---
         if (event.getClickedInventory() == null || !event.getClickedInventory().equals(event.getView().getTopInventory())) {
             return;
@@ -74,31 +66,6 @@ public class MenuListener implements Listener {
 
         if (actionsToExecute != null && !actionsToExecute.isEmpty()) {
             plugin.getActionManager().executeStringActions(player, actionsToExecute);
-        }
-    }
-
-    private void handleGadgetClick(Player player, String gadgetId) {
-        Gadget gadget = plugin.getGadgetManager().getGadget(gadgetId);
-        if (gadget == null) {
-            plugin.getLogger().warning("Player " + player.getName() + " clicked on an unknown gadget: " + gadgetId);
-            return;
-        }
-
-        // Check for cooldown
-        if (plugin.getCooldownManager().hasCooldown(player, "gadget_" + gadgetId)) {
-            long remaining = plugin.getCooldownManager().getRemainingCooldown(player, "gadget_" + gadgetId);
-            plugin.getLocaleManager().sendMessage(player, "gadget-cooldown", String.valueOf(remaining));
-            return;
-        }
-
-        // Set cooldown if applicable
-        if (gadget.cooldown() > 0) {
-            plugin.getCooldownManager().setCooldown(player, "gadget_" + gadgetId, gadget.cooldown());
-        }
-
-        // Execute actions
-        if (gadget.actions() != null && !gadget.actions().isEmpty()) {
-            plugin.getActionManager().executeStringActions(player, gadget.actions());
         }
     }
 }

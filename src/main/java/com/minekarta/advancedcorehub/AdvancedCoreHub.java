@@ -28,8 +28,6 @@ public class AdvancedCoreHub extends JavaPlugin {
     private InventoryManager inventoryManager;
     private ServerInfoManager serverInfoManager;
     private CosmeticsManager cosmeticsManager;
-    private GadgetManager gadgetManager;
-    private PlayerVisibilityManager playerVisibilityManager;
     private PlaceholderManager placeholderManager;
 
 
@@ -63,9 +61,6 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.commandManager = new CommandManager(this);
         this.serverInfoManager = new ServerInfoManager(this);
         this.cosmeticsManager = new CosmeticsManager(this);
-        this.gadgetManager = new GadgetManager(this);
-        this.gadgetManager.loadGadgets();
-        this.playerVisibilityManager = new PlayerVisibilityManager(this);
 
 
         // Load other components
@@ -101,7 +96,6 @@ public class AdvancedCoreHub extends JavaPlugin {
             this.fileManager.reloadAll();
             this.localeManager.load();
             this.itemsManager.loadItems();
-            this.gadgetManager.loadGadgets();
             this.menuManager.loadMenus();
             this.actionManager = new ActionManager(this); // Re-register actions
             this.hubWorldManager.load();
@@ -143,11 +137,6 @@ public class AdvancedCoreHub extends JavaPlugin {
             getLogger().info("Chat Protection feature enabled.");
         }
 
-        // Register Player Visibility Listener if enabled
-        if (playerVisibilityManager.isEnabled()) {
-            getServer().getPluginManager().registerEvents(new PlayerVisibilityListener(this), this);
-            getLogger().info("Player Visibility feature enabled.");
-        }
     }
 
     private void registerChannels() {
@@ -220,14 +209,6 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public CosmeticsManager getCosmeticsManager() {
         return cosmeticsManager;
-    }
-
-    public GadgetManager getGadgetManager() {
-        return gadgetManager;
-    }
-
-    public PlayerVisibilityManager getPlayerVisibilityManager() {
-        return playerVisibilityManager;
     }
 
     public PlaceholderManager getPlaceholderManager() {

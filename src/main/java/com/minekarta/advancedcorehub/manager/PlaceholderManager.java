@@ -38,8 +38,24 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
-        // This is where the placeholder logic will go.
-        // For now, returning null to fix the compilation error.
+        String[] parts = params.split("_");
+        if (parts.length < 2) {
+            return null;
+        }
+
+        String type = parts[0];
+        String serverName = parts[1];
+
+        int playerCount = plugin.getServerInfoManager().getPlayerCount(serverName);
+
+        if (type.equalsIgnoreCase("players")) {
+            return playerCount >= 0 ? String.valueOf(playerCount) : "Offline";
+        }
+
+        if (type.equalsIgnoreCase("status")) {
+            return playerCount >= 0 ? "<green>Online</green>" : "<red>Offline</red>";
+        }
+
         return null;
     }
 }

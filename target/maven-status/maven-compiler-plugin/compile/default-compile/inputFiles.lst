@@ -28,7 +28,6 @@
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.java
-/app/src/main/java/com/minekarta/advancedcorehub/cosmetics/Gadget.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/ParticleTrail.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/AntiWorldDownloaderListener.java
@@ -42,7 +41,6 @@
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerConnectionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerJoinListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerQuitListener.java
-/app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerVisibilityListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldEventListeners.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ActionManager.java
@@ -52,7 +50,6 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/CommandManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/CooldownManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/FileManager.java
-/app/src/main/java/com/minekarta/advancedcorehub/manager/GadgetManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/HubWorldManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/InventoryManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ItemsManager.java
@@ -60,7 +57,6 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuHolder.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/PlaceholderManager.java
-/app/src/main/java/com/minekarta/advancedcorehub/manager/PlayerVisibilityManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ServerInfoManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Formatter.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/ItemBuilder.java
