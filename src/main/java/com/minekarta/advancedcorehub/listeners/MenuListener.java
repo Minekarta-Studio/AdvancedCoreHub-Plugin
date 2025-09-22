@@ -69,7 +69,7 @@ public class MenuListener implements Listener {
             // Play the click sound, if configured
             ConfigurationSection clickSoundSection = plugin.getConfig().getConfigurationSection("menu_sounds.click");
             if (clickSoundSection != null && clickSoundSection.getBoolean("enabled", false)) {
-                String soundName = clickSoundSection.getString("name", "UI_BUTTON_CLICK");
+                String soundName = clickSoundSection.getString("name", "ui.button.click");
                 float volume = (float) clickSoundSection.getDouble("volume", 1.0);
                 float pitch = (float) clickSoundSection.getDouble("pitch", 1.0);
                 player.playSound(player.getLocation(), soundName, volume, pitch);
