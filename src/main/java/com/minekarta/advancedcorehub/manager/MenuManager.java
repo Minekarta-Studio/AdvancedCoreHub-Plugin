@@ -53,7 +53,7 @@ public class MenuManager {
         // Play the open sound, if configured
         ConfigurationSection openSoundSection = plugin.getConfig().getConfigurationSection("menu_sounds.open");
         if (openSoundSection != null && openSoundSection.getBoolean("enabled", false)) {
-            String soundName = openSoundSection.getString("name", "ENTITY_CHICKEN_EGG");
+            String soundName = openSoundSection.getString("name", "ENTITY_CHICKEN_EGG").toLowerCase();
             float volume = (float) openSoundSection.getDouble("volume", 1.0);
             float pitch = (float) openSoundSection.getDouble("pitch", 1.0);
             player.playSound(player.getLocation(), soundName, volume, pitch);
