@@ -45,13 +45,42 @@ public class MenuManager {
 
         Inventory inventory = Bukkit.createInventory(new MenuHolder(menuId), size, title);
 
-        // Standard static menu population
-        populateStaticMenu(player, inventory, config, menuId);
+        // Populate menu with filler items and then specific items
+        populateMenu(player, inventory, config, menuId);
 
         player.openInventory(inventory);
+
+        // Play the open sound, if configured
+        ConfigurationSection openSoundSection = plugin.getConfig().getConfigurationSection("menu_sounds.open");
+        if (openSoundSection != null && openSoundSection.getBoolean("enabled", false)) {
+            String soundName = openSoundSection.getString("name", "ENTITY_CHICKEN_EGG");
+            float volume = (float) openSoundSection.getDouble("volume", 1.0);
+            float pitch = (float) openSoundSection.getDouble("pitch", 1.0);
+            player.playSound(player.getLocation(), soundName, volume, pitch);
+        }
     }
 
-    private void populateStaticMenu(Player player, Inventory inventory, FileConfiguration config, String menuId) {
+    private void populateMenu(Player player, Inventory inventory, FileConfiguration config, String menuId) {
+        // First, fill with a filler item if specified
+        ConfigurationSection fillerSection = config.getConfigurationSection("filler-item");
+        if (fillerSection != null) {
+            try {
+                ItemBuilder fillerBuilder = new ItemBuilder(fillerSection.getString("material", "GRAY_STAINED_GLASS_PANE"));
+                fillerBuilder.setDisplayName(plugin.getLocaleManager().getComponentFromString(fillerSection.getString("display-name", " "), player));
+                if (fillerSection.isInt("custom-model-data")) {
+                    fillerBuilder.setCustomModelData(fillerSection.getInt("custom-model-data"));
+                }
+                ItemStack fillerStack = fillerBuilder.build();
+                for (int i = 0; i < inventory.getSize(); i++) {
+                    inventory.setItem(i, fillerStack);
+                }
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("Invalid material for filler item in menu '" + menuId + "'. Error: " + e.getMessage());
+            }
+        }
+
+
+        // Then, populate the specific items
         ConfigurationSection itemsSection = config.getConfigurationSection("items");
         if (itemsSection != null) {
             for (String key : itemsSection.getKeys(false)) {
@@ -84,9 +113,9 @@ public class MenuManager {
                         builder = new ItemBuilder(itemConfig.getString("material", "STONE"));
                         builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player));
                         if (itemConfig.contains("lore")) {
-                             builder.setLore(itemConfig.getStringList("lore").stream()
-                                .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
-                                .collect(Collectors.toList()));
+                            builder.setLore(itemConfig.getStringList("lore").stream()
+                                    .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                                    .collect(Collectors.toList()));
                         }
                     }
 

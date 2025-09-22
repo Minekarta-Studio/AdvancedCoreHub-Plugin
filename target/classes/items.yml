@@ -77,7 +77,7 @@ items:
 # 'item_name' must match an ID from the 'items' section above.
 join_items:
   - item_name: server_selector
-    slot: 0
+    slot: 4
   - item_name: player_hider
     slot: 2
   - item_name: profile_menu
