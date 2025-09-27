@@ -31,7 +31,7 @@ items:
       - "<gray>Connect with: <white>play.minekarta.com"
 
   social_discord:
-    material: "hdb:862" # Discord Head
+    material: "LAPIS_LAZULI" # Discord Head
     slot: 32
     display-name: "<blue>Discord"
     lore:
@@ -41,7 +41,7 @@ items:
       - "[CLOSE]"
 
   social_website:
-    material: "hdb:2361" # Website/Earth Head
+    material: "COMPASS" # Website/Earth Head
     slot: 33
     display-name: "<green>Website"
     lore:
