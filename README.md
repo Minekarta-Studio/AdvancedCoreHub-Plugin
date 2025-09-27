@@ -1,8 +1,8 @@
 # AdvancedCoreHub
 
-AdvancedCoreHub is a comprehensive core plugin for PaperMC Minecraft servers, designed to manage hub-specific functionalities. It is built for Minecraft 1.20+ and runs on Java 21.
+AdvancedCoreHub is a comprehensive and professional core plugin for PaperMC servers, designed to provide a robust and feature-rich experience for your server's hub. Built for modern Minecraft (1.20+) and running on Java 21, it offers a suite of powerful tools to create a dynamic and engaging hub environment.
 
-This project was developed by the AI assistant, Jules.
+This project was developed by the AI assistant, Jules, with a focus on professional development standards, maintainability, and performance.
 
 ## Features
 
@@ -21,23 +21,68 @@ This project was developed by the AI assistant, Jules.
 
 ## Commands
 
-| Command | Description | Permission |
+The plugin's commands are organized for ease of use. The main administrative command is `/ach` (aliases: `/advancedcorehub`, `/acore`, `/ahub`).
+
+### Player Commands
+
+| Command | Description |
+| --- | --- |
+| `/fly [player] [duration]` | Toggles flight. Duration can be specified (e.g., `10s`, `5m`, `1h`). |
+| `/spawn` | Teleports you to the server spawn. |
+
+### Admin Commands
+
+| Command | Description |
+| --- | --- |
+| `/setspawn` | Sets the server spawn location. |
+| `/bossbar <...>` | Manages global or per-player boss bars. |
+| `/ach <subcommand>` | The root command for all other administrative functions. |
+
+### `/ach` Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| `help` | Shows the plugin's help menu. |
+| `reload` | Reloads all plugin configuration files. |
+| `version` | Shows the current plugin version. |
+| `give <player> <item> [amount]` | Gives a player a custom item. |
+| `listitems` | Lists all available custom items. |
+| `clearchat` | Clears the global chat for all players. |
+| `lockchat` | Toggles the chat lock on or off. |
+| `worlds <add/remove/list>` | Manages the list of hub worlds. |
+
+## Permissions
+
+| Permission | Description | Default |
 | --- | --- | --- |
-| `/ach <subcommand>` | Root command for the plugin. | `advancedcorehub.command.help` |
-| `/ach listitems` | Lists all available custom items. | `advancedcorehub.command.listitems` |
-| `/fly [player] [duration]` | Toggles flight. Duration can be specified (e.g., `10s`, `5m`, `1h`). | `advancedcorehub.command.fly` |
-| `/bossbar <create/remove/set> ...` | Manages global or per-player boss bars. | `advancedcorehub.command.bossbar` |
-| `/spawn` | Teleports you to the server spawn. | `advancedcorehub.command.spawn` |
-| `/setspawn` | Sets the server spawn location. | `advancedcorehub.command.setspawn` |
-| `/lockchat` | Locks or unlocks the global chat. | `advancedcorehub.command.lockchat` |
-| `/clearchat` | Clears the global chat. | `advancedcorehub.command.clearchat` |
+| `advancedcorehub.command.fly` | Allows a player to use the `/fly` command for themselves. | OP |
+| `advancedcorehub.command.fly.others` | Allows a player to use the `/fly` command for other players. | OP |
+| `advancedcorehub.command.spawn` | Allows a player to use the `/spawn` command. | Everyone |
+| `advancedcorehub.command.setspawn` | Allows a player to use the `/setspawn` command. | OP |
+| `advancedcorehub.command.reload` | Allows a player to use the `/ach reload` command. | OP |
+| `advancedcorehub.command.give` | Allows a player to use the `/ach give` command. | OP |
+| `advancedcorehub.command.listitems` | Allows a player to use the `/ach listitems` command. | OP |
+| `advancedcorehub.command.worlds` | Allows a player to manage the hub worlds list. | OP |
+| `advancedcorehub.command.clearchat` | Allows a player to use the `/ach clearchat` command. | OP |
+| `advancedcorehub.command.lockchat` | Allows a player to use the `/ach lockchat` command. | OP |
+| `advancedcorehub.command.bossbar` | Allows a player to use the `/bossbar` command. | OP |
+| `advancedcorehub.bypass.cooldown` | Allows a player to bypass all item cooldowns. | OP |
+| `advancedcorehub.bypass.chatlock` | Allows a player to chat when the chat is locked. | OP |
+| `advancedcorehub.bypass.worldguard` | Allows a player to bypass world event cancellations (e.g., block breaking). | OP |
 
 ## Configuration
 
+The plugin is highly configurable through a set of YAML files located in the `/plugins/AdvancedCoreHub/` directory.
+
+### `config.yml`
+
+This is the main configuration file. It allows you to enable/disable features, set spawn locations, manage hub worlds, configure announcements, and much more. The file is heavily commented to explain each option.
+
 ### `items.yml`
 
-This file defines all custom items.
+This file defines all custom items that can be given to players or used in menus.
 
+**Example:**
 ```yaml
 items:
   my_awesome_sword:
@@ -46,30 +91,26 @@ items:
     lore:
       - "<gray>This sword is awesome."
       - "<gray>Left-click for info, Right-click to attack."
-    # (Optional) Add a custom texture via a resource pack
     custom-model-data: 1001
-    # (Optional) Add enchantments
     enchantments:
       - "sharpness:5"
       - "unbreaking:3"
-    # (Optional) Define actions for left and right clicks
     left-click-actions:
       - "[MESSAGE] This is my awesome sword!"
     right-click-actions:
-      - "[SOUND] ENTITY_PLAYER_ATTACK_SWEEP;1.0;1.2" # Format: [SOUND]SOUND_NAME;VOLUME;PITCH
-    # (Optional) Protect the item from being moved or dropped
+      - "[SOUND] ENTITY_PLAYER_ATTACK_SWEEP;1.0;1.2"
     protected: true
 ```
 
 ### `menus/*.yml`
 
-You can create any number of menu files in the `menus/` directory.
+You can create any number of menu files in the `menus/` directory. Each file represents a unique GUI menu.
 
+**Example:**
 ```yaml
 # menus/my_menu.yml
 title: "<blue>My Custom Menu"
 size: 27 # Must be a multiple of 9
-
 items:
   info_item:
     material: BOOK
@@ -77,132 +118,48 @@ items:
     display-name: "<green>Information"
     lore:
       - "<gray>This is an item in my menu."
-    # You can also use custom-model-data and enchantments here
-    custom-model-data: 101
-    enchantments: ["unbreaking:1"]
-    # Actions are defined directly on the item
     actions:
       - "[MESSAGE] You clicked the info item!"
-      - "[CLOSE]" # Closes the menu
-
-# Optional: Define a filler item to fill the empty slots in the menu.
-# This creates a background and prevents players from seeing their own inventory.
+      - "[CLOSE]"
 filler-item:
   material: GRAY_STAINED_GLASS_PANE
   display-name: " "
 ```
 
-### `config.yml` - Menu Sounds
-
-You can configure sounds to be played when a player opens or clicks within a GUI menu. This is configured in `config.yml`.
-
-```yaml
-# config.yml
-menu_sounds:
-  # Sound played when a player opens any menu.
-  open:
-    enabled: true
-    name: "ENTITY_CHICKEN_EGG"
-    volume: 1.0
-    pitch: 1.0
-  # Sound played when a player clicks any item in a menu.
-  click:
-    enabled: true
-    name: "UI_BUTTON_CLICK"
-    volume: 1.0
-    pitch: 1.0
-```
-
-### `config.yml` - Custom Actions
-
-You can define your own reusable actions in `config.yml`.
-
-```yaml
-custom-actions:
-  # This action can be triggered with "[welcome_pack]"
-  welcome_pack:
-    actions:
-      - "[MESSAGE] <green>Here is your welcome pack!"
-      - "[CONSOLE] give %player_name% golden_apple 1"
-      - "[SOUND] ENTITY_PLAYER_LEVELUP;1.0;1.0"
-
-  # This action can be triggered with "[website_link]"
-  website_link:
-    actions:
-      - "[MESSAGE] <yellow>Our website is www.example.com"
-```
-
-### `config.yml` - Announcements
-
-The announcements system has been completely overhauled.
-
-```yaml
-announcements:
-  enabled: true
-  interval_seconds: 90
-  # If true, announcements will be chosen randomly. If false, they will appear in order.
-  randomized: false
-  # A list of announcements. Each is an object with its own settings.
-  messages:
-    # Example 1: A simple chat message for all players
-    - type: CHAT
-      message: "<yellow>Don't forget to visit our website!"
-
-    # Example 2: A title message for players in specific worlds
-    - type: TITLE
-      message: "<green>TIP<gray>;<white>Vote for us with /vote!" # Title and subtitle separated by ;
-      worlds:
-        - "world"
-        - "world_nether"
-
-    # Example 3: An action bar message
-    - type: ACTION_BAR
-      message: "<aqua>Having fun? Let us know!"
-
-    # Example 4: A boss bar message
-    - type: BOSS_BAR
-      message: "<gradient:blue:purple>We have a Discord server!</gradient>"
-      color: PURPLE # Default: YELLOW
-      style: SEGMENTED_10 # Default: SOLID
-      duration: 10 # Default: 10 seconds
-```
-
-## Dependencies
-
-### Required
--   None (the plugin can run standalone)
-
-### Optional (Soft Dependencies)
--   **PlaceholderAPI**: For full placeholder support in messages and menus.
--   **HeadDatabase**: For using custom heads. To use a head, set the `material` to `hdb:<head_id>`.
-
 ## For Developers
 
 ### Action System API
 
-You can register your own custom actions with the `ActionManager`.
+You can register your own custom actions with the `ActionManager` to extend the plugin's functionality.
 
 **Example:**
 ```java
+// Get the ActionManager instance
 ActionManager am = AdvancedCoreHub.getInstance().getActionManager();
+
+// Register a new action
 am.registerAction("MY_ACTION", (player, data) -> {
     player.setFoodLevel(20);
+    player.sendMessage("You have been fed!");
 });
-// Usage in YAML: "[MY_ACTION]"
+
+// You can now use "[MY_ACTION]" in your items.yml or menus!
 ```
 
 ## Building from Source
 
-This project uses Apache Maven.
-```bash
-git clone <repository_url>
-cd AdvancedCoreHub
-mvn clean package
-```
+This project uses Apache Maven for building.
+
+1.  Clone the repository: `git clone <repository_url>`
+2.  Navigate to the project directory: `cd AdvancedCoreHub`
+3.  Build the project: `mvn clean package`
+
+The compiled JAR will be located in the `target/` directory.
 
 ## Installation
 
 1.  Requires Paper (or a fork) for Minecraft 1.20+.
-2.  Install PlaceholderAPI and HeadDatabase (optional).
-3.  Copy the JAR into your `plugins/` directory.
-4.  Start the server. Customize the generated files and use `/ach reload`.
+2.  Install PlaceholderAPI (optional, for placeholder support).
+3.  Copy the compiled JAR into your server's `plugins/` directory.
+4.  Start the server to generate the default configuration files.
+5.  Customize the generated files and use `/ach reload` to apply changes.

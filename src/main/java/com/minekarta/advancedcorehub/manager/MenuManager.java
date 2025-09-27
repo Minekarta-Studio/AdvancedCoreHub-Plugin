@@ -1,17 +1,16 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.config.MenuConfig;
+import com.minekarta.advancedcorehub.config.MenuItemConfig;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import com.minekarta.advancedcorehub.util.ItemBuilder;
-import com.minekarta.advancedcorehub.util.PersistentKeys;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,172 +20,123 @@ import java.util.stream.Collectors;
 public class MenuManager {
 
     private final AdvancedCoreHub plugin;
-    private final Map<String, Map<Integer, Map<String, List<String>>>> menuActionsCache = new HashMap<>();
+    private final Map<String, MenuConfig> menuConfigs = new HashMap<>();
 
     public MenuManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
     }
 
     public void loadMenus() {
-        menuActionsCache.clear();
-        plugin.getLogger().info("Menu action cache cleared.");
+        menuConfigs.clear();
+        FileManager fileManager = plugin.getFileManager();
+        for (Map.Entry<String, FileConfiguration> entry : fileManager.getConfigs().entrySet()) {
+            String configName = entry.getKey();
+            if (configName.startsWith("menus/")) {
+                String menuId = configName.replace("menus/", "").replace(".yml", "");
+                FileConfiguration fileConfig = entry.getValue();
+                if (fileConfig != null) {
+                    MenuConfig menuConfig = new MenuConfig(menuId, fileConfig);
+                    menuConfigs.put(menuId, menuConfig);
+                    plugin.getLogger().info("Loaded menu: " + menuId);
+                }
+            }
+        }
     }
 
     public void openMenu(Player player, String menuId) {
-        FileConfiguration config = plugin.getFileManager().getConfig("menus/" + menuId + ".yml");
-        if (config == null) {
-            plugin.getLogger().warning("Menu configuration for '" + menuId + ".yml' not found.");
+        MenuConfig menuConfig = menuConfigs.get(menuId);
+        if (menuConfig == null) {
+            plugin.getLogger().warning("Menu configuration for '" + menuId + "' not found or failed to load.");
             plugin.getLocaleManager().sendMessage(player, "menu-not-found", menuId);
             return;
         }
 
-        Component title = plugin.getLocaleManager().getComponentFromString(config.getString("title", "<red>Invalid Title"), player);
-        int size = config.getInt("size", 27);
+        Component title = plugin.getLocaleManager().getComponentFromString(menuConfig.getTitle(), player);
+        Inventory inventory = Bukkit.createInventory(new MenuHolder(menuId), menuConfig.getSize(), title);
 
-        Inventory inventory = Bukkit.createInventory(new MenuHolder(menuId), size, title);
-
-        // Populate menu with filler items and then specific items
-        populateMenu(player, inventory, config, menuId);
-
+        populateMenu(player, inventory, menuConfig);
         player.openInventory(inventory);
+        playSound(player, "open");
+    }
 
-        // Play the open sound, if configured
-        ConfigurationSection openSoundSection = plugin.getConfig().getConfigurationSection("menu_sounds.open");
-        if (openSoundSection != null && openSoundSection.getBoolean("enabled", false)) {
-            String soundName = openSoundSection.getString("name", "ENTITY_CHICKEN_EGG").toLowerCase();
-            float volume = (float) openSoundSection.getDouble("volume", 1.0);
-            float pitch = (float) openSoundSection.getDouble("pitch", 1.0);
-            player.playSound(player.getLocation(), soundName, volume, pitch);
+    private void populateMenu(Player player, Inventory inventory, MenuConfig menuConfig) {
+        // Fill with filler item first
+        if (menuConfig.getFillerItem() != null) {
+            ItemStack fillerStack = createMenuItem(player, menuConfig.getFillerItem());
+            for (int i = 0; i < inventory.getSize(); i++) {
+                inventory.setItem(i, fillerStack);
+            }
+        }
+
+        // Place the actual items
+        for (MenuItemConfig itemConfig : menuConfig.getItems()) {
+            ItemStack itemStack = createMenuItem(player, itemConfig);
+            if (itemConfig.slot != -1) {
+                inventory.setItem(itemConfig.slot, itemStack);
+            }
+            if (itemConfig.slots != null && !itemConfig.slots.isEmpty()) {
+                for (int slot : itemConfig.slots) {
+                    inventory.setItem(slot, itemStack);
+                }
+            }
         }
     }
 
-    private void populateMenu(Player player, Inventory inventory, FileConfiguration config, String menuId) {
-        // First, fill with a filler item if specified
-        ConfigurationSection fillerSection = config.getConfigurationSection("filler-item");
-        if (fillerSection != null) {
+    private ItemStack createMenuItem(Player player, MenuItemConfig itemConfig) {
+        ItemBuilder builder;
+
+        if (itemConfig.isDynamic()) {
+            int playerCount = plugin.getServerInfoManager().getPlayerCount(itemConfig.serverName);
+            boolean isOnline = playerCount >= 0;
+            MenuItemConfig.DynamicItemDisplay display = isOnline ? itemConfig.onlineItem : itemConfig.offlineItem;
+
+            if (display == null) return null;
+
+            builder = new ItemBuilder(display.material);
+            builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(display.displayName, player));
+            builder.setLore(display.lore.stream()
+                    .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                    .collect(Collectors.toList()));
+        } else {
+            builder = new ItemBuilder(itemConfig.material);
+            builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(itemConfig.displayName, player));
+            builder.setLore(itemConfig.lore.stream()
+                    .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
+                    .collect(Collectors.toList()));
+        }
+
+        if (itemConfig.customModelData > 0) {
+            builder.setCustomModelData(itemConfig.customModelData);
+        }
+        if (itemConfig.enchantments != null && !itemConfig.enchantments.isEmpty()) {
+            builder.addEnchantments(itemConfig.enchantments);
+        }
+
+        return builder.build();
+    }
+
+    public MenuItemConfig getMenuItem(String menuId, int slot) {
+        MenuConfig menuConfig = menuConfigs.get(menuId);
+        if (menuConfig == null) return null;
+
+        for (MenuItemConfig item : menuConfig.getItems()) {
+            if (item.slot == slot || (item.slots != null && item.slots.contains(slot))) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void playSound(Player player, String soundType) {
+        PluginConfig.MenuSoundsConfig soundsConfig = plugin.getPluginConfig().menuSounds;
+        PluginConfig.SoundConfig soundConfig = soundType.equalsIgnoreCase("click") ? soundsConfig.click : soundsConfig.open;
+
+        if (soundConfig != null && soundConfig.enabled) {
             try {
-                ItemBuilder fillerBuilder = new ItemBuilder(fillerSection.getString("material", "GRAY_STAINED_GLASS_PANE"));
-                fillerBuilder.setDisplayName(plugin.getLocaleManager().getComponentFromString(fillerSection.getString("display-name", " "), player));
-                if (fillerSection.isInt("custom-model-data")) {
-                    fillerBuilder.setCustomModelData(fillerSection.getInt("custom-model-data"));
-                }
-                ItemStack fillerStack = fillerBuilder.build();
-                for (int i = 0; i < inventory.getSize(); i++) {
-                    inventory.setItem(i, fillerStack);
-                }
-            } catch (IllegalArgumentException e) {
-                plugin.getLogger().warning("Invalid material for filler item in menu '" + menuId + "'. Error: " + e.getMessage());
+                player.playSound(player.getLocation(), soundConfig.name, soundConfig.volume, soundConfig.pitch);
+            } catch (Exception e) {
+                plugin.getLogger().warning("Invalid sound name in menu_sounds." + soundType + ": " + soundConfig.name);
             }
         }
-
-
-        // Then, populate the specific items
-        ConfigurationSection itemsSection = config.getConfigurationSection("items");
-        if (itemsSection != null) {
-            for (String key : itemsSection.getKeys(false)) {
-                ConfigurationSection itemConfig = itemsSection.getConfigurationSection(key);
-                if (itemConfig == null) continue;
-
-                try {
-                    ServerInfoManager serverInfoManager = plugin.getServerInfoManager();
-                    String serverName = itemConfig.getString("server-name");
-                    ItemBuilder builder;
-
-                    if (serverName != null && !serverName.isEmpty()) {
-                        // Dynamic server item
-                        int playerCount = serverInfoManager.getPlayerCount(serverName);
-                        boolean isOnline = playerCount >= 0;
-                        ConfigurationSection displayConfig = itemConfig.getConfigurationSection(isOnline ? "online-item" : "offline-item");
-
-                        if (displayConfig == null) {
-                            plugin.getLogger().warning("Menu '" + menuId + "', item '" + key + "' is missing " + (isOnline ? "online-item" : "offline-item") + " section.");
-                            continue;
-                        }
-                        builder = new ItemBuilder(displayConfig.getString("material", "STONE"));
-                        builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(displayConfig.getString("display-name", " "), player));
-                        builder.setLore(displayConfig.getStringList("lore").stream()
-                                .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
-                                .collect(Collectors.toList()));
-
-                    } else {
-                        // Static item
-                        builder = new ItemBuilder(itemConfig.getString("material", "STONE"));
-                        builder.setDisplayName(plugin.getLocaleManager().getComponentFromString(itemConfig.getString("display-name", " "), player));
-                        if (itemConfig.contains("lore")) {
-                            builder.setLore(itemConfig.getStringList("lore").stream()
-                                    .map(line -> plugin.getLocaleManager().getComponentFromString(line, player))
-                                    .collect(Collectors.toList()));
-                        }
-                    }
-
-                    if (itemConfig.isInt("custom-model-data")) {
-                        builder.setCustomModelData(itemConfig.getInt("custom-model-data"));
-                    }
-
-                    if (itemConfig.contains("enchantments")) {
-                        builder.addEnchantments(itemConfig.getStringList("enchantments"));
-                    }
-
-                    ItemStack itemStack = builder.build();
-
-                    if (itemConfig.contains("slot")) {
-                        inventory.setItem(itemConfig.getInt("slot"), itemStack);
-                    } else if (itemConfig.contains("slots")) {
-                        for (int slot : itemConfig.getIntegerList("slots")) {
-                            inventory.setItem(slot, itemStack);
-                        }
-                    }
-                } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid material in menu '" + menuId + "' for item '" + key + "'. Error: " + e.getMessage());
-                }
-            }
-        }
-    }
-
-
-    public Map<Integer, Map<String, List<String>>> getActionsForMenu(String menuId) {
-        if (menuActionsCache.containsKey(menuId)) {
-            return menuActionsCache.get(menuId);
-        }
-
-        FileConfiguration config = plugin.getFileManager().getConfig("menus/" + menuId + ".yml");
-        if (config == null) {
-            return new HashMap<>();
-        }
-
-        Map<Integer, Map<String, List<String>>> menuActions = new HashMap<>();
-        ConfigurationSection itemsSection = config.getConfigurationSection("items");
-        if (itemsSection != null) {
-            for (String key : itemsSection.getKeys(false)) {
-                ConfigurationSection itemConfig = itemsSection.getConfigurationSection(key);
-                if (itemConfig == null) continue;
-
-                Map<String, List<String>> clickActions = new HashMap<>();
-                if (itemConfig.contains("left-click-actions")) {
-                    clickActions.put("LEFT", itemConfig.getStringList("left-click-actions"));
-                }
-                if (itemConfig.contains("right-click-actions")) {
-                    clickActions.put("RIGHT", itemConfig.getStringList("right-click-actions"));
-                }
-                if (itemConfig.contains("actions")) {
-                    plugin.getLogger().warning("Menu '" + menuId + "', item '" + key + "' uses deprecated 'actions' key. Please use 'left-click-actions' or 'right-click-actions'.");
-                    clickActions.putIfAbsent("RIGHT", itemConfig.getStringList("actions"));
-                }
-
-                if (!clickActions.isEmpty()) {
-                    if (itemConfig.contains("slot")) {
-                        int slot = itemConfig.getInt("slot");
-                        menuActions.put(slot, clickActions);
-                    } else if (itemConfig.contains("slots")) {
-                        for (int slot : itemConfig.getIntegerList("slots")) {
-                            menuActions.put(slot, clickActions);
-                        }
-                    }
-                }
-            }
-        }
-
-        menuActionsCache.put(menuId, menuActions);
-        return menuActions;
     }
 }

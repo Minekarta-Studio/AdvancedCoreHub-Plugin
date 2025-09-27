@@ -20,13 +20,15 @@
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/TitleAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/AdvancedCoreHubCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/BossBarCommand.java
-/app/src/main/java/com/minekarta/advancedcorehub/commands/acf/ClearChatCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/CosmeticsCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/FlyCommand.java
-/app/src/main/java/com/minekarta/advancedcorehub/commands/acf/LockChatCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/ServerSelectorCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SetSpawnCommand.java
 /app/src/main/java/com/minekarta/advancedcorehub/commands/acf/SpawnCommand.java
+/app/src/main/java/com/minekarta/advancedcorehub/config/AnnouncementConfig.java
+/app/src/main/java/com/minekarta/advancedcorehub/config/MenuConfig.java
+/app/src/main/java/com/minekarta/advancedcorehub/config/MenuItemConfig.java
+/app/src/main/java/com/minekarta/advancedcorehub/config/PluginConfig.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/ParticleTrail.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.java
@@ -39,8 +41,6 @@
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MovementItemListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerConnectionListener.java
-/app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerJoinListener.java
-/app/src/main/java/com/minekarta/advancedcorehub/listeners/PlayerQuitListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldEventListeners.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/WorldListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ActionManager.java

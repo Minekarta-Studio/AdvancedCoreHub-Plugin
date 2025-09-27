@@ -39,7 +39,6 @@ public class FileManager {
         // Load other configs
         loadConfigFile("items.yml");
         loadConfigFile("cosmetics.yml");
-        loadConfigFile("gadgets.yml");
 
         // Dynamically load all menu configurations
         loadAllConfigsFromFolder("menus");
@@ -67,6 +66,10 @@ public class FileManager {
 
     public FileConfiguration getConfig(String name) {
         return configs.get(name);
+    }
+
+    public Map<String, FileConfiguration> getConfigs() {
+        return configs;
     }
 
     public void reloadAll() {

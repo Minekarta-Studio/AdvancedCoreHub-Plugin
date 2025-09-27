@@ -1,6 +1,7 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,9 +14,11 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 public class WorldEventListeners implements Listener {
 
     private final AdvancedCoreHub plugin;
+    private final PluginConfig.WorldSettingsConfig config;
 
     public WorldEventListeners(AdvancedCoreHub plugin) {
         this.plugin = plugin;
+        this.config = plugin.getPluginConfig().worldSettings;
     }
 
     private boolean shouldCancel(Player player) {
@@ -29,14 +32,14 @@ public class WorldEventListeners implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (plugin.getConfig().getBoolean("world_settings.cancel_block_break", true) && shouldCancel(event.getPlayer())) {
+        if (config.cancelBlockBreak && shouldCancel(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (plugin.getConfig().getBoolean("world_settings.cancel_block_place", true) && shouldCancel(event.getPlayer())) {
+        if (config.cancelBlockPlace && shouldCancel(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -45,7 +48,7 @@ public class WorldEventListeners implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        if (plugin.getConfig().getBoolean("world_settings.cancel_player_damage", true) && shouldCancel(player)) {
+        if (config.cancelPlayerDamage && shouldCancel(player)) {
             event.setCancelled(true);
         }
     }
@@ -54,7 +57,7 @@ public class WorldEventListeners implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
-        if (plugin.getConfig().getBoolean("world_settings.cancel_hunger_loss", true) && shouldCancel(player)) {
+        if (config.cancelHungerLoss && shouldCancel(player)) {
             event.setCancelled(true);
             player.setFoodLevel(20); // Keep hunger full
         }
@@ -62,8 +65,7 @@ public class WorldEventListeners implements Listener {
 
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent event) {
-        if (plugin.getHubWorldManager().isHubWorld(event.getWorld().getName()) &&
-            plugin.getConfig().getBoolean("world_settings.cancel_weather_change", true)) {
+        if (plugin.getHubWorldManager().isHubWorld(event.getWorld().getName()) && config.cancelWeatherChange) {
             if (event.toWeatherState()) { // if it's starting to rain/thunder
                 event.setCancelled(true);
             }

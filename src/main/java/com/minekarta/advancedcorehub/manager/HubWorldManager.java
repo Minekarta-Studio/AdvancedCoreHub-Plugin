@@ -19,8 +19,11 @@ public class HubWorldManager {
 
     public void load() {
         hubWorlds.clear();
-        List<String> worlds = plugin.getConfig().getStringList("hub-worlds");
-        hubWorlds.addAll(worlds);
+        // Load from the type-safe config object
+        List<String> worlds = plugin.getPluginConfig().getHubWorlds();
+        if (worlds != null) {
+            hubWorlds.addAll(worlds);
+        }
     }
 
     public boolean isHubWorld(String worldName) {
@@ -28,13 +31,15 @@ public class HubWorldManager {
     }
 
     public void addWorld(String worldName) {
-        hubWorlds.add(worldName);
-        save();
+        if (hubWorlds.add(worldName)) {
+            save();
+        }
     }
 
     public void removeWorld(String worldName) {
-        hubWorlds.remove(worldName);
-        save();
+        if (hubWorlds.remove(worldName)) {
+            save();
+        }
     }
 
     public void listWorlds(CommandSender sender) {
@@ -47,7 +52,10 @@ public class HubWorldManager {
     }
 
     private void save() {
+        // This is a write operation, so it directly modifies the config file
         plugin.getConfig().set("hub-worlds", List.copyOf(hubWorlds));
         plugin.saveConfig();
+        // After saving, we should reload the plugin's config to keep everything in sync
+        plugin.reloadPlugin();
     }
 }

@@ -6,13 +6,13 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Dependency;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.manager.HubWorldManager;
 import com.minekarta.advancedcorehub.manager.LocaleManager;
 import com.minekarta.advancedcorehub.util.Permissions;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CommandAlias("setspawn|setlobby")
@@ -25,15 +25,12 @@ public class SetSpawnCommand extends BaseCommand {
     @Dependency
     private LocaleManager localeManager;
 
-    @Dependency
-    private HubWorldManager hubWorldManager;
-
     @Default
     public void onSetSpawn(Player player) {
         Location location = player.getLocation();
         World world = location.getWorld();
 
-        // Set the spawn location in the config
+        // Direct write operations are acceptable for a command that sets configuration.
         plugin.getConfig().set("spawn.world", world.getName());
         plugin.getConfig().set("spawn.x", location.getX());
         plugin.getConfig().set("spawn.y", location.getY());
@@ -41,17 +38,15 @@ public class SetSpawnCommand extends BaseCommand {
         plugin.getConfig().set("spawn.yaw", location.getYaw());
         plugin.getConfig().set("spawn.pitch", location.getPitch());
 
-        // Add the world to the hub-worlds list if it's not already there
-        List<String> hubWorlds = plugin.getConfig().getStringList("hub-worlds");
+        // Read from the type-safe config, then write back if modified.
+        List<String> hubWorlds = new ArrayList<>(plugin.getPluginConfig().getHubWorlds());
         if (!hubWorlds.contains(world.getName())) {
             hubWorlds.add(world.getName());
             plugin.getConfig().set("hub-worlds", hubWorlds);
         }
 
-        // Save the config and reload relevant managers
         plugin.saveConfig();
-        hubWorldManager.load(); // Reload the worlds list in the manager
-        plugin.getInventoryManager().loadConfig(); // Reload inventory manager config
+        plugin.reloadPlugin(); // Reload all configs and managers to ensure consistency
 
         localeManager.sendMessage(player, "spawn-set-success");
     }

@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub.commands.acf;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.manager.ChatManager;
 import com.minekarta.advancedcorehub.manager.HubWorldManager;
 import com.minekarta.advancedcorehub.manager.ItemsManager;
 import com.minekarta.advancedcorehub.manager.LocaleManager;
@@ -24,6 +25,9 @@ public class AdvancedCoreHubCommand extends BaseCommand {
 
     @Dependency
     private HubWorldManager hubWorldManager;
+
+    @Dependency
+    private ChatManager chatManager;
 
     @Default
     @HelpCommand
@@ -71,6 +75,29 @@ public class AdvancedCoreHubCommand extends BaseCommand {
 
         String itemList = String.join(", ", itemNames);
         localeManager.sendMessage(sender, "item-list", itemList);
+    }
+
+    @Subcommand("clearchat|cc")
+    @CommandPermission(Permissions.CMD_CLEARCHAT)
+    @Description("Clears the server chat for all players.")
+    public void onClearChat(CommandSender sender) {
+        for (int i = 0; i < 100; i++) {
+            plugin.getServer().broadcastMessage(" ");
+        }
+        Player player = (sender instanceof Player) ? (Player) sender : null;
+        plugin.getServer().broadcast(localeManager.getComponent("chat-clear-broadcast", player, sender.getName()));
+    }
+
+    @Subcommand("lockchat|lc")
+    @CommandPermission(Permissions.CMD_LOCKCHAT)
+    @Description("Toggles the chat lock on or off.")
+    public void onLockChat(CommandSender sender) {
+        chatManager.toggleChatLock();
+        boolean isLocked = chatManager.isChatLocked();
+        String status = isLocked ? "locked" : "unlocked";
+
+        Player player = (sender instanceof Player) ? (Player) sender : null;
+        plugin.getServer().broadcast(localeManager.getComponent("chat-lock-broadcast", player, sender.getName(), status));
     }
 
     @Subcommand("worlds")

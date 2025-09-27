@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Dependency;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import com.minekarta.advancedcorehub.manager.LocaleManager;
 import com.minekarta.advancedcorehub.util.Permissions;
 import org.bukkit.Location;
@@ -25,19 +26,15 @@ public class SpawnCommand extends BaseCommand {
     @Default
     public void onSpawn(Player player) {
         try {
-            String worldName = plugin.getConfig().getString("spawn.world");
-            if (worldName == null || plugin.getServer().getWorld(worldName) == null) {
+            PluginConfig.SpawnConfig spawnConfig = plugin.getPluginConfig().spawn;
+            World world = plugin.getServer().getWorld(spawnConfig.world);
+
+            if (world == null) {
                 localeManager.sendMessage(player, "spawn-not-set");
                 return;
             }
-            World world = plugin.getServer().getWorld(worldName);
-            double x = plugin.getConfig().getDouble("spawn.x");
-            double y = plugin.getConfig().getDouble("spawn.y");
-            double z = plugin.getConfig().getDouble("spawn.z");
-            float yaw = (float) plugin.getConfig().getDouble("spawn.yaw");
-            float pitch = (float) plugin.getConfig().getDouble("spawn.pitch");
 
-            Location spawnLocation = new Location(world, x, y, z, yaw, pitch);
+            Location spawnLocation = new Location(world, spawnConfig.x, spawnConfig.y, spawnConfig.z, spawnConfig.yaw, spawnConfig.pitch);
             player.teleport(spawnLocation);
             localeManager.sendMessage(player, "spawn-teleport-success");
 

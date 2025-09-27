@@ -1,7 +1,7 @@
 package com.minekarta.advancedcorehub.manager;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import org.bukkit.configuration.ConfigurationSection;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -14,38 +14,28 @@ import java.util.UUID;
 public class InventoryManager {
 
     private final AdvancedCoreHub plugin;
+    private final PluginConfig.InventoryManagementConfig config;
     private List<String> hubWorlds;
-    private boolean clearOnEnter;
-    private boolean saveAndRestore;
 
     private final Map<UUID, ItemStack[]> playerInventories = new HashMap<>();
     private final Map<UUID, ItemStack[]> playerArmor = new HashMap<>();
 
     public InventoryManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
+        this.config = plugin.getPluginConfig().inventoryManagement;
         loadConfig();
     }
 
     public void loadConfig() {
-        // Load the single source of truth for hub worlds from the root of the config
-        this.hubWorlds = plugin.getConfig().getStringList("hub-worlds");
-
-        ConfigurationSection invManagementConfig = plugin.getConfig().getConfigurationSection("inventory_management");
-        boolean inventoryManagementEnabled = invManagementConfig != null && invManagementConfig.getBoolean("enable", true);
-
-        if (inventoryManagementEnabled) {
-            this.clearOnEnter = invManagementConfig.getBoolean("clear-on-enter", true);
-            this.saveAndRestore = invManagementConfig.getBoolean("save-and-restore", true);
+        if (config.enable) {
+            this.hubWorlds = plugin.getPluginConfig().getHubWorlds();
         } else {
-            this.clearOnEnter = false;
-            this.saveAndRestore = false;
-            // If the whole feature is disabled, clear the list so isHubWorld returns false
             this.hubWorlds.clear();
         }
     }
 
     public void setupHubInventory(Player player) {
-        if (clearOnEnter) {
+        if (config.clearOnEnter) {
             clearPlayerInventory(player);
         }
         giveJoinItems(player);
@@ -91,8 +81,6 @@ public class InventoryManager {
             int amount = itemData.get("amount") != null ? (int) itemData.get("amount") : 1;
             int slot = itemData.get("slot") != null ? (int) itemData.get("slot") : -1;
 
-            // The duplication check was removed as it was redundant after clearing the inventory
-            // and was likely causing issues with ItemStack equality checks, preventing items from being given.
             plugin.getItemsManager().giveItem(player, itemName, amount, slot);
         }
     }
@@ -102,7 +90,7 @@ public class InventoryManager {
     }
 
     public boolean isSaveAndRestoreEnabled() {
-        return saveAndRestore;
+        return config.saveAndRestore;
     }
 
     public void savePlayerInventory(Player player) {
