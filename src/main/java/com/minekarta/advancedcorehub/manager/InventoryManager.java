@@ -123,4 +123,8 @@ public class InventoryManager {
             player.getInventory().setArmorContents(armor);
         }
     }
+
+    public boolean hasSavedInventory(Player player) {
+        return playerInventories.containsKey(player.getUniqueId());
+    }
 }
