@@ -5,7 +5,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MenuConfig {
 
@@ -14,6 +13,8 @@ public class MenuConfig {
     private final int size;
     private final List<MenuItemConfig> items;
     private final MenuItemConfig fillerItem;
+    private final PluginConfig.SoundConfig openSound;
+    private final PluginConfig.SoundConfig clickSound;
 
     public MenuConfig(String menuId, FileConfiguration config) {
         this.menuId = menuId;
@@ -32,6 +33,18 @@ public class MenuConfig {
             this.fillerItem = new MenuItemConfig("filler-item", config.getConfigurationSection("filler-item"));
         } else {
             this.fillerItem = null;
+        }
+
+        if (config.isConfigurationSection("open-sound")) {
+            this.openSound = new PluginConfig.SoundConfig(config.getConfigurationSection("open-sound"));
+        } else {
+            this.openSound = null;
+        }
+
+        if (config.isConfigurationSection("click-sound")) {
+            this.clickSound = new PluginConfig.SoundConfig(config.getConfigurationSection("click-sound"));
+        } else {
+            this.clickSound = null;
         }
     }
 
@@ -53,5 +66,13 @@ public class MenuConfig {
 
     public MenuItemConfig getFillerItem() {
         return fillerItem;
+    }
+
+    public PluginConfig.SoundConfig getOpenSound() {
+        return openSound;
+    }
+
+    public PluginConfig.SoundConfig getClickSound() {
+        return clickSound;
     }
 }

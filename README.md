@@ -6,15 +6,16 @@ This project was developed by the AI assistant, Jules, with a focus on professio
 
 ## Features
 
--   **Full MiniMessage Support**: All user-facing text, from chat messages to item lore, supports the full range of MiniMessage formatting, including gradients, hover/click events, and more. All text is non-italic by default for a clean, modern look.
--   **Advanced Item System**: Create custom items with unique display names, lore, enchantments, custom model data, and separate actions for left and right clicks.
+-   **Advanced Text Formatting**: Full support for **MiniMessage** (`<gradient>`, `<#HEX>`) and **legacy color codes** (`&c`) in all user-facing text. All text is non-italic by default for a clean, modern look.
+-   **Dynamic Item Lores**: Use **PlaceholderAPI** placeholders in item names and lore to create dynamic, player-specific item descriptions.
+-   **Advanced Item System**: Create custom items with unique display names, lore, enchantments, and custom model data.
+-   **Configurable Interaction Sounds**: Add custom sounds to both GUIs and items. Specify unique open/click sounds for each menu, or add audio feedback to any item interaction.
+-   **Custom GUI Icons**: Use custom player heads as icons in your menus via player name (`skull-owner`), Base64 texture (`head-texture`), or the **HeadDatabase** plugin.
 -   **Hotbar / Join Items**: Automatically equip players with specific items when they join or enter a hub world.
 -   **Item Protection**: Prevent players from dropping or moving specific items in hub worlds.
 -   **Per-World Inventories**: Automatically saves and restores player inventories when they move between hub worlds and other worlds, ensuring no items are lost.
--   **Flexible Action System**: Define a series of actions to execute on item use or player join. Includes a wide range of built-in actions like `[MESSAGE]`, `[CONSOLE]`, `[MENU]`, and `[BUNGEE]`. The `[SOUND]` action is enhanced to support volume and pitch (`[SOUND]NAME;VOL;PITCH`). You can also create your own custom actions in `config.yml`.
--   **Configurable GUI Menus**: Create fully custom GUI menus from YAML files. Items in menus support all the features of the advanced item system (lore, model data, etc.).
+-   **Flexible Action System**: Define a series of actions to execute on item use or player join. Includes a wide range of built-in actions like `[MESSAGE]`, `[CONSOLE]`, `[MENU]`, and `[BUNGEE]`.
 -   **Advanced Announcements**: A powerful announcement system with per-world messages, multiple display types (`CHAT`, `TITLE`, `ACTION_BAR`, `BOSS_BAR`), and a randomized mode.
--   **Movement Items**: A unified listener handles all movement items (Trident, Grappling Hook, Custom Elytra, etc.), with configurable cooldowns and settings.
 -   **Admin Commands**: A suite of commands to manage the server hub.
 -   **Per-World Event Cancellation**: Disable events like block breaking and hunger loss in specified hub worlds.
 -   **Multi-language Support**: All messages can be translated.
@@ -52,23 +53,7 @@ The plugin's commands are organized for ease of use. The main administrative com
 | `worlds <add/remove/list>` | Manages the list of hub worlds. |
 
 ## Permissions
-
-| Permission | Description | Default |
-| --- | --- | --- |
-| `advancedcorehub.command.fly` | Allows a player to use the `/fly` command for themselves. | OP |
-| `advancedcorehub.command.fly.others` | Allows a player to use the `/fly` command for other players. | OP |
-| `advancedcorehub.command.spawn` | Allows a player to use the `/spawn` command. | Everyone |
-| `advancedcorehub.command.setspawn` | Allows a player to use the `/setspawn` command. | OP |
-| `advancedcorehub.command.reload` | Allows a player to use the `/ach reload` command. | OP |
-| `advancedcorehub.command.give` | Allows a player to use the `/ach give` command. | OP |
-| `advancedcorehub.command.listitems` | Allows a player to use the `/ach listitems` command. | OP |
-| `advancedcorehub.command.worlds` | Allows a player to manage the hub worlds list. | OP |
-| `advancedcorehub.command.clearchat` | Allows a player to use the `/ach clearchat` command. | OP |
-| `advancedcorehub.command.lockchat` | Allows a player to use the `/ach lockchat` command. | OP |
-| `advancedcorehub.command.bossbar` | Allows a player to use the `/bossbar` command. | OP |
-| `advancedcorehub.bypass.cooldown` | Allows a player to bypass all item cooldowns. | OP |
-| `advancedcorehub.bypass.chatlock` | Allows a player to chat when the chat is locked. | OP |
-| `advancedcorehub.bypass.worldguard` | Allows a player to bypass world event cancellations (e.g., block breaking). | OP |
+*A full list of permissions can be found in the `plugin.yml` file.*
 
 ## Configuration
 
@@ -82,45 +67,73 @@ This is the main configuration file. It allows you to enable/disable features, s
 
 This file defines all custom items that can be given to players or used in menus.
 
+**Item Properties:**
+- `material`: The item material. Also supports `hdb:<id>` for HeadDatabase, `skull-owner:<name>`, and `head-texture:<base64>`.
+- `displayname`: The item's name. Supports MiniMessage, legacy codes, and PlaceholderAPI.
+- `lore`: The item's description. Supports MiniMessage, legacy codes, and PlaceholderAPI.
+- `custom-model-data`: An integer for custom textures.
+- `skull-owner`: (For `PLAYER_HEAD` material) The name of the player whose skin to use.
+- `head-texture`: (For `PLAYER_HEAD` material) A Base64 texture string. Takes priority over `skull-owner`.
+- `interact-sound`: (Optional) A sound to play when the item is clicked.
+- `protected`: If true, players without permission cannot move or drop the item.
+- `left-click-actions` / `right-click-actions`: A list of actions to run on click.
+
 **Example:**
 ```yaml
 items:
-  my_awesome_sword:
-    material: DIAMOND_SWORD
-    displayname: "<gold>My Awesome Sword"
+  player_profile:
+    material: PLAYER_HEAD
+    # This will show the skin of the player holding the item.
+    skull-owner: "%player_name%"
+    displayname: "<gradient:#12c2e9:#c471ed>My Profile</gradient>"
     lore:
-      - "<gray>This sword is awesome."
-      - "<gray>Left-click for info, Right-click to attack."
-    custom-model-data: 1001
-    enchantments:
-      - "sharpness:5"
-      - "unbreaking:3"
-    left-click-actions:
-      - "[MESSAGE] This is my awesome sword!"
+      - "&7View your stats and settings."
+      - ""
+      - "<yellow>Player: <white>%player_name%"
+      - "<yellow>Rank: <white>%vault_rank%"
     right-click-actions:
-      - "[SOUND] ENTITY_PLAYER_ATTACK_SWEEP;1.0;1.2"
-    protected: true
+      - "[MENU] profile"
+    interact-sound:
+      enabled: true
+      name: "block.note_block.pling"
+      volume: 1.0
+      pitch: 1.5
 ```
 
 ### `menus/*.yml`
 
 You can create any number of menu files in the `menus/` directory. Each file represents a unique GUI menu.
 
+**Menu Properties:**
+- `title`: The title of the menu. Supports MiniMessage and legacy codes.
+- `size`: The menu size (must be a multiple of 9).
+- `open-sound`: (Optional) A sound to play when the menu is opened. Defaults to a chest opening sound.
+- `click-sound`: (Optional) A sound to play when any item is clicked.
+- `items`: A section defining the items within the menu.
+- `filler-item`: (Optional) An item to fill all empty slots.
+
 **Example:**
 ```yaml
-# menus/my_menu.yml
-title: "<blue>My Custom Menu"
-size: 27 # Must be a multiple of 9
+# menus/main_menu.yml
+title: "<gradient:#f64f59:#c471ed>Main Menu</gradient>"
+size: 27
+open-sound:
+  name: "block.chest.open"
+  volume: 0.8
+  pitch: 1.0
+click-sound:
+  name: "ui.button.click"
+  volume: 1.0
+  pitch: 1.0
 items:
-  info_item:
-    material: BOOK
+  server_selector:
+    material: COMPASS
     slot: 13
-    display-name: "<green>Information"
+    display-name: "<green>Server Selector"
     lore:
-      - "<gray>This is an item in my menu."
-    actions:
-      - "[MESSAGE] You clicked the info item!"
-      - "[CLOSE]"
+      - "<gray>Click to browse servers!"
+    right-click-actions:
+      - "[MENU] servers"
 filler-item:
   material: GRAY_STAINED_GLASS_PANE
   display-name: " "

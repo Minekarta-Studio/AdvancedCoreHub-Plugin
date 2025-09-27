@@ -165,6 +165,39 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setSkullOwner(String owner) {
+        if (itemStack.getType() == Material.PLAYER_HEAD && owner != null && !owner.isEmpty()) {
+            try {
+                SkullMeta skullMeta = (SkullMeta) this.itemStack.getItemMeta();
+                if (skullMeta != null) {
+                    PlayerProfile profile = Bukkit.createProfile(owner);
+                    skullMeta.setPlayerProfile(profile);
+                    this.itemStack.setItemMeta(skullMeta);
+                }
+            } catch (Exception e) {
+                LOGGER.warning("Failed to set skull owner: " + owner);
+            }
+        }
+        return this;
+    }
+
+    public ItemBuilder setHeadTexture(String base64Texture) {
+        if (itemStack.getType() == Material.PLAYER_HEAD && base64Texture != null && !base64Texture.isEmpty()) {
+            try {
+                SkullMeta skullMeta = (SkullMeta) this.itemStack.getItemMeta();
+                if (skullMeta != null) {
+                    PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+                    profile.getProperties().add(new ProfileProperty("textures", base64Texture));
+                    skullMeta.setPlayerProfile(profile);
+                    this.itemStack.setItemMeta(skullMeta);
+                }
+            } catch (Exception e) {
+                LOGGER.warning("Failed to apply texture to player head.");
+            }
+        }
+        return this;
+    }
+
     public ItemStack build() {
         return itemStack;
     }

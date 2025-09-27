@@ -36,4 +36,7 @@ public final class PersistentKeys {
 
     // Key to identify a gadget in the gadget menu
     public static final NamespacedKey GADGET_ID = new NamespacedKey(plugin, "gadget_id");
+
+    // Key to store the sound to play on interaction
+    public static final NamespacedKey INTERACT_SOUND_KEY = new NamespacedKey(plugin, "interact_sound");
 }

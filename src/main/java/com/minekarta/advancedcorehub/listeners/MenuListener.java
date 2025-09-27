@@ -56,7 +56,8 @@ public class MenuListener implements Listener {
         }
 
         if (actionsToExecute != null && !actionsToExecute.isEmpty()) {
-            plugin.getMenuManager().playSound(player, "click");
+            com.minekarta.advancedcorehub.config.MenuConfig menuConfig = plugin.getMenuManager().getMenuConfig(menuId);
+            plugin.getMenuManager().playSound(player, "click", menuConfig);
             plugin.getActionManager().executeStringActions(player, actionsToExecute);
         }
     }

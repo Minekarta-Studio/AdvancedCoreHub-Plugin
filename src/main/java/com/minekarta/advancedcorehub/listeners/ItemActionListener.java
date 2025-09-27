@@ -59,6 +59,24 @@ public class ItemActionListener implements Listener {
             event.setCancelled(true); // Prevent default item actions (e.g., eating, placing blocks)
             List<String> actions = Arrays.asList(actionString.split("\n"));
             plugin.getActionManager().executeStringActions(player, actions);
+
+            // After executing actions, check for and play an interaction sound.
+            if (container.has(PersistentKeys.INTERACT_SOUND_KEY, PersistentDataType.STRING)) {
+                String soundData = container.get(PersistentKeys.INTERACT_SOUND_KEY, PersistentDataType.STRING);
+                if (soundData != null) {
+                    try {
+                        String[] parts = soundData.split(";");
+                        if (parts.length == 3) {
+                            String soundName = parts[0];
+                            float volume = Float.parseFloat(parts[1]);
+                            float pitch = Float.parseFloat(parts[2]);
+                            player.playSound(player.getLocation(), soundName, volume, pitch);
+                        }
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("Could not play interact sound for item. Invalid sound data: " + soundData);
+                    }
+                }
+            }
         }
     }
 }
