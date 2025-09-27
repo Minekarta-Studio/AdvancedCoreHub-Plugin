@@ -18,12 +18,14 @@ item-cooldown: "<red>You must wait {0} more seconds to use this item."
 no-items-found: "<red>There are no custom items defined."
 item-list: "<green>Available items: <yellow>{0}</yellow>"
 
-# World management
-worlds-list: "<green>Disabled worlds: <yellow>{0}</yellow>"
-worlds-list-empty: "<red>There are no disabled worlds."
-world-added: "<green>World '<yellow>{0}</yellow>' has been added to the disabled list."
-world-removed: "<green>World '<yellow>{0}</yellow>' has been removed from the disabled list."
-world-check-status: "<green>World '<yellow>{0}</yellow>' is currently <yellow>{1}</yellow>."
+# Hub World Management
+worlds-list: "<aqua>Hub Worlds: <white>{0}"
+worlds-list-empty: "<yellow>There are no worlds in the hub worlds list."
+world-added: "<green>Successfully added world <yellow>{0}</yellow> to the hub worlds list."
+world-removed: "<green>Successfully removed world <yellow>{0}</yellow> from the hub worlds list."
+world-add-failed: "<red>The world <yellow>{0}</yellow> is already in the hub worlds list."
+world-remove-failed: "<red>The world <yellow>{0}</yellow> is not in the hub worlds list."
+world-check-status: "<aqua>The world <yellow>{0}</yellow> is currently <white>{1}</white>."
 
 # Spawn messages
 spawn-teleport-success: "<green>Teleported to spawn."

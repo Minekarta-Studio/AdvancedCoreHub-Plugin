@@ -139,4 +139,13 @@ public class MenuManager {
             }
         }
     }
+
+    public List<String> getDynamicServerNames() {
+        return menuConfigs.values().stream()
+                .flatMap(menu -> menu.getItems().stream())
+                .filter(item -> item.serverName != null && !item.serverName.isEmpty())
+                .map(item -> item.serverName)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }

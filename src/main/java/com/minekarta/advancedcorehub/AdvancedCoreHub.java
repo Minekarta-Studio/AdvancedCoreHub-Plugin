@@ -60,6 +60,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.commandManager = new CommandManager(this);
         this.serverInfoManager = new ServerInfoManager(this);
         this.cosmeticsManager = new CosmeticsManager(this);
+        this.cosmeticsManager.loadCosmetics();
 
         // Load other components
         registerCommands();
@@ -91,15 +92,30 @@ public class AdvancedCoreHub extends JavaPlugin {
     public void reloadPlugin() {
         getLogger().info("Reloading AdvancedCoreHub...");
         try {
+            // 1. Cancel all tasks and clear state
+            if (announcementsManager != null) announcementsManager.cancelTasks();
+            if (bossBarManager != null) bossBarManager.cleanup();
+            if (serverInfoManager != null && serverInfoManager.getUpdateTask() != null) serverInfoManager.getUpdateTask().cancel();
+            unregisterListeners();
+            unregisterChannels();
+
+            // 2. Reload configurations from disk
             this.fileManager.reloadAll();
             this.pluginConfig = new PluginConfig(this.fileManager.getConfig("config.yml"));
+
+            // 3. Reload managers with new config values
             this.localeManager.load();
             this.itemsManager.loadItems();
             this.menuManager.loadMenus();
-            this.actionManager = new ActionManager(this); // Re-register actions
+            this.actionManager = new ActionManager(this);
             this.hubWorldManager.load();
+            this.cosmeticsManager.loadCosmetics(); // Reload cosmetics from config
             this.announcementsManager.load();
-            this.bossBarManager.cleanup();
+            this.serverInfoManager.reload(); // Must be after menuManager
+
+            // 4. Re-register components with the new configuration
+            registerListeners();
+            registerChannels();
 
             getLogger().info("Reload complete.");
         } catch (Exception e) {
@@ -122,31 +138,36 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 
-        // Register Double Jump Listener if enabled
-        if (pluginConfig.doubleJump.enabled) {
+        if (getPluginConfig().doubleJump.enabled) {
             getServer().getPluginManager().registerEvents(new DoubleJumpListener(this), this);
             getLogger().info("Double Jump feature enabled.");
         }
-
-        // Register Chat Protection Listener if either feature is enabled
-        if (pluginConfig.chatProtection.antiSwear.enabled || pluginConfig.chatProtection.commandBlocker.enabled) {
+        if (getPluginConfig().chatProtection.antiSwear.enabled || getPluginConfig().chatProtection.commandBlocker.enabled) {
             getServer().getPluginManager().registerEvents(new ChatProtectionListener(this), this);
             getLogger().info("Chat Protection feature enabled.");
         }
     }
 
-    private void registerChannels() {
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
+    private void unregisterListeners() {
+        org.bukkit.event.HandlerList.unregisterAll(this);
+    }
 
-        // Register Anti-World Downloader channels if enabled
-        if (pluginConfig.antiWorldDownloader.enabled) {
+    private void registerChannels() {
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
+
+        if (getPluginConfig().antiWorldDownloader.enabled) {
             AntiWorldDownloaderListener wdlListener = new AntiWorldDownloaderListener(this);
-            this.getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:init", wdlListener);
-            this.getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:request", wdlListener);
-            this.getServer().getMessenger().registerIncomingPluginChannel(this, "worlddownloader:init", wdlListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:init", wdlListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:request", wdlListener);
+            getServer().getMessenger().registerIncomingPluginChannel(this, "worlddownloader:init", wdlListener);
             getLogger().info("Anti-World Downloader feature enabled.");
         }
+    }
+
+    private void unregisterChannels() {
+        getServer().getMessenger().unregisterIncomingPluginChannel(this);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
     }
 
     // --- Getters ---

@@ -27,9 +27,9 @@ public class PlayerMoveListener implements Listener {
         Player player = event.getPlayer();
         ParticleTrail trail = cosmeticsManager.getActiveTrail(player);
 
-        if (trail != null) {
+        if (trail != null && trail.particle() != null) {
             Location loc = player.getLocation();
-            player.getWorld().spawnParticle(trail.getParticle(), loc, 1, 0, 0, 0, 0);
+            player.getWorld().spawnParticle(trail.particle(), loc, 1, 0, 0, 0, 0);
         }
     }
 }

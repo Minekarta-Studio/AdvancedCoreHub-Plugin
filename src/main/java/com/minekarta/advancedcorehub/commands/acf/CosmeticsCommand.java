@@ -36,12 +36,12 @@ public class CosmeticsCommand extends BaseCommand {
             return;
         }
 
-        if (!player.hasPermission(trail.getPermission())) {
+        if (!player.hasPermission(trail.permission())) {
             localeManager.sendMessage(player, "no-permission");
             return;
         }
 
-        cosmeticsManager.setActiveTrail(player, trail.getParticle() == null ? null : trail);
-        localeManager.sendMessage(player, "trail-set", trail.getName());
+        cosmeticsManager.setActiveTrail(player, trail.particle() == null ? null : trail);
+        localeManager.sendMessage(player, "trail-set", trail.name());
     }
 }

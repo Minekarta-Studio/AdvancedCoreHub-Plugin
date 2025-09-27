@@ -15,7 +15,6 @@ public class PluginConfig {
     public final ChatProtectionConfig chatProtection;
     public final AntiWorldDownloaderConfig antiWorldDownloader;
     public final InventoryManagementConfig inventoryManagement;
-    public final ServerSelectorConfig serverSelector;
     public final MovementItemsConfig movementItems;
     public final DoubleJumpConfig doubleJump;
     public final MenuSoundsConfig menuSounds;
@@ -41,7 +40,6 @@ public class PluginConfig {
         this.chatProtection = new ChatProtectionConfig(source.getConfigurationSection("chat_protection"));
         this.antiWorldDownloader = new AntiWorldDownloaderConfig(source.getConfigurationSection("anti_world_downloader"));
         this.inventoryManagement = new InventoryManagementConfig(source.getConfigurationSection("inventory_management"));
-        this.serverSelector = new ServerSelectorConfig(source.getConfigurationSection("server-selector"));
         this.movementItems = new MovementItemsConfig(source.getConfigurationSection("movement_items"));
         this.doubleJump = new DoubleJumpConfig(source.getConfigurationSection("double_jump"));
         this.menuSounds = new MenuSoundsConfig(source.getConfigurationSection("menu_sounds"));
@@ -145,14 +143,6 @@ public class PluginConfig {
             this.enable = section.getBoolean("enable", true);
             this.saveAndRestore = section.getBoolean("save-and-restore", true);
             this.clearOnEnter = section.getBoolean("clear-on-enter", true);
-        }
-    }
-
-    public static class ServerSelectorConfig {
-        public final List<String> servers;
-
-        public ServerSelectorConfig(ConfigurationSection section) {
-            this.servers = section.getStringList("servers");
         }
     }
 

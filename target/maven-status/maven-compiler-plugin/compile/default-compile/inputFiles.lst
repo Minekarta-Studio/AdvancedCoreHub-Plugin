@@ -5,6 +5,7 @@
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/ClearAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/CloseAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/ConsoleAction.java
+/app/src/main/java/com/minekarta/advancedcorehub/actions/types/CustomAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/EffectAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/FireworkAction.java
 /app/src/main/java/com/minekarta/advancedcorehub/actions/types/GamemodeAction.java

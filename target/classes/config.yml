@@ -92,15 +92,6 @@ inventory_management:
   save-and-restore: true
   clear-on-enter: true
 
-# Settings for the server selector menu
-server-selector:
-  # A list of BungeeCord/Velocity server names to get player counts for.
-  # This must match the server names in your proxy's configuration.
-  servers:
-    - "survival"
-    - "creative"
-    - "skyblock"
-
 # Settings for movement items.
 movement_items:
   trident:

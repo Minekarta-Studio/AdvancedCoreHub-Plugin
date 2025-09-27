@@ -109,16 +109,26 @@ public class AdvancedCoreHubCommand extends BaseCommand {
         @Syntax("<world>")
         @CommandCompletion("@worlds")
         public void onAdd(CommandSender sender, String worldName) {
-            hubWorldManager.addWorld(worldName);
-            localeManager.sendMessage(sender, "world-added", worldName);
+            if (hubWorldManager.addWorld(worldName)) {
+                plugin.getConfig().set("hub-worlds", new java.util.ArrayList<>(hubWorldManager.getHubWorlds()));
+                plugin.saveConfig();
+                localeManager.sendMessage(sender, "world-added", worldName);
+            } else {
+                localeManager.sendMessage(sender, "world-add-failed", worldName);
+            }
         }
 
         @Subcommand("remove")
         @Syntax("<world>")
         @CommandCompletion("@worlds")
         public void onRemove(CommandSender sender, String worldName) {
-            hubWorldManager.removeWorld(worldName);
-            localeManager.sendMessage(sender, "world-removed", worldName);
+            if (hubWorldManager.removeWorld(worldName)) {
+                plugin.getConfig().set("hub-worlds", new java.util.ArrayList<>(hubWorldManager.getHubWorlds()));
+                plugin.saveConfig();
+                localeManager.sendMessage(sender, "world-removed", worldName);
+            } else {
+                localeManager.sendMessage(sender, "world-remove-failed", worldName);
+            }
         }
 
         @Subcommand("list")
