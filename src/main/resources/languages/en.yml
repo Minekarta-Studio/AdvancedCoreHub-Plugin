@@ -1,86 +1,88 @@
 # English Language File for AdvancedCoreHub
+# This file uses MiniMessage format for colors and text styling.
+# Learn more at: https://docs.adventure.kyori.net/minimessage
 
 # General messages
-no-permission: "<red>You do not have permission to execute this command."
-players-only: "<red>This command can only be run by a player."
-player-not-found: "<red>Player <yellow>{0}</yellow> not found."
-invalid-usage: "<red>Invalid usage. Use: <yellow>{0}</yellow>"
-invalid-number: "<red><yellow>{0}</yellow> is not a valid number."
-reload-success: "<green>AdvancedCoreHub configuration has been reloaded."
-version-info: "<green>AdvancedCoreHub is running version <yellow>{0}</yellow>."
-unknown-command: "<red>Unknown subcommand <yellow>{0}</yellow>. Use <green>/ach help</green> for a list of commands."
-action-not-found: "<red>The action <yellow>{0}</yellow> was not found."
+no-permission: "<gradient:#FF416C:#FF4B2B>You do not have permission to execute this command.</gradient>"
+players-only: "<gradient:#FF416C:#FF4B2B>This command can only be run by a player.</gradient>"
+player-not-found: "<#E0E0E0>Player <#FAD961>{0}</#FAD961> not found."
+invalid-usage: "<#FF6B6B>Invalid usage. Use: <#F9D423>{0}</#F9D423>"
+invalid-number: "<#FF6B6B><#F9D423>{0}</#F9D423> is not a valid number."
+reload-success: "<gradient:#56AB2F:#A8E063>AdvancedCoreHub configuration has been reloaded.</gradient>"
+version-info: "<#A8E063>AdvancedCoreHub is running version <#FAD961>{0}</#FAD961>."
+unknown-command: "<#FF6B6B>Unknown subcommand <#FAD961>{0}</#FAD961>. Use <#56AB2F>/ach help</#56AB2F> for a list of commands."
+action-not-found: "<#FF6B6B>The action <#FAD961>{0}</#FAD961> was not found."
 
 # Item related messages
-item-not-found: "<red>The item '{0}' does not exist."
-item-given: "<green>You have given <yellow>{0}x {1}</yellow> to <yellow>{2}</yellow>."
-item-cooldown: "<red>You must wait {0} more seconds to use this item."
-no-items-found: "<red>There are no custom items defined."
-item-list: "<green>Available items: <yellow>{0}</yellow>"
+item-not-found: "<#FF6B6B>The item '<#FAD961>{0}</#FAD961>' does not exist."
+item-given: "<#A8E063>You have given <#FAD961>{0}x {1}</#FAD961> to <#FAD961>{2}</#FAD961>."
+item-cooldown: "<#FF6B6B>You must wait <#FAD961>{0}</#FAD961> more seconds to use this item."
+no-items-found: "<#FF6B6B>There are no custom items defined."
+item-list: "<#A8E063>Available items: <#FAD961>{0}</#FAD961>"
 
 # Hub World Management
-worlds-list: "<aqua>Hub Worlds: <white>{0}"
-worlds-list-empty: "<yellow>There are no worlds in the hub worlds list."
-world-added: "<green>Successfully added world <yellow>{0}</yellow> to the hub worlds list."
-world-removed: "<green>Successfully removed world <yellow>{0}</yellow> from the hub worlds list."
-world-add-failed: "<red>The world <yellow>{0}</yellow> is already in the hub worlds list."
-world-remove-failed: "<red>The world <yellow>{0}</yellow> is not in the hub worlds list."
-world-check-status: "<aqua>The world <yellow>{0}</yellow> is currently <white>{1}</white>."
+worlds-list: "<#89f7fe>Hub Worlds: <white>{0}"
+worlds-list-empty: "<#FAD961>There are no worlds in the hub worlds list."
+world-added: "<#A8E063>Successfully added world <#FAD961>{0}</#FAD961> to the hub worlds list."
+world-removed: "<#A8E063>Successfully removed world <#FAD961>{0}</#FAD961> from the hub worlds list."
+world-add-failed: "<#FF6B6B>The world <#FAD961>{0}</#FAD961> is already in the hub worlds list."
+world-remove-failed: "<#FF6B6B>The world <#FAD961>{0}</#FAD961> is not in the hub worlds list."
+world-check-status: "<#89f7fe>The world <#FAD961>{0}</#FAD961> is currently <white>{1}</white>."
 
 # Spawn messages
-spawn-teleport-success: "<green>Teleported to spawn."
-spawn-not-set: "<red>The server spawn has not been set yet."
-spawn-set-success: "<green>Spawn location has been set to your current position."
+spawn-teleport-success: "<#A8E063>Teleported to spawn."
+spawn-not-set: "<#FF6B6B>The server spawn has not been set yet."
+spawn-set-success: "<#A8E0C3>Spawn location has been set to your current position."
 
 # Fly command
-fly-toggled-self: "<green>Your flight mode has been <yellow>{0}</yellow>."
-fly-toggled-by-other: "<green>Your flight mode was <yellow>{0}</yellow> by <yellow>{1}</yellow>."
-fly-toggled-other: "<green>You have <yellow>{0}</yellow> flight for <yellow>{1}</yellow>."
-fly-toggled-timed-self: "<green>Your flight mode has been <yellow>enabled</yellow> for <yellow>{0}</yellow>."
-fly-toggled-timed-other: "<green>You have <yellow>enabled</yellow> flight for <yellow>{0}</yellow> for <yellow>{1}</yellow>."
-fly-expired: "<red>Your temporary flight has expired."
-invalid-duration-format: "<red>Invalid duration format: {0}. Use formats like 10s, 5m, 1h."
+fly-toggled-self: "<#A8E063>Your flight mode has been <#FAD961>{0}</#FAD961>."
+fly-toggled-by-other: "<#A8E063>Your flight mode was <#FAD961>{0}</#FAD961> by <#FAD961>{1}</#FAD961>."
+fly-toggled-other: "<#A8E063>You have <#FAD961>{0}</#FAD961> flight for <#FAD961>{1}</#FAD961>."
+fly-toggled-timed-self: "<#A8E063>Your flight mode has been <#FAD961>enabled</#FAD961> for <#FAD961>{0}</#FAD961>."
+fly-toggled-timed-other: "<#A8E063>You have <#FAD961>enabled</#FAD961> flight for <#FAD961>{0}</#FAD961> for <#FAD961>{1}</#FAD961>."
+fly-expired: "<#FF6B6B>Your temporary flight has expired."
+invalid-duration-format: "<#FF6B6B>Invalid duration format: {0}. Use formats like 10s, 5m, 1h."
 
 # Join/Quit messages
-join-message: "<gray>[<green>+</green>] <yellow>%player_name%</yellow>"
-quit-message: "<gray>[<red>-</red>] <yellow>%player_name%</yellow>"
+join-message: "<gradient:#80FF72:#7EE8FA><bold>+</bold></gradient> <#E0E0E0>%player_name%"
+quit-message: "<gradient:#FF512F:#DD2476><bold>-</bold></gradient> <#E0E0E0>%player_name%"
 
 # Announcements
-announcement-prefix: "<aqua><bold>ANNOUNCEMENT</bold> <reset>"
+announcement-prefix: "<gradient:#12c2e9:#c471ed:#f64f59><bold>ANNOUNCEMENT</bold></gradient> <reset>"
 
 # AOTE message
-aote-no-space: "<red>There is not enough space to teleport."
+aote-no-space: "<#FF6B6B>There is not enough space to teleport."
 
 # BossBar Command
-bossbar-help-header: "<gold>--- BossBar Command Help ---"
-bossbar-help-create: "<aqua>/bossbar create <player|@a> <color> <style> <title...>"
-bossbar-help-remove: "<aqua>/bossbar remove <player|@a>"
-bossbar-help-set: "<aqua>/bossbar set <player|@a> <title|color|style> <value...>"
-bossbar-created: "<green>Boss bar created for <yellow>{0}</yellow>."
-bossbar-removed: "<green>Boss bar removed for <yellow>{0}</yellow>."
-bossbar-set-success: "<green>Boss bar <yellow>{0}</yellow> set to <yellow>{1}</yellow> for <yellow>{2}</yellow>."
-bossbar-invalid-color: "<red>Invalid color: <yellow>{0}</yellow>. Valid colors are: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
-bossbar-invalid-style: "<red>Invalid style: <yellow>{0}</yellow>. Valid styles are: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
+bossbar-help-header: "<gradient:#f64f59:#c471ed>--- BossBar Command Help ---</gradient>"
+bossbar-help-create: "<#89f7fe>/bossbar create <player|@a> <color> <style> <title...>"
+bossbar-help-remove: "<#89f7fe>/bossbar remove <player|@a>"
+bossbar-help-set: "<#89f7fe>/bossbar set <player|@a> <title|color|style> <value...>"
+bossbar-created: "<#A8E063>Boss bar created for <#FAD961>{0}</#FAD961>."
+bossbar-removed: "<#A8E063>Boss bar removed for <#FAD961>{0}</#FAD961>."
+bossbar-set-success: "<#A8E063>Boss bar <#FAD961>{0}</#FAD961> set to <#FAD961>{1}</#FAD961> for <#FAD961>{2}</#FAD961>."
+bossbar-invalid-color: "<#FF6B6B>Invalid color: <#FAD961>{0}</#FAD961>. Valid colors are: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE."
+bossbar-invalid-style: "<#FF6B6B>Invalid style: <#FAD961>{0}</#FAD961>. Valid styles are: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20."
 
 # Anti-World Downloader
-anti_wdl_kick_message: "<red>Using a World Downloader mod is not allowed on this server."
+anti_wdl_kick_message: "<gradient:#FF416C:#FF4B2B>Using a World Downloader mod is not allowed on this server.</gradient>"
 
 # Chat Protection
-chat-protection-swear-warning: "<red>Your message contains a blocked word."
-chat-protection-command-warning: "<red>You are not allowed to use this command."
+chat-protection-swear-warning: "<#FF6B6B>Your message contains a blocked word."
+chat-protection-command-warning: "<#FF6B6B>You are not allowed to use this command."
 
 # Player Hider
-player-hider-hidden: "<green>Players are now hidden."
-player-hider-shown: "<green>Players are now visible."
+player-hider-hidden: "<#A8E063>Players are now hidden."
+player-hider-shown: "<#A8E063>Players are now visible."
 
 # Server Selector
-server-selector.connecting: "<gray>Connecting you to <yellow>{0}</yellow>..."
-server-selector-success: "<green>Successfully connected to <yellow>{0}</yellow>!"
-server-selector-failed: "<red>Failed to connect to <yellow>{0}</yellow>."
+server-selector.connecting: "<#E0E0E0>Connecting you to <#FAD961>{0}</#FAD961>..."
+server-selector-success: "<#A8E063>Successfully connected to <#FAD961>{0}</#FAD961>!"
+server-selector-failed: "<#FF6B6B>Failed to connect to <#FAD961>{0}</#FAD961>."
 
 # Custom action messages
-custom-actions.example_action.message: "<green>This is a custom action!"
-custom-actions.greet.message: "<wave> Hello, {0}! Welcome to the server!"
+custom-actions.example_action.message: "<gradient:#56AB2F:#A8E063>This is a custom action!</gradient>"
+custom-actions.greet.message: "<wave> Hello, <#FAD961>{0}</#FAD961>! Welcome to the server!"
 
 # Cosmetics menu
-cosmetics.coming-soon: "<red>This feature is coming soon!"
+cosmetics.coming-soon: "<#FF6B6B>This feature is coming soon!"

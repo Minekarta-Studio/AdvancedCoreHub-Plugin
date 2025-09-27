@@ -56,7 +56,7 @@ public class MenuManager {
 
         populateMenu(player, inventory, menuConfig);
         player.openInventory(inventory);
-        playSound(player, "open");
+        playSound(player, "open", menuConfig);
     }
 
     private void populateMenu(Player player, Inventory inventory, MenuConfig menuConfig) {
@@ -108,6 +108,11 @@ public class MenuManager {
         if (itemConfig.customModelData > 0) {
             builder.setCustomModelData(itemConfig.customModelData);
         }
+        if (itemConfig.headTexture != null && !itemConfig.headTexture.isEmpty()) {
+            builder.setHeadTexture(itemConfig.headTexture);
+        } else if (itemConfig.skullOwner != null && !itemConfig.skullOwner.isEmpty()) {
+            builder.setSkullOwner(itemConfig.skullOwner);
+        }
         if (itemConfig.enchantments != null && !itemConfig.enchantments.isEmpty()) {
             builder.addEnchantments(itemConfig.enchantments);
         }
@@ -127,13 +132,40 @@ public class MenuManager {
         return null;
     }
 
-    public void playSound(Player player, String soundType) {
-        PluginConfig.MenuSoundsConfig soundsConfig = plugin.getPluginConfig().menuSounds;
-        PluginConfig.SoundConfig soundConfig = soundType.equalsIgnoreCase("click") ? soundsConfig.click : soundsConfig.open;
+    public MenuConfig getMenuConfig(String menuId) {
+        return menuConfigs.get(menuId);
+    }
+
+    public void playSound(Player player, String soundType, MenuConfig menuConfig) {
+        PluginConfig.SoundConfig soundConfig = null;
+
+        if (soundType.equalsIgnoreCase("click")) {
+            // Prioritize menu-specific click sound
+            if (menuConfig != null && menuConfig.getClickSound() != null) {
+                soundConfig = menuConfig.getClickSound();
+            } else {
+                // Fallback to global click sound
+                soundConfig = plugin.getPluginConfig().menuSounds.click;
+            }
+        } else if (soundType.equalsIgnoreCase("open")) {
+            // Prioritize menu-specific open sound
+            if (menuConfig != null && menuConfig.getOpenSound() != null) {
+                soundConfig = menuConfig.getOpenSound();
+            } else {
+                // Fallback to global open sound
+                soundConfig = plugin.getPluginConfig().menuSounds.open;
+            }
+        }
 
         if (soundConfig != null && soundConfig.enabled) {
             try {
-                player.playSound(player.getLocation(), soundConfig.name, soundConfig.volume, soundConfig.pitch);
+                // Default to chest open sound if the global open sound is not configured
+                String soundName = soundConfig.name;
+                if (soundType.equalsIgnoreCase("open") && (menuConfig == null || menuConfig.getOpenSound() == null)) {
+                    soundName = "BLOCK_CHEST_OPEN";
+                }
+
+                player.playSound(player.getLocation(), soundName, soundConfig.volume, soundConfig.pitch);
             } catch (Exception e) {
                 plugin.getLogger().warning("Invalid sound name in menu_sounds." + soundType + ": " + soundConfig.name);
             }

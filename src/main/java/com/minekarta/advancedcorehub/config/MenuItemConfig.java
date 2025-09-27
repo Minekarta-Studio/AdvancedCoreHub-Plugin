@@ -15,6 +15,9 @@ public class MenuItemConfig {
     public final int slot;
     public final List<Integer> slots;
     public final Map<String, List<String>> clickActions;
+    public final PluginConfig.SoundConfig interactSound;
+    public final String skullOwner;
+    public final String headTexture;
 
     // For dynamic server items
     public final String serverName;
@@ -49,6 +52,8 @@ public class MenuItemConfig {
         this.enchantments = section.getStringList("enchantments");
         this.slot = section.getInt("slot", -1);
         this.slots = section.getIntegerList("slots");
+        this.skullOwner = section.getString("skull-owner");
+        this.headTexture = section.getString("head-texture");
 
         this.clickActions = new HashMap<>();
         if (section.contains("left-click-actions")) {
@@ -59,6 +64,12 @@ public class MenuItemConfig {
         }
         if (section.contains("actions")) {
             clickActions.putIfAbsent("RIGHT", section.getStringList("actions"));
+        }
+
+        if (section.isConfigurationSection("interact-sound")) {
+            this.interactSound = new PluginConfig.SoundConfig(section.getConfigurationSection("interact-sound"));
+        } else {
+            this.interactSound = null;
         }
     }
 
