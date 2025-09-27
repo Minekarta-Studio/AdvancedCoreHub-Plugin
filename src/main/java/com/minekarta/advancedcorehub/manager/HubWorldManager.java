@@ -30,16 +30,12 @@ public class HubWorldManager {
         return hubWorlds.contains(worldName);
     }
 
-    public void addWorld(String worldName) {
-        if (hubWorlds.add(worldName)) {
-            save();
-        }
+    public boolean addWorld(String worldName) {
+        return hubWorlds.add(worldName);
     }
 
-    public void removeWorld(String worldName) {
-        if (hubWorlds.remove(worldName)) {
-            save();
-        }
+    public boolean removeWorld(String worldName) {
+        return hubWorlds.remove(worldName);
     }
 
     public void listWorlds(CommandSender sender) {
@@ -51,11 +47,7 @@ public class HubWorldManager {
         plugin.getLocaleManager().sendMessage(sender, "worlds-list", worldList);
     }
 
-    private void save() {
-        // This is a write operation, so it directly modifies the config file
-        plugin.getConfig().set("hub-worlds", List.copyOf(hubWorlds));
-        plugin.saveConfig();
-        // After saving, we should reload the plugin's config to keep everything in sync
-        plugin.reloadPlugin();
+    public Set<String> getHubWorlds() {
+        return new HashSet<>(hubWorlds);
     }
 }

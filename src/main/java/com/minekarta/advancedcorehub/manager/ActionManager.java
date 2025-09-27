@@ -3,70 +3,43 @@ package com.minekarta.advancedcorehub.manager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import com.minekarta.advancedcorehub.actions.types.*;
-import com.minekarta.advancedcorehub.config.PluginConfig;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ActionManager {
 
     private final AdvancedCoreHub plugin;
-    private final PluginConfig config;
     private final Map<String, Action> actionMap = new HashMap<>();
-    private final java.util.Set<String> customActionNames = new java.util.HashSet<>();
-    // Pattern to match actions like [ACTION] data or [ACTION:data]
-    private static final Pattern ACTION_PATTERN = Pattern.compile("\\[([A-Z_]+)(?::\\s*(.*?))?\\](.*)");
 
     public ActionManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
-        this.config = plugin.getPluginConfig();
+        // The ActionManager is recreated on reload, ensuring a clean state.
         registerDefaultActions();
         loadCustomActions();
     }
 
     private void loadCustomActions() {
-        if (config.getCustomActions() == null) return;
+        var customActionsConfig = plugin.getPluginConfig().getCustomActions();
+        if (customActionsConfig == null) return;
 
-        for (Map.Entry<String, ?> entry : config.getCustomActions().entrySet()) {
+        for (Map.Entry<String, ?> entry : customActionsConfig.entrySet()) {
             String key = entry.getKey();
-            if (!(entry.getValue() instanceof Map)) continue;
+            if (!(entry.getValue() instanceof Map<?, ?> actionData)) continue;
 
-            @SuppressWarnings("unchecked")
-            Map<String, Object> actionData = (Map<String, Object>) entry.getValue();
-
-            final List<String> actionStrings = (List<String>) actionData.get("actions");
-
-            if (actionStrings == null || actionStrings.isEmpty()) {
-                plugin.getLogger().warning("Custom action '" + key + "' has no actions defined.");
+            if (!(actionData.get("actions") instanceof List<?> rawActionStrings)) {
+                plugin.getLogger().warning("Custom action '" + key + "' has no 'actions' list or it's empty.");
                 continue;
             }
 
-            registerAction(key.toUpperCase(), (player, data) -> {
-                if (!(data instanceof List)) return;
-                List<String> args = (List<String>) data;
-                List<String> processedActionStrings = new ArrayList<>();
-
-                for (String actionString : actionStrings) {
-                    String processedAction = actionString;
-                    // args[0] is the action name, so args start from index 1.
-                    for (int i = 1; i < args.size(); i++) {
-                        processedAction = processedAction.replace("%arg" + (i) + "%", args.get(i));
-                    }
-                    processedActionStrings.add(processedAction);
-                }
-                executeStringActions(player, processedActionStrings);
-            });
-            plugin.getLogger().info("Registered custom action: " + key);
+            List<String> actionStrings = rawActionStrings.stream().map(Object::toString).collect(Collectors.toList());
+            registerAction(key.toUpperCase(), new CustomAction(this, actionStrings));
         }
+        plugin.getLogger().info("Loaded " + customActionsConfig.size() + " custom actions.");
     }
 
     private void registerDefaultActions() {
@@ -89,7 +62,7 @@ public class ActionManager {
         registerAction("MOVEMENT", new MovementAction(plugin));
         MessageAction messageAction = new MessageAction(plugin);
         registerAction("MESSAGE", messageAction);
-        registerAction("LANG", messageAction);
+        registerAction("LANG", messageAction); // Alias for MESSAGE
     }
 
     public void registerAction(String identifier, Action action) {
@@ -117,7 +90,7 @@ public class ActionManager {
             try {
                 action.execute(player, data);
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error executing action: " + actionMap, e);
+                plugin.getLogger().log(Level.SEVERE, "Error executing map-based action: " + actionMap, e);
             }
         } else {
             plugin.getLogger().warning("Unknown action identifier: " + identifier);
@@ -132,51 +105,32 @@ public class ActionManager {
     }
 
     public void executeAction(Player player, String actionString) {
-        if (actionString == null || actionString.isEmpty()) {
+        if (actionString == null || actionString.isBlank()) {
             return;
         }
 
-        Matcher matcher = ACTION_PATTERN.matcher(actionString.trim());
-        if (!matcher.matches()) {
-            // This string doesn't match our action format, so we ignore it.
-            // This can be useful for comments or other text in action lists.
+        String trimmedAction = actionString.trim();
+        if (!trimmedAction.startsWith("[")) {
+            return; // Not a valid action format.
+        }
+
+        int closingBracketIndex = trimmedAction.indexOf(']');
+        if (closingBracketIndex == -1) {
+            plugin.getLogger().warning("Malformed action string (missing ']]'): " + actionString);
             return;
         }
 
-        String identifier = matcher.group(1).toUpperCase();
-        String dataInBrackets = matcher.group(2);
-        String dataOutsideBrackets = matcher.group(3);
-
-        List<String> args = new ArrayList<>();
-        args.add(identifier);
-
-        String combinedData;
-        if (dataInBrackets != null && !dataInBrackets.isEmpty()) {
-            combinedData = dataInBrackets;
-        } else {
-            combinedData = dataOutsideBrackets;
-        }
-
-        if (combinedData != null && !combinedData.trim().isEmpty()) {
-            // Split the data part by spaces to handle multiple arguments
-            args.addAll(Arrays.stream(combinedData.trim().split("\\s+"))
-                    .collect(Collectors.toList()));
-        }
+        String identifier = trimmedAction.substring(1, closingBracketIndex).toUpperCase();
+        String data = trimmedAction.substring(closingBracketIndex + 1).trim();
 
         Action action = actionMap.get(identifier);
         if (action != null) {
             try {
-                // Custom actions are designed to take a list of arguments for templating,
-                // where the first argument is the action name itself.
-                // Default actions, however, expect to receive the raw data string as a single argument.
-                // This logic correctly dispatches the data in the expected format for each type.
-                if (customActionNames.contains(identifier)) {
-                    action.execute(player, args);
-                } else {
-                    action.execute(player, combinedData != null ? combinedData.trim() : "");
-                }
+                // All actions, including CustomAction, now receive the raw data string.
+                // The action itself is responsible for parsing this data.
+                action.execute(player, data);
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "Error executing action: " + actionString, e);
+                plugin.getLogger().log(Level.SEVERE, "Error executing string-based action: " + actionString, e);
             }
         } else {
             plugin.getLogger().warning("Unknown action identifier: " + identifier);

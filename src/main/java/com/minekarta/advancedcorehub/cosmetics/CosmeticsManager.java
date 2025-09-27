@@ -1,7 +1,6 @@
 package com.minekarta.advancedcorehub.cosmetics;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -19,10 +18,10 @@ public class CosmeticsManager {
 
     public CosmeticsManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
-        loadTrails();
+        loadCosmetics();
     }
 
-    public void loadTrails() {
+    public void loadCosmetics() {
         availableTrails.clear();
         ConfigurationSection trailsSection = plugin.getFileManager().getConfig("cosmetics.yml").getConfigurationSection("particle-trails");
         if (trailsSection == null) {
@@ -36,19 +35,23 @@ public class CosmeticsManager {
                 String particleName = trailsSection.getString(id + ".particle");
                 String permission = trailsSection.getString(id + ".permission");
 
-                // Handle the 'none' case
                 if (id.equalsIgnoreCase("none")) {
                     availableTrails.put(id, new ParticleTrail(id, name, null, permission));
                     continue;
                 }
 
-                Particle particle = Particle.valueOf(particleName.toUpperCase());
-                ParticleTrail trail = new ParticleTrail(id, name, particle, permission);
-                availableTrails.put(id, trail);
+                Particle particle = particleName != null && !particleName.isEmpty() ? Particle.valueOf(particleName.toUpperCase()) : null;
+                availableTrails.put(id, new ParticleTrail(id, name, particle, permission));
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().severe("Invalid particle name in cosmetics.yml for trail '" + id + "': " + trailsSection.getString(id + ".particle"));
             } catch (Exception e) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to load particle trail: " + id, e);
             }
         }
+        plugin.getLogger().info("Loaded " + availableTrails.size() + " particle trails.");
+
+        // After reloading, remove any active trails that no longer exist.
+        activeTrails.entrySet().removeIf(entry -> !availableTrails.containsKey(entry.getValue().id()));
     }
 
     public ParticleTrail getTrail(String id) {
@@ -56,11 +59,12 @@ public class CosmeticsManager {
     }
 
     public Map<String, ParticleTrail> getAvailableTrails() {
-        return availableTrails;
+        return Map.copyOf(availableTrails);
     }
 
     public void setActiveTrail(Player player, ParticleTrail trail) {
-        if (trail == null) {
+        // The "none" trail is represented by a trail object with a null particle.
+        if (trail == null || trail.particle() == null) {
             activeTrails.remove(player.getUniqueId());
         } else {
             activeTrails.put(player.getUniqueId(), trail);

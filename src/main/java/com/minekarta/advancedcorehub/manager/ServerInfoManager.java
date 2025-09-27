@@ -3,7 +3,6 @@ package com.minekarta.advancedcorehub.manager;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import com.minekarta.advancedcorehub.config.PluginConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -17,20 +16,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerInfoManager implements PluginMessageListener {
 
     private final AdvancedCoreHub plugin;
-    private final PluginConfig.ServerSelectorConfig config;
     private final Map<String, Integer> serverPlayerCounts = new ConcurrentHashMap<>();
     private List<String> serversToQuery;
     private BukkitTask updateTask;
 
     public ServerInfoManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
-        this.config = plugin.getPluginConfig().serverSelector;
         loadConfig();
         startUpdateTask();
     }
 
     public void loadConfig() {
-        this.serversToQuery = config.servers;
+        this.serversToQuery = plugin.getMenuManager().getDynamicServerNames();
+        plugin.getLogger().info("Found " + serversToQuery.size() + " servers to monitor from menu configurations.");
+    }
+
+    public void reload() {
+        loadConfig();
+        startUpdateTask();
     }
 
     public void startUpdateTask() {
@@ -74,5 +77,9 @@ public class ServerInfoManager implements PluginMessageListener {
 
     public List<String> getServersToQuery() {
         return Collections.unmodifiableList(serversToQuery);
+    }
+
+    public BukkitTask getUpdateTask() {
+        return updateTask;
     }
 }
