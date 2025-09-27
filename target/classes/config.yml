@@ -143,7 +143,7 @@ menu_sounds:
   # Sound played when a player clicks any item in a menu.
   click:
     enabled: true
-    name: "UI_BUTTON_CLICK"
+    name: "ui.button.click"
     volume: 1.0
     pitch: 1.0
 

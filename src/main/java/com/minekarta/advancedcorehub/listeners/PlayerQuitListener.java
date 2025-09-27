@@ -18,7 +18,8 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (inventoryManager.isHubWorld(player.getWorld().getName())) {
+        // Restore inventory if it has been saved, regardless of the player's current world.
+        if (inventoryManager.hasSavedInventory(player)) {
             inventoryManager.restorePlayerInventory(player);
         }
     }
