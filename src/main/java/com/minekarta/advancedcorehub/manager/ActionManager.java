@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub.manager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
 import com.minekarta.advancedcorehub.actions.types.*;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class ActionManager {
 
     private final AdvancedCoreHub plugin;
+    private final PluginConfig config;
     private final Map<String, Action> actionMap = new HashMap<>();
     private final java.util.Set<String> customActionNames = new java.util.HashSet<>();
     // Pattern to match actions like [ACTION] data or [ACTION:data]
@@ -26,18 +28,24 @@ public class ActionManager {
 
     public ActionManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
+        this.config = plugin.getPluginConfig();
         registerDefaultActions();
         loadCustomActions();
     }
 
     private void loadCustomActions() {
-        ConfigurationSection customActionsSection = plugin.getConfig().getConfigurationSection("custom-actions");
-        if (customActionsSection == null) return;
+        if (config.getCustomActions() == null) return;
 
-        for (String key : customActionsSection.getKeys(false)) {
-            customActionNames.add(key.toUpperCase());
-            final List<String> actionStrings = customActionsSection.getStringList(key + ".actions");
-            if (actionStrings.isEmpty()) {
+        for (Map.Entry<String, ?> entry : config.getCustomActions().entrySet()) {
+            String key = entry.getKey();
+            if (!(entry.getValue() instanceof Map)) continue;
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> actionData = (Map<String, Object>) entry.getValue();
+
+            final List<String> actionStrings = (List<String>) actionData.get("actions");
+
+            if (actionStrings == null || actionStrings.isEmpty()) {
                 plugin.getLogger().warning("Custom action '" + key + "' has no actions defined.");
                 continue;
             }

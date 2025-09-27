@@ -6,10 +6,8 @@ import co.aikar.commands.PaperCommandManager;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.commands.acf.AdvancedCoreHubCommand;
 import com.minekarta.advancedcorehub.commands.acf.BossBarCommand;
-import com.minekarta.advancedcorehub.commands.acf.ClearChatCommand;
 import com.minekarta.advancedcorehub.commands.acf.CosmeticsCommand;
 import com.minekarta.advancedcorehub.commands.acf.FlyCommand;
-import com.minekarta.advancedcorehub.commands.acf.LockChatCommand;
 import com.minekarta.advancedcorehub.commands.acf.ServerSelectorCommand;
 import com.minekarta.advancedcorehub.commands.acf.SetSpawnCommand;
 import com.minekarta.advancedcorehub.commands.acf.SpawnCommand;
@@ -40,8 +38,6 @@ public class CommandManager {
     public void registerCommands() {
         manager.registerCommand(new BossBarCommand());
         manager.registerCommand(new FlyCommand());
-        manager.registerCommand(new LockChatCommand());
-        manager.registerCommand(new ClearChatCommand());
         manager.registerCommand(new SpawnCommand());
         manager.registerCommand(new SetSpawnCommand());
         manager.registerCommand(new AdvancedCoreHubCommand());

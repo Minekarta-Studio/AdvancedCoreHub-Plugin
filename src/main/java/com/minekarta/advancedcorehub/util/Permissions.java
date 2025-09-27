@@ -33,5 +33,6 @@ public final class Permissions {
     // Bypass Permissions
     public static final String BYPASS_COOLDOWN = PREFIX + "bypass.cooldown";
     public static final String BYPASS_CHAT_LOCK = PREFIX + "chat.bypasslock";
+    public static final String BYPASS_CHAT_PROTECTION = PREFIX + "bypass.chatprotection";
 
 }

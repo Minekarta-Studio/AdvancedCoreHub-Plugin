@@ -1,9 +1,9 @@
 package com.minekarta.advancedcorehub;
 
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import com.minekarta.advancedcorehub.cosmetics.CosmeticsManager;
 import com.minekarta.advancedcorehub.cosmetics.PlayerMoveListener;
 import com.minekarta.advancedcorehub.listeners.*;
-import com.minekarta.advancedcorehub.manager.PlaceholderManager;
 import com.minekarta.advancedcorehub.manager.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +12,9 @@ import java.util.logging.Level;
 public class AdvancedCoreHub extends JavaPlugin {
 
     private static AdvancedCoreHub instance;
+
+    // Config
+    private PluginConfig pluginConfig;
 
     // Managers
     private FileManager fileManager;
@@ -30,7 +33,6 @@ public class AdvancedCoreHub extends JavaPlugin {
     private CosmeticsManager cosmeticsManager;
     private PlaceholderManager placeholderManager;
 
-
     @Override
     public void onEnable() {
         instance = this;
@@ -39,18 +41,15 @@ public class AdvancedCoreHub extends JavaPlugin {
         // Initialize managers
         this.fileManager = new FileManager(this);
         this.fileManager.setup(); // Must be first
+        this.pluginConfig = new PluginConfig(this.fileManager.getConfig("config.yml"));
 
         this.inventoryManager = new InventoryManager(this);
-
         this.localeManager = new LocaleManager(this, this.fileManager);
         this.localeManager.load();
-
         this.itemsManager = new ItemsManager(this);
         this.itemsManager.loadItems();
-
         this.menuManager = new MenuManager(this);
         this.menuManager.loadMenus();
-
         this.actionManager = new ActionManager(this);
         this.cooldownManager = new CooldownManager(this);
         this.hubWorldManager = new HubWorldManager(this);
@@ -61,7 +60,6 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.commandManager = new CommandManager(this);
         this.serverInfoManager = new ServerInfoManager(this);
         this.cosmeticsManager = new CosmeticsManager(this);
-
 
         // Load other components
         registerCommands();
@@ -94,6 +92,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         getLogger().info("Reloading AdvancedCoreHub...");
         try {
             this.fileManager.reloadAll();
+            this.pluginConfig = new PluginConfig(this.fileManager.getConfig("config.yml"));
             this.localeManager.load();
             this.itemsManager.loadItems();
             this.menuManager.loadMenus();
@@ -113,7 +112,7 @@ public class AdvancedCoreHub extends JavaPlugin {
     }
 
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerConnectionListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldEventListeners(this), this);
         getServer().getPluginManager().registerEvents(new WorldListener(this), this);
         getServer().getPluginManager().registerEvents(new MenuListener(this), this);
@@ -121,22 +120,19 @@ public class AdvancedCoreHub extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MovementItemListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemActionListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 
         // Register Double Jump Listener if enabled
-        if (getConfig().getBoolean("double_jump.enabled", false)) {
+        if (pluginConfig.doubleJump.enabled) {
             getServer().getPluginManager().registerEvents(new DoubleJumpListener(this), this);
             getLogger().info("Double Jump feature enabled.");
         }
 
         // Register Chat Protection Listener if either feature is enabled
-        if (getConfig().getBoolean("chat_protection.anti_swear.enabled", false) ||
-            getConfig().getBoolean("chat_protection.command_blocker.enabled", false)) {
+        if (pluginConfig.chatProtection.antiSwear.enabled || pluginConfig.chatProtection.commandBlocker.enabled) {
             getServer().getPluginManager().registerEvents(new ChatProtectionListener(this), this);
             getLogger().info("Chat Protection feature enabled.");
         }
-
     }
 
     private void registerChannels() {
@@ -144,7 +140,7 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
 
         // Register Anti-World Downloader channels if enabled
-        if (getConfig().getBoolean("anti_world_downloader.enabled", true)) {
+        if (pluginConfig.antiWorldDownloader.enabled) {
             AntiWorldDownloaderListener wdlListener = new AntiWorldDownloaderListener(this);
             this.getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:init", wdlListener);
             this.getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:request", wdlListener);
@@ -157,6 +153,10 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public static AdvancedCoreHub getInstance() {
         return instance;
+    }
+
+    public PluginConfig getPluginConfig() {
+        return pluginConfig;
     }
 
     public FileManager getFileManager() {

@@ -1,18 +1,14 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.config.MenuItemConfig;
 import com.minekarta.advancedcorehub.manager.MenuHolder;
-import com.minekarta.advancedcorehub.util.PersistentKeys;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Map;
@@ -27,54 +23,40 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        InventoryHolder holder = event.getInventory().getHolder();
-        if (!(holder instanceof MenuHolder)) {
+        if (!(event.getInventory().getHolder() instanceof MenuHolder)) {
             return;
         }
 
         event.setCancelled(true);
         ItemStack clickedItem = event.getCurrentItem();
 
-        if (clickedItem == null || clickedItem.getType().isAir() || !clickedItem.hasItemMeta()) {
+        if (clickedItem == null || clickedItem.getType().isAir()) {
             return;
         }
 
-        Player player = (Player) event.getWhoClicked();
-        ItemMeta meta = clickedItem.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        String menuId = ((MenuHolder) holder).getMenuId();
-
-        // --- Static Menu Item Handling ---
         if (event.getClickedInventory() == null || !event.getClickedInventory().equals(event.getView().getTopInventory())) {
             return;
         }
 
+        Player player = (Player) event.getWhoClicked();
+        String menuId = ((MenuHolder) event.getInventory().getHolder()).getMenuId();
         int clickedSlot = event.getRawSlot();
-        Map<Integer, Map<String, List<String>>> menuActions = plugin.getMenuManager().getActionsForMenu(menuId);
 
-        if (menuActions == null || !menuActions.containsKey(clickedSlot)) {
+        MenuItemConfig itemConfig = plugin.getMenuManager().getMenuItem(menuId, clickedSlot);
+
+        if (itemConfig == null || itemConfig.clickActions.isEmpty()) {
             return;
         }
 
-        Map<String, List<String>> slotActions = menuActions.get(clickedSlot);
         List<String> actionsToExecute = null;
-
-        if (event.getClick().isLeftClick()) {
-            actionsToExecute = slotActions.get("LEFT");
-        } else if (event.getClick().isRightClick()) {
-            actionsToExecute = slotActions.get("RIGHT");
+        if (event.getClick().isLeftClick() && itemConfig.clickActions.containsKey("LEFT")) {
+            actionsToExecute = itemConfig.clickActions.get("LEFT");
+        } else if (event.getClick().isRightClick() && itemConfig.clickActions.containsKey("RIGHT")) {
+            actionsToExecute = itemConfig.clickActions.get("RIGHT");
         }
 
         if (actionsToExecute != null && !actionsToExecute.isEmpty()) {
-            // Play the click sound, if configured
-            ConfigurationSection clickSoundSection = plugin.getConfig().getConfigurationSection("menu_sounds.click");
-            if (clickSoundSection != null && clickSoundSection.getBoolean("enabled", false)) {
-                String soundName = clickSoundSection.getString("name", "ui.button.click");
-                float volume = (float) clickSoundSection.getDouble("volume", 1.0);
-                float pitch = (float) clickSoundSection.getDouble("pitch", 1.0);
-                player.playSound(player.getLocation(), soundName, volume, pitch);
-            }
-
+            plugin.getMenuManager().playSound(player, "click");
             plugin.getActionManager().executeStringActions(player, actionsToExecute);
         }
     }

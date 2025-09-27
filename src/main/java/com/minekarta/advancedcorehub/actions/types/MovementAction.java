@@ -2,21 +2,24 @@ package com.minekarta.advancedcorehub.actions.types;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.actions.Action;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import com.minekarta.advancedcorehub.util.TeleportUtil;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Set;
-import org.bukkit.Material;
 
 public class MovementAction implements Action {
 
     private final AdvancedCoreHub plugin;
+    private final PluginConfig.MovementItemsConfig config;
 
     public MovementAction(AdvancedCoreHub plugin) {
         this.plugin = plugin;
+        this.config = plugin.getPluginConfig().movementItems;
     }
 
     @Override
@@ -32,34 +35,29 @@ public class MovementAction implements Action {
             case "aote":
                 handleAote(player);
                 break;
-            // Other movement types can be added here
             default:
                 plugin.getLogger().warning("[MovementAction] Unknown movement type: " + movementType);
         }
     }
 
     private void handleAote(Player player) {
-        if (handleCooldown(player, "aote", "movement_items.aote.cooldown", 2)) {
+        if (handleCooldown(player, "aote", config.aote.cooldown)) {
             return;
         }
 
-        int distance = plugin.getConfig().getInt("movement_items.aote.distance", 8);
-        Block targetBlock = player.getTargetBlock((Set<Material>) null, distance);
-
+        Block targetBlock = player.getTargetBlock((Set<Material>) null, config.aote.distance);
         Location targetLocation = targetBlock.getLocation();
-        // Set player rotation to look forward after teleport
         targetLocation.setDirection(player.getLocation().getDirection());
 
         TeleportUtil.safeTeleport(player, targetLocation.add(0.5, 1, 0.5));
     }
 
-    private boolean handleCooldown(Player player, String cooldownId, String configPath, int defaultCooldown) {
+    private boolean handleCooldown(Player player, String cooldownId, int cooldownSeconds) {
         if (plugin.getCooldownManager().hasCooldown(player, cooldownId)) {
             long remaining = plugin.getCooldownManager().getRemainingCooldown(player, cooldownId);
             plugin.getLocaleManager().sendMessage(player, "item-cooldown", String.valueOf(remaining));
             return true;
         }
-        int cooldownSeconds = plugin.getConfig().getInt(configPath, defaultCooldown);
         plugin.getCooldownManager().setCooldown(player, cooldownId, cooldownSeconds);
         return false;
     }

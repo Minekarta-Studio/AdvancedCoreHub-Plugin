@@ -60,25 +60,10 @@ items:
       - "<gray>Cast this at a block to be"
       - "<gray>pulled towards it."
 
-  player_hider:
-    material: LIME_DYE
-    displayname: "<green>Players: Visible <gray>(Click)"
-    lore:
-      - "<gray>Click to hide other players."
-    custom-model-data: 101
-    # Note: A more advanced implementation would change the material/name
-    # based on the current state (e.g., to RED_DYE and "Players: Hidden").
-    # This requires custom logic beyond the scope of a simple action.
-    right-click-actions:
-      - "[TOGGLE_VISIBILITY]"
-    protected: true
-
 # This section defines items to be given to players when they join.
 # 'item_name' must match an ID from the 'items' section above.
 join_items:
   - item_name: server_selector
     slot: 4
-  - item_name: player_hider
-    slot: 2
   - item_name: profile_menu
     slot: 8

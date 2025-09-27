@@ -2,7 +2,6 @@ package com.minekarta.advancedcorehub.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,34 +21,12 @@ import java.util.Set;
 public class ItemBuilder {
 
     private ItemStack itemStack;
-    private static HeadDatabaseAPI hdbApi;
     private static final Logger LOGGER = Bukkit.getLogger();
 
     public ItemBuilder(String materialString) {
         String lowerMaterialString = materialString.toLowerCase();
 
-        if (lowerMaterialString.startsWith("headdatabase:") || lowerMaterialString.startsWith("hdb:")) {
-            if (hdbApi == null && Bukkit.getPluginManager().isPluginEnabled("HeadDatabase")) {
-                hdbApi = new HeadDatabaseAPI();
-            }
-
-            if (hdbApi == null) {
-                LOGGER.warning("Tried to use a HeadDatabase item, but the HeadDatabase plugin is not enabled. Defaulting to PLAYER_HEAD.");
-                this.itemStack = new ItemStack(Material.PLAYER_HEAD);
-            } else {
-                try {
-                    String id = materialString.split(":")[1];
-                    this.itemStack = hdbApi.getItemHead(id);
-                    if (this.itemStack == null) {
-                        LOGGER.warning("Invalid HeadDatabase ID: " + id + ". Defaulting to PLAYER_HEAD.");
-                        this.itemStack = new ItemStack(Material.PLAYER_HEAD);
-                    }
-                } catch (Exception e) {
-                    LOGGER.warning("Failed to parse HeadDatabase item: " + materialString + ". Defaulting to PLAYER_HEAD.");
-                    this.itemStack = new ItemStack(Material.PLAYER_HEAD);
-                }
-            }
-        } else if (lowerMaterialString.startsWith("head:")) {
+        if (lowerMaterialString.startsWith("head:")) {
             this.itemStack = new ItemStack(Material.PLAYER_HEAD);
             try {
                 String playerName = materialString.split(":")[1];

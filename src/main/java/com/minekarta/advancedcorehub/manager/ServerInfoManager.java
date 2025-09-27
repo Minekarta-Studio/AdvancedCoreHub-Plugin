@@ -3,6 +3,7 @@ package com.minekarta.advancedcorehub.manager;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
+import com.minekarta.advancedcorehub.config.PluginConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -16,26 +17,26 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerInfoManager implements PluginMessageListener {
 
     private final AdvancedCoreHub plugin;
+    private final PluginConfig.ServerSelectorConfig config;
     private final Map<String, Integer> serverPlayerCounts = new ConcurrentHashMap<>();
     private List<String> serversToQuery;
     private BukkitTask updateTask;
 
     public ServerInfoManager(AdvancedCoreHub plugin) {
         this.plugin = plugin;
+        this.config = plugin.getPluginConfig().serverSelector;
         loadConfig();
         startUpdateTask();
     }
 
     public void loadConfig() {
-        this.serversToQuery = plugin.getConfig().getStringList("server-selector.servers");
+        this.serversToQuery = config.servers;
     }
 
     public void startUpdateTask() {
-        // Cancel previous task if reloading
         if (updateTask != null) {
             updateTask.cancel();
         }
-        // Run task every 5 seconds
         updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::requestPlayerCounts, 0L, 100L);
     }
 
@@ -44,13 +45,10 @@ public class ServerInfoManager implements PluginMessageListener {
             return;
         }
 
-        // We don't need a player to send a plugin message to Bungee.
-        // The server itself can do it, as long as the channel is registered.
         for (String serverName : serversToQuery) {
             com.google.common.io.ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("PlayerCount");
             out.writeUTF(serverName);
-            // Send the message from the server, not a specific player
             plugin.getServer().sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
         }
     }

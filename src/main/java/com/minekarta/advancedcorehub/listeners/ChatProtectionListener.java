@@ -1,79 +1,60 @@
 package com.minekarta.advancedcorehub.listeners;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
-import org.bukkit.entity.Player;
+import com.minekarta.advancedcorehub.config.PluginConfig;
+import com.minekarta.advancedcorehub.util.Permissions;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ChatProtectionListener implements Listener {
 
     private final AdvancedCoreHub plugin;
-    private final List<String> blockedWords;
-    private final List<String> blockedCommands;
+    private final PluginConfig.ChatProtectionConfig config;
 
     public ChatProtectionListener(AdvancedCoreHub plugin) {
         this.plugin = plugin;
-        // Load and lowercase the lists for case-insensitive matching
-        this.blockedWords = plugin.getConfig().getStringList("chat_protection.anti_swear.blocked_words")
-                .stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toList());
-        this.blockedCommands = plugin.getConfig().getStringList("chat_protection.command_blocker.blocked_commands")
-                .stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toList());
+        this.config = plugin.getPluginConfig().chatProtection;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (!plugin.getConfig().getBoolean("chat_protection.anti_swear.enabled", false)) {
+        if (event.getPlayer().hasPermission(Permissions.BYPASS_CHAT_PROTECTION)) {
             return;
         }
 
-        Player player = event.getPlayer();
-        if (player.hasPermission("advancedcorehub.bypass.antiswear")) {
-            return;
-        }
-
-        String message = event.getMessage().toLowerCase();
-        for (String blockedWord : blockedWords) {
-            if (message.contains(blockedWord)) {
-                event.setCancelled(true);
-                plugin.getLocaleManager().sendMessage(player, "chat-protection-swear-warning");
-                return;
+        // Anti-Swear
+        if (config.antiSwear.enabled) {
+            String message = event.getMessage().toLowerCase();
+            for (String blockedWord : config.antiSwear.blockedWords) {
+                if (message.contains(blockedWord.toLowerCase())) {
+                    event.setCancelled(true);
+                    plugin.getLocaleManager().sendMessage(event.getPlayer(), "chat_protection.anti_swear.message");
+                    return; // No need to check for command blocking if a swear word is found
+                }
             }
         }
-    }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (!plugin.getConfig().getBoolean("chat_protection.command_blocker.enabled", false)) {
-            return;
-        }
+        // Command Blocker
+        if (config.commandBlocker.enabled) {
+            String message = event.getMessage().toLowerCase().trim();
+            if (message.startsWith("/")) {
+                String command = message.split(" ")[0].substring(1);
+                // Check for variants like 'bukkit:plugins'
+                if (command.contains(":")) {
+                    command = command.split(":")[1];
+                }
 
-        Player player = event.getPlayer();
-        if (player.hasPermission("advancedcorehub.bypass.commandblocker")) {
-            return;
-        }
-
-        String command = event.getMessage().toLowerCase().substring(1); // remove leading '/'
-        // Handle commands with namespace, e.g. /minecraft:me
-        if (command.contains(":")) {
-            command = command.split(":")[1];
-        }
-        final String finalCommand = command;
-
-        for (String blockedCommand : blockedCommands) {
-            if (finalCommand.startsWith(blockedCommand)) {
-                event.setCancelled(true);
-                plugin.getLocaleManager().sendMessage(player, "chat-protection-command-warning");
-                return;
+                for (String blockedCommand : config.commandBlocker.blockedCommands) {
+                    if (command.equalsIgnoreCase(blockedCommand)) {
+                        event.setCancelled(true);
+                        plugin.getLocaleManager().sendMessage(event.getPlayer(), "chat_protection.command_blocker.message");
+                        return;
+                    }
+                }
             }
         }
     }
