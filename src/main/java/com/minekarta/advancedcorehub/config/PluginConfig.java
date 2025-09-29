@@ -2,9 +2,14 @@ package com.minekarta.advancedcorehub.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class PluginConfig {
 
@@ -27,25 +32,50 @@ public class PluginConfig {
     private final Map<String, ?> customActions;
 
     public PluginConfig(FileConfiguration source) {
+        // A null source can happen if the config file fails to load.
+        // Create an empty one to prevent NullPointerExceptions.
+        if (source == null) {
+            source = new YamlConfiguration();
+        }
+
+        Logger logger = Logger.getLogger("AdvancedCoreHub"); // Or get from plugin instance if available
+
         // Load top-level settings
         this.language = source.getString("language", "en");
         this.hubWorlds = source.getStringList("hub-worlds");
         this.actionsOnJoin = source.getMapList("actions_on_join");
-        this.customActions = source.getConfigurationSection("custom-actions").getValues(false);
 
-        // Load nested sections
-        this.spawn = new SpawnConfig(source.getConfigurationSection("spawn"));
-        this.messages = new MessagesConfig(source.getConfigurationSection("messages"));
-        this.worldSettings = new WorldSettingsConfig(source.getConfigurationSection("world_settings"));
-        this.chatProtection = new ChatProtectionConfig(source.getConfigurationSection("chat_protection"));
-        this.antiWorldDownloader = new AntiWorldDownloaderConfig(source.getConfigurationSection("anti_world_downloader"));
-        this.inventoryManagement = new InventoryManagementConfig(source.getConfigurationSection("inventory_management"));
-        this.movementItems = new MovementItemsConfig(source.getConfigurationSection("movement_items"));
-        this.doubleJump = new DoubleJumpConfig(source.getConfigurationSection("double_jump"));
-        this.menuSounds = new MenuSoundsConfig(source.getConfigurationSection("menu_sounds"));
-        this.announcements = new AnnouncementsConfig(source.getConfigurationSection("announcements"));
-        this.bossBar = new BossBarConfig(source.getConfigurationSection("bossbar"));
+        ConfigurationSection customActionsSection = getSection(source, "custom-actions", logger);
+        this.customActions = customActionsSection.getValues(false);
+
+        // Load nested sections safely
+        this.spawn = new SpawnConfig(getSection(source, "spawn", logger));
+        this.messages = new MessagesConfig(getSection(source, "messages", logger));
+        this.worldSettings = new WorldSettingsConfig(getSection(source, "world_settings", logger));
+        this.chatProtection = new ChatProtectionConfig(getSection(source, "chat_protection", logger));
+        this.antiWorldDownloader = new AntiWorldDownloaderConfig(getSection(source, "anti_world_downloader", logger));
+        this.inventoryManagement = new InventoryManagementConfig(getSection(source, "inventory_management", logger));
+        this.movementItems = new MovementItemsConfig(getSection(source, "movement_items", logger));
+        this.doubleJump = new DoubleJumpConfig(getSection(source, "double_jump", logger));
+        this.menuSounds = new MenuSoundsConfig(getSection(source, "menu_sounds", logger));
+        this.announcements = new AnnouncementsConfig(getSection(source, "announcements", logger));
+        this.bossBar = new BossBarConfig(getSection(source, "bossbar", logger));
     }
+
+    /**
+     * Safely retrieves a ConfigurationSection, logging a warning if it's missing.
+     * @return A valid (potentially empty) ConfigurationSection, never null.
+     */
+    private ConfigurationSection getSection(ConfigurationSection parent, String key, Logger logger) {
+        ConfigurationSection section = parent.getConfigurationSection(key);
+        if (section == null) {
+            logger.warning("Configuration section '" + key + "' is missing from the config. Using default values.");
+            // Create an empty section in memory to avoid NullPointerExceptions
+            return parent.createSection(key);
+        }
+        return section;
+    }
+
 
     // --- Getters for top-level settings ---
     public String getLanguage() { return language; }
@@ -62,6 +92,7 @@ public class PluginConfig {
         public final boolean spawnOnJoinEnabled;
 
         public SpawnConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "SpawnConfig section cannot be null.");
             this.world = section.getString("world", "world");
             this.x = section.getDouble("x", 0.0);
             this.y = section.getDouble("y", 100.0);
@@ -76,6 +107,7 @@ public class PluginConfig {
         public final String prefix;
 
         public MessagesConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "MessagesConfig section cannot be null.");
             this.prefix = section.getString("prefix", "");
         }
     }
@@ -88,6 +120,7 @@ public class PluginConfig {
         public final boolean cancelWeatherChange;
 
         public WorldSettingsConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "WorldSettingsConfig section cannot be null.");
             this.cancelBlockBreak = section.getBoolean("cancel_block_break", true);
             this.cancelBlockPlace = section.getBoolean("cancel_block_place", true);
             this.cancelPlayerDamage = section.getBoolean("cancel_player_damage", true);
@@ -101,8 +134,19 @@ public class PluginConfig {
         public final CommandBlockerConfig commandBlocker;
 
         public ChatProtectionConfig(ConfigurationSection section) {
-            this.antiSwear = new AntiSwearConfig(section.getConfigurationSection("anti_swear"));
-            this.commandBlocker = new CommandBlockerConfig(section.getConfigurationSection("command_blocker"));
+            Objects.requireNonNull(section, "ChatProtectionConfig section cannot be null.");
+            Logger logger = Logger.getLogger("AdvancedCoreHub");
+            this.antiSwear = new AntiSwearConfig(getSection(section, "anti_swear", logger));
+            this.commandBlocker = new CommandBlockerConfig(getSection(section, "command_blocker", logger));
+        }
+
+        private ConfigurationSection getSection(ConfigurationSection parent, String key, Logger logger) {
+            ConfigurationSection section = parent.getConfigurationSection(key);
+            if (section == null) {
+                logger.warning("Configuration subsection '" + parent.getCurrentPath() + "." + key + "' is missing. Using default values.");
+                return parent.createSection(key);
+            }
+            return section;
         }
 
         public static class AntiSwearConfig {
@@ -110,6 +154,7 @@ public class PluginConfig {
             public final List<String> blockedWords;
 
             public AntiSwearConfig(ConfigurationSection section) {
+                Objects.requireNonNull(section, "AntiSwearConfig section cannot be null.");
                 this.enabled = section.getBoolean("enabled", false);
                 this.blockedWords = section.getStringList("blocked_words");
             }
@@ -120,6 +165,7 @@ public class PluginConfig {
             public final List<String> blockedCommands;
 
             public CommandBlockerConfig(ConfigurationSection section) {
+                Objects.requireNonNull(section, "CommandBlockerConfig section cannot be null.");
                 this.enabled = section.getBoolean("enabled", false);
                 this.blockedCommands = section.getStringList("blocked_commands");
             }
@@ -130,6 +176,7 @@ public class PluginConfig {
         public final boolean enabled;
 
         public AntiWorldDownloaderConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "AntiWorldDownloaderConfig section cannot be null.");
             this.enabled = section.getBoolean("enabled", true);
         }
     }
@@ -140,6 +187,7 @@ public class PluginConfig {
         public final boolean clearOnEnter;
 
         public InventoryManagementConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "InventoryManagementConfig section cannot be null.");
             this.enable = section.getBoolean("enable", true);
             this.saveAndRestore = section.getBoolean("save-and-restore", true);
             this.clearOnEnter = section.getBoolean("clear-on-enter", true);
@@ -154,11 +202,22 @@ public class PluginConfig {
         public final CustomElytraConfig customElytra;
 
         public MovementItemsConfig(ConfigurationSection section) {
-            this.trident = new TridentConfig(section.getConfigurationSection("trident"));
-            this.grapplingHook = new GrapplingHookConfig(section.getConfigurationSection("grappling_hook"));
-            this.aote = new AoteConfig(section.getConfigurationSection("aote"));
-            this.enderbow = new EnderbowConfig(section.getConfigurationSection("enderbow"));
-            this.customElytra = new CustomElytraConfig(section.getConfigurationSection("custom_elytra"));
+            Objects.requireNonNull(section, "MovementItemsConfig section cannot be null.");
+            Logger logger = Logger.getLogger("AdvancedCoreHub");
+            this.trident = new TridentConfig(getSection(section, "trident", logger));
+            this.grapplingHook = new GrapplingHookConfig(getSection(section, "grappling_hook", logger));
+            this.aote = new AoteConfig(getSection(section, "aote", logger));
+            this.enderbow = new EnderbowConfig(getSection(section, "enderbow", logger));
+            this.customElytra = new CustomElytraConfig(getSection(section, "custom_elytra", logger));
+        }
+
+        private ConfigurationSection getSection(ConfigurationSection parent, String key, Logger logger) {
+            ConfigurationSection section = parent.getConfigurationSection(key);
+            if (section == null) {
+                logger.warning("Configuration subsection '" + parent.getCurrentPath() + "." + key + "' is missing. Using default values.");
+                return parent.createSection(key);
+            }
+            return section;
         }
 
         public static class TridentConfig {
@@ -217,6 +276,7 @@ public class PluginConfig {
         public final SoundConfig sound;
 
         public DoubleJumpConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "DoubleJumpConfig section cannot be null.");
             this.enabled = section.getBoolean("enabled", true);
             this.cooldown = section.getInt("cooldown", 2);
             this.power = section.getDouble("power", 1.2);
@@ -229,6 +289,7 @@ public class PluginConfig {
         public final SoundConfig click;
 
         public MenuSoundsConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "MenuSoundsConfig section cannot be null.");
             this.open = new SoundConfig(section.getConfigurationSection("open"));
             this.click = new SoundConfig(section.getConfigurationSection("click"));
         }
@@ -241,6 +302,7 @@ public class PluginConfig {
         public final float pitch;
 
         public SoundConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "SoundConfig section cannot be null.");
             this.enabled = section.getBoolean("enabled", true);
             this.name = section.getString("name", "ui.button.click");
             this.volume = (float) section.getDouble("volume", 1.0);
@@ -255,14 +317,75 @@ public class PluginConfig {
         public final List<AnnouncementConfig> messages;
 
         public AnnouncementsConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "AnnouncementsConfig section cannot be null.");
             this.enabled = section.getBoolean("enabled", true);
             this.intervalSeconds = section.getInt("interval_seconds", 90);
             this.randomized = section.getBoolean("randomized", false);
             this.messages = section.getMapList("messages").stream()
                                   .map(AnnouncementConfig::new)
-                                  .collect(java.util.stream.Collectors.toList());
+                                  .collect(Collectors.toList());
         }
     }
+
+    public static class AnnouncementConfig {
+        public final String message;
+        public final String type;
+        public final List<String> worlds;
+        // For TITLE type
+        public final String title;
+        public final String subtitle;
+        public final int fadeIn;
+        public final int stay;
+        public final int fadeOut;
+        // For BOSS_BAR type
+        public final String bossBarColor;
+        public final String bossBarStyle;
+        public final int bossBarDuration;
+
+
+        public AnnouncementConfig(Map<?, ?> map) {
+            this.message = get(map, "message", "");
+            this.type = get(map, "type", "CHAT");
+            this.worlds = getList(map, "worlds");
+
+            // Title properties
+            this.title = get(map, "title", "");
+            this.subtitle = get(map, "subtitle", "");
+            this.fadeIn = get(map, "fadeIn", 10);
+            this.stay = get(map, "stay", 70);
+            this.fadeOut = get(map, "fadeOut", 20);
+
+            // BossBar properties
+            this.bossBarColor = get(map, "bossBarColor", "WHITE");
+            this.bossBarStyle = get(map, "bossBarStyle", "SOLID");
+            this.bossBarDuration = get(map, "bossBarDuration", 10);
+        }
+
+        // --- Type-safe helper methods for parsing the map ---
+
+        private <T> T get(Map<?, ?> map, String key, T def) {
+            Object val = map.get(key);
+            if (val == null) return def;
+            try {
+                // This is an unchecked cast, but we trust the config structure.
+                // The try-catch will handle cases where the type is wrong.
+                return (T) def.getClass().cast(val);
+            } catch (ClassCastException e) {
+                return def;
+            }
+        }
+
+        private List<String> getList(Map<?, ?> map, String key) {
+            Object val = map.get(key);
+            if (val instanceof List) {
+                return ((List<?>) val).stream()
+                                      .map(String::valueOf)
+                                      .collect(Collectors.toList());
+            }
+            return Collections.emptyList();
+        }
+    }
+
 
     public static class BossBarConfig {
         public final boolean showOnJoin;
@@ -272,6 +395,7 @@ public class PluginConfig {
         public final int duration;
 
         public BossBarConfig(ConfigurationSection section) {
+            Objects.requireNonNull(section, "BossBarConfig section cannot be null.");
             this.showOnJoin = section.getBoolean("show_on_join", true);
             this.title = section.getString("title", "<gradient:#5e4fa2:#f79459>Welcome, %player_name%!</gradient>");
             this.color = section.getString("color", "WHITE");

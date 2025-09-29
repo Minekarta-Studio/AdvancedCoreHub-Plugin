@@ -1,4 +1,4 @@
-package com.minekarta.advancedcorehub.listeners;
+package com.minekarta.advancedcorehub.features.chatprotection;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import com.minekarta.advancedcorehub.config.PluginConfig;

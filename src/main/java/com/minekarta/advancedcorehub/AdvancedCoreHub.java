@@ -2,10 +2,14 @@ package com.minekarta.advancedcorehub;
 
 import com.minekarta.advancedcorehub.config.PluginConfig;
 import com.minekarta.advancedcorehub.cosmetics.CosmeticsManager;
-import com.minekarta.advancedcorehub.cosmetics.PlayerMoveListener;
-import com.minekarta.advancedcorehub.listeners.*;
+import com.minekarta.advancedcorehub.database.DataManager;
+import com.minekarta.advancedcorehub.database.IDataManager;
 import com.minekarta.advancedcorehub.manager.*;
+import com.minekarta.advancedcorehub.player.IPlayerManager;
+import com.minekarta.advancedcorehub.player.PlayerManager;
+import com.minekarta.advancedcorehub.services.PluginSetupService;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.logging.Level;
 
@@ -16,8 +20,13 @@ public class AdvancedCoreHub extends JavaPlugin {
     // Config
     private PluginConfig pluginConfig;
 
-    // Managers
+    // Services
+    private PluginSetupService setupService;
+
+    // Managers (using interfaces where available)
     private FileManager fileManager;
+    private IDataManager dataManager;
+    private IPlayerManager playerManager;
     private LocaleManager localeManager;
     private ItemsManager itemsManager;
     private ActionManager actionManager;
@@ -38,11 +47,29 @@ public class AdvancedCoreHub extends JavaPlugin {
         instance = this;
         getLogger().info("Enabling AdvancedCoreHub v" + getDescription().getVersion());
 
-        // Initialize managers
+        // Initialize core services and managers first
+        this.setupService = new PluginSetupService(this);
         this.fileManager = new FileManager(this);
-        this.fileManager.setup(); // Must be first
+        this.dataManager = new DataManager(this);
+
+        // Asynchronously load all configurations and then initialize other components
+        this.fileManager.setup().thenRun(() -> {
+            // This block runs after all files are loaded.
+            // We need to run the rest of the setup on the main server thread.
+            getServer().getScheduler().runTask(this, this::initializePluginComponents);
+        }).exceptionally(ex -> {
+            getLogger().log(Level.SEVERE, "Failed to load initial configurations. Plugin will not enable correctly.", ex);
+            return null;
+        });
+    }
+
+    private void initializePluginComponents() {
+        // This method is called on the main thread after configs are loaded
+        getLogger().info("Configurations loaded. Initializing plugin components...");
+
         this.pluginConfig = new PluginConfig(this.fileManager.getConfig("config.yml"));
 
+        // Initialize all other managers that depend on configs
         this.inventoryManager = new InventoryManager(this);
         this.localeManager = new LocaleManager(this, this.fileManager);
         this.localeManager.load();
@@ -61,11 +88,15 @@ public class AdvancedCoreHub extends JavaPlugin {
         this.serverInfoManager = new ServerInfoManager(this);
         this.cosmeticsManager = new CosmeticsManager(this);
         this.cosmeticsManager.loadCosmetics();
+        this.playerManager = new PlayerManager(this);
 
-        // Load other components
-        registerCommands();
-        registerListeners();
-        registerChannels();
+        // Initialize database
+        this.dataManager.initDatabase();
+
+        // Register everything using the setup service
+        this.setupService.registerCommands();
+        this.setupService.registerListeners();
+        this.setupService.registerChannels();
 
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             this.placeholderManager = new PlaceholderManager(this);
@@ -79,95 +110,61 @@ public class AdvancedCoreHub extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Disabling AdvancedCoreHub.");
-        if (announcementsManager != null) {
-            announcementsManager.cancelTasks();
+        // Cancel tasks and clean up managers
+        if (announcementsManager != null) announcementsManager.cancelTasks();
+        if (bossBarManager != null) bossBarManager.cleanup();
+        if (placeholderManager != null) placeholderManager.unregister();
+
+        // Close database connections
+        if (dataManager != null) {
+            dataManager.closeDataSource();
         }
-        if (bossBarManager != null) {
-            bossBarManager.cleanup();
+
+        // Unregister plugin channels
+        if (setupService != null) {
+            setupService.unregisterChannels();
         }
-        this.getServer().getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
+
         getLogger().info("AdvancedCoreHub has been disabled.");
     }
 
     public void reloadPlugin() {
         getLogger().info("Reloading AdvancedCoreHub...");
-        try {
-            // 1. Cancel all tasks and clear state
-            if (announcementsManager != null) announcementsManager.cancelTasks();
-            if (bossBarManager != null) bossBarManager.cleanup();
-            if (serverInfoManager != null && serverInfoManager.getUpdateTask() != null) serverInfoManager.getUpdateTask().cancel();
-            unregisterListeners();
-            unregisterChannels();
 
-            // 2. Reload configurations from disk
-            this.fileManager.reloadAll();
-            this.pluginConfig = new PluginConfig(this.fileManager.getConfig("config.yml"));
-
-            // 3. Reload managers with new config values
-            this.localeManager.load();
-            this.itemsManager.loadItems();
-            this.menuManager.loadMenus();
-            this.actionManager = new ActionManager(this);
-            this.hubWorldManager.load();
-            this.cosmeticsManager.loadCosmetics(); // Reload cosmetics from config
-            this.announcementsManager.load();
-            this.serverInfoManager.reload(); // Must be after menuManager
-
-            // 4. Re-register components with the new configuration
-            registerListeners();
-            registerChannels();
-
-            getLogger().info("Reload complete.");
-        } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "An error occurred while reloading the plugin.", e);
+        // 1. Cancel all tasks and clear state
+        if (announcementsManager != null) announcementsManager.cancelTasks();
+        if (bossBarManager != null) bossBarManager.cleanup();
+        if (serverInfoManager != null) {
+            BukkitTask updateTask = serverInfoManager.getUpdateTask();
+            if (updateTask != null) updateTask.cancel();
         }
-    }
+        setupService.unregisterListeners();
+        setupService.unregisterChannels();
 
-    private void registerCommands() {
-        commandManager.registerCommands();
-    }
+        // 2. Asynchronously reload configurations from disk
+        this.fileManager.reloadAll().thenRun(() -> {
+            // 3. Re-initialize managers with new config values on the main thread
+            getServer().getScheduler().runTask(this, () -> {
+                this.pluginConfig = new PluginConfig(this.fileManager.getConfig("config.yml"));
+                this.localeManager.load();
+                this.itemsManager.loadItems();
+                this.menuManager.loadMenus();
+                this.actionManager = new ActionManager(this);
+                this.hubWorldManager.load();
+                this.cosmeticsManager.loadCosmetics();
+                this.announcementsManager.load();
+                this.serverInfoManager.reload();
 
-    private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new PlayerConnectionListener(this), this);
-        getServer().getPluginManager().registerEvents(new WorldEventListeners(this), this);
-        getServer().getPluginManager().registerEvents(new WorldListener(this), this);
-        getServer().getPluginManager().registerEvents(new MenuListener(this), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
-        getServer().getPluginManager().registerEvents(new MovementItemListener(this), this);
-        getServer().getPluginManager().registerEvents(new ItemActionListener(this), this);
-        getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+                // 4. Re-register components with the new configuration
+                setupService.registerListeners();
+                setupService.registerChannels();
 
-        if (getPluginConfig().doubleJump.enabled) {
-            getServer().getPluginManager().registerEvents(new DoubleJumpListener(this), this);
-            getLogger().info("Double Jump feature enabled.");
-        }
-        if (getPluginConfig().chatProtection.antiSwear.enabled || getPluginConfig().chatProtection.commandBlocker.enabled) {
-            getServer().getPluginManager().registerEvents(new ChatProtectionListener(this), this);
-            getLogger().info("Chat Protection feature enabled.");
-        }
-    }
-
-    private void unregisterListeners() {
-        org.bukkit.event.HandlerList.unregisterAll(this);
-    }
-
-    private void registerChannels() {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this.serverInfoManager);
-
-        if (getPluginConfig().antiWorldDownloader.enabled) {
-            AntiWorldDownloaderListener wdlListener = new AntiWorldDownloaderListener(this);
-            getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:init", wdlListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, "wdl:request", wdlListener);
-            getServer().getMessenger().registerIncomingPluginChannel(this, "worlddownloader:init", wdlListener);
-            getLogger().info("Anti-World Downloader feature enabled.");
-        }
-    }
-
-    private void unregisterChannels() {
-        getServer().getMessenger().unregisterIncomingPluginChannel(this);
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+                getLogger().info("Reload complete.");
+            });
+        }).exceptionally(ex -> {
+            getLogger().log(Level.SEVERE, "An error occurred while reloading the plugin.", ex);
+            return null;
+        });
     }
 
     // --- Getters ---
@@ -180,8 +177,20 @@ public class AdvancedCoreHub extends JavaPlugin {
         return pluginConfig;
     }
 
+    public PluginSetupService getSetupService() {
+        return setupService;
+    }
+
     public FileManager getFileManager() {
         return fileManager;
+    }
+
+    public IDataManager getDataManager() {
+        return dataManager;
+    }
+
+    public IPlayerManager getPlayerManager() {
+        return playerManager;
     }
 
     public LocaleManager getLocaleManager() {
@@ -218,6 +227,10 @@ public class AdvancedCoreHub extends JavaPlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
     public InventoryManager getInventoryManager() {
