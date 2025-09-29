@@ -57,6 +57,9 @@
                         <relocation>
                             <pattern>org.sqlite</pattern>
                             <shadedPattern>com.minekarta.advancedcorehub.lib.sqlite</shadedPattern>
+                            <excludes>
+                                <exclude>org.sqlite.native.**</exclude>
+                            </excludes>
                         </relocation>
                     </relocations>
                     <filters>
