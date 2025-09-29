@@ -33,10 +33,12 @@
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/CosmeticsManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/ParticleTrail.java
 /app/src/main/java/com/minekarta/advancedcorehub/cosmetics/PlayerMoveListener.java
-/app/src/main/java/com/minekarta/advancedcorehub/listeners/AntiWorldDownloaderListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/database/DataManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/database/IDataManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/features/antiworlddownloader/AntiWorldDownloaderListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/features/chatprotection/ChatProtectionListener.java
+/app/src/main/java/com/minekarta/advancedcorehub/features/doublejump/DoubleJumpListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatListener.java
-/app/src/main/java/com/minekarta/advancedcorehub/listeners/ChatProtectionListener.java
-/app/src/main/java/com/minekarta/advancedcorehub/listeners/DoubleJumpListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemActionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/ItemProtectionListener.java
 /app/src/main/java/com/minekarta/advancedcorehub/listeners/MenuListener.java
@@ -59,6 +61,11 @@
 /app/src/main/java/com/minekarta/advancedcorehub/manager/MenuManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/PlaceholderManager.java
 /app/src/main/java/com/minekarta/advancedcorehub/manager/ServerInfoManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/player/IPlayerManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/player/PlayerData.java
+/app/src/main/java/com/minekarta/advancedcorehub/player/PlayerManager.java
+/app/src/main/java/com/minekarta/advancedcorehub/services/PluginSetupService.java
+/app/src/main/java/com/minekarta/advancedcorehub/util/Constants.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Formatter.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/ItemBuilder.java
 /app/src/main/java/com/minekarta/advancedcorehub/util/Permissions.java

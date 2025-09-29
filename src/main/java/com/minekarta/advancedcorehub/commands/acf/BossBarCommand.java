@@ -11,6 +11,8 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
+
 @CommandAlias("bossbar|bb")
 @CommandPermission("advancedcorehub.command.bossbar")
 @Description("Manage server-wide boss bars.")
@@ -42,7 +44,8 @@ public class BossBarCommand extends BaseCommand {
     @Description("Create a boss bar for a player or everyone.")
     public void onCreate(CommandSender sender, String targetName, BarColor color, BarStyle style, String title) {
         if (targetName.equalsIgnoreCase("@a")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+            for (Player player : onlinePlayers) {
                 bossBarManager.createBossBar(player, title, color, style);
             }
             localeManager.sendMessage(sender, "bossbar-created", "all players");
@@ -63,7 +66,8 @@ public class BossBarCommand extends BaseCommand {
     @Description("Remove a boss bar from a player or everyone.")
     public void onRemove(CommandSender sender, String targetName) {
         if (targetName.equalsIgnoreCase("@a")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+            for (Player player : onlinePlayers) {
                 bossBarManager.removeBossBar(player);
             }
             localeManager.sendMessage(sender, "bossbar-removed", "all players");

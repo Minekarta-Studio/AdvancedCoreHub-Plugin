@@ -1,4 +1,4 @@
-package com.minekarta.advancedcorehub.listeners;
+package com.minekarta.advancedcorehub.features.antiworlddownloader;
 
 import com.minekarta.advancedcorehub.AdvancedCoreHub;
 import net.kyori.adventure.text.Component;
